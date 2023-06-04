@@ -138,7 +138,7 @@ interface common_data_bus_if;
 
 endinterface
 
-interface staation_unit_if;
+interface station_unit_if;
   logic [31:0] rs1, rs2, addr, imm;
   logic [5:0] rd;
   instr_name_e instr;

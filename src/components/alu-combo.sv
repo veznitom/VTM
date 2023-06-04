@@ -1,5 +1,3 @@
-import CustomTypes::*;
-
 module ALUCombo #(
   parameter int station_size = 8,
   parameter int arbiter_address = 4'h5

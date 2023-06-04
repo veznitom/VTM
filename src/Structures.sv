@@ -43,7 +43,7 @@ package Structures;
     FENCE,
     UNKNOWN
   } instr_name_e;
- 
+
   typedef enum reg [2:0] {
     LOAD,
     PREPARE,
@@ -86,7 +86,7 @@ package Structures;
     reg [31:0] data1, data2, address, imm;
     instr_name_e instr_name;
     reg [5:0] src1, src2, rrn;
-    reg valid1, valid2, tag, ignore;
+    reg valid1, valid2, tag, skip;
   } station_record_t;
 
   typedef struct packed {

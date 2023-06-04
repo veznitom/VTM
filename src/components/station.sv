@@ -1,13 +1,13 @@
-import CustomTypes::*;
-
-module ResStation #(
-  parameter station_size = 1,
-  parameter Station station = NONE
+module Station #(
+  parameter int SIZE = 16,
+  parameter logic [7:0] ADDRESS = 8'h00,
+  parameter int ISSUE_BUS_CNT = 2,
+  parameter int CDB_CNT = 2
 )(
-  GlobalSignals.rest global_signals,
-  InstrIssue issue1, issue2,
-  CommonDataBus data_bus1, data_bus2,
-  ExecFeed exec_feed,
+  global_signals_if gl_signals,
+  instr_issue_if instr_issue [ISSUE_BUS_CNT],
+  common_data_bus_if cdb,
+  station_unit_if to_unit,
   // Dispatch
   output logic [15:0] free_space
 );
