@@ -66,12 +66,12 @@ package Structures;
     BYTE,
     HALFWORD,
     WORD,
+    DOUBLEWORD,
     EMPTY
   } data_width_e;
 
   typedef enum reg [1:0] {
     VALID,
-    WAITING,
     INVALID,
     MODIFIED
   } cache_state_e;
@@ -82,11 +82,19 @@ package Structures;
     WRITE
   } mmu_state_e;
 
+  typedef enum {
+    BR,
+    AL,
+    LS,
+    MD,
+    XX
+  } instr_type_e;
+
   typedef struct packed {
     reg [31:0] data1, data2, address, imm;
-    instr_name_e instr_name;
     reg [5:0] src1, src2, rrn;
     reg valid1, valid2, tag, skip;
+    instr_name_e instr_name;
   } station_record_t;
 
   typedef struct packed {
@@ -106,7 +114,7 @@ package Structures;
   typedef struct packed {
     reg [31:0] data, address, jump_address;
     reg [5:0] arn, rrn;
-    reg finished, jump, tag, ignore;
+    reg finished, jumps, tag, ignore;
   } rob_record_t;
 endpackage
 
