@@ -10,18 +10,18 @@ interface global_signals_if (
 endinterface
 
 interface debug_interface_if;
-  logic [31:0] reg11_value;
+  logic [31:0] reg_11_value;
   logic [ 6:0] ren_queue_size;
 endinterface
 
 interface pc_interface_if;
-  logic [31:0] jump_address, address;
-  logic inc, inc2, wr;
+  logic [31:0] jmp_address, address;
+  logic plus_4, plus_8, write;
 
-  modport pc(input jump_address, inc, inc2, wr, output address);
+  modport pc(input jmp_address, plus_4, plus_8, write, output address);
 
-  modport dispatch(input address, output inc, inc2);
+  modport dispatch(input address, output plus_4, plus_8);
 
-  modport rob(output jump_address, wr);
+  modport rob(output jmp_address, write);
 endinterface
 

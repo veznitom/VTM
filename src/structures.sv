@@ -1,4 +1,4 @@
-package Structures;
+package structures;
 
   typedef enum reg [7:0] {
     LB,
@@ -62,12 +62,12 @@ package Structures;
     ERROR
   } instr_types_e;
 
-  typedef enum reg [1:0] {
+  typedef enum reg [2:0] {
+    EMPTY,
     BYTE,
     HALFWORD,
     WORD,
-    DOUBLEWORD,
-    EMPTY
+    DOUBLEWORD
   } data_width_e;
 
   typedef enum reg [1:0] {
@@ -82,18 +82,18 @@ package Structures;
     WRITE
   } mmu_state_e;
 
-  typedef enum {
+  typedef enum reg[2:0] {
     BR,
     AL,
     LS,
     MD,
     XX
-  } instr_type_e;
+  } st_type_e;
 
   typedef struct packed {
-    reg [31:0] data1, data2, address, imm;
-    reg [5:0] src1, src2, rrn;
-    reg valid1, valid2, tag, skip;
+    reg [31:0] data_1, data_2, address, imm;
+    reg [5:0] src_1, src_2, rrn;
+    reg valid_1, valid_2, tag, skip;
     instr_name_e instr_name;
   } station_record_t;
 
@@ -104,17 +104,9 @@ package Structures;
   } register_t;
 
   typedef struct packed {
-    reg [31:0] data, address, instr;
-    cache_state_e state;
-    word_select_e ws;
-  } data_cache_record_t;
-
-  typedef struct packed {reg [31:0] address, instr;} instr_cache_record_t;
-
-  typedef struct packed {
-    reg [31:0] data, address, jump_address;
+    reg [31:0] data, address, jmp_address;
     reg [5:0] arn, rrn;
-    reg finished, jumps, tag, ignore;
+    reg completed, jumps, tag, ignore;
   } rob_record_t;
 endpackage
 
