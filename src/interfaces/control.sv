@@ -14,7 +14,9 @@ interface debug_interface_if;
   logic [ 6:0] ren_queue_size;
 endinterface
 
-interface pc_interface_if;
+interface pc_interface_if#(
+    parameterint XLEN = 32
+) ();
   logic [31:0] jmp_address, address;
   logic plus_4, plus_8, write;
 

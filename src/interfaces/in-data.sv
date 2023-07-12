@@ -43,8 +43,10 @@ interface register_query_if;
   endtask
 endinterface
 
-interface instr_issue_if;
-  logic [31:0] address, imm;
+interface instr_issue_if #(
+    parameterint XLEN = 32
+) ();
+  logic [XLEN-1:0] address, immediate;
   logic [5:0] src_1, src_2, arn, rrn;
   logic jump, tag;
 
@@ -52,11 +54,11 @@ interface instr_issue_if;
   st_type_e st_type;
 
   modport dispatch(
-      output address, imm, src_1, src_2, arn, rrn, jump, tag, instr_type, instr_name,
+      output address, immediate, src_1, src_2, arn, rrn, jump, tag, instr_type, instr_name,
       import clear, write
   );
 
-  modport combo(input address, imm, src_1, src_2, arn, rrn, jump, tag, instr_type, instr_name);
+  modport combo(input address, immediate, src_1, src_2, arn, rrn, jump, tag, instr_type, instr_name);
 
   modport rob(input address, arn, rrn, jump, tag);
 
@@ -68,7 +70,7 @@ interface instr_issue_if;
     input instr_name_e task_instr_name;
     begin
       address <= task_address;
-      imm <= task_imm;
+      immediate <= task_imm;
       instr_name <= task_instr_name;
       src1 <= task_src_1;
       src2 <= task_src_2;
@@ -83,7 +85,7 @@ interface instr_issue_if;
   task automatic clear();
     begin
       address <= 32'hzzzzzzzz;
-      imm <= 32'hzzzzzzzz;
+      immediate <= 32'hzzzzzzzz;
       instr_name <= UNKNOWN;
       src1 <= 6'hzz;
       src2 <= 6'hzz;
@@ -96,8 +98,10 @@ interface instr_issue_if;
   endtask
 endinterface
 
-interface common_data_bus_if;
-  wire [31:0] result, address, jmp_address;
+interface common_data_bus_if#(
+    parameterint XLEN = 32
+) ();
+  wire [XLEN-1:0] result, address, jmp_address;
   wire [5:0] arn, rrn;
   wire [3:0] select;
   wire we;
@@ -112,20 +116,22 @@ interface common_data_bus_if;
 
 endinterface
 
-interface station_unit_if;
-  logic [31:0] data_1, data_2, addrres, imm;
+interface station_unit_if#(
+    parameterint XLEN = 32
+) ();
+  logic [XLEN-1:0] data_1, data_2, addrres, immediate;
   logic [5:0] rrn;
   instr_name_e instr_name;
 
-  modport station(output data_1, data_2, address, imm, rrn, tag, instr_name, import clear);
+  modport station(output data_1, data_2, address, immediate, rrn, tag, instr_name, import clear);
 
-  modport exec(input data_1, data_2, address, imm, rrn, tag, instr_name);
+  modport exec(input data_1, data_2, address, immediate, rrn, tag, instr_name);
 
   task automatic clear();
     data_1 <= 32'hzzzzzzzz;
     data_2 <= 32'hzzzzzzzz;
     address <= 32'hzzzzzzzz;
-    imm <= 32'hzzzzzzzz;
+    immediate <= 32'hzzzzzzzz;
     instr_name <= UNKNOWN;
     rrn <= 6'hzz;
   endtask
@@ -138,7 +144,7 @@ interface station_unit_if;
     data_1 <= task_data_1;
     data_2 <= taks_data_2;
     address <= task_address;
-    imm <= task_imm;
+    immediate <= task_imm;
     instr_name <= task_instr_name;
     rrn <= task_rrn;
   end
@@ -146,3 +152,10 @@ interface station_unit_if;
 
 endinterface
 
+interface register_values_if#(
+    parameterint XLEN = 32
+) ();
+  logic [XLEN-1:0] data_1, data_2;
+  logic [5:0] src_1, src_2;
+  logic valid_1, valid_2;
+endinterface
