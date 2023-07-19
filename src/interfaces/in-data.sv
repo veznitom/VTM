@@ -58,7 +58,9 @@ interface instr_issue_if #(
       import clear, write
   );
 
-  modport combo(input address, immediate, src_1, src_2, arn, rrn, jump, tag, instr_type, instr_name);
+  modport combo(
+      input address, immediate, src_1, src_2, arn, rrn, jump, tag, instr_type, instr_name
+  );
 
   modport rob(input address, arn, rrn, jump, tag);
 
@@ -98,7 +100,7 @@ interface instr_issue_if #(
   endtask
 endinterface
 
-interface common_data_bus_if#(
+interface common_data_bus_if #(
     parameterint XLEN = 32
 ) ();
   wire [XLEN-1:0] result, address, jmp_address;
@@ -116,7 +118,7 @@ interface common_data_bus_if#(
 
 endinterface
 
-interface station_unit_if#(
+interface station_unit_if #(
     parameterint XLEN = 32
 ) ();
   logic [XLEN-1:0] data_1, data_2, addrres, immediate;
@@ -137,25 +139,36 @@ interface station_unit_if#(
   endtask
 
   task automatic write;
-  input logic [31:0] task_data_1, task_data_2,task_address, task_imm;
-  input instr_name_e task_instr_name;
-  input logic [5:0] task_rrn;
-  begin
-    data_1 <= task_data_1;
-    data_2 <= taks_data_2;
-    address <= task_address;
-    immediate <= task_imm;
-    instr_name <= task_instr_name;
-    rrn <= task_rrn;
-  end
+    input logic [31:0] task_data_1, task_data_2, task_address, task_imm;
+    input instr_name_e task_instr_name;
+    input logic [5:0] task_rrn;
+    begin
+      data_1 <= task_data_1;
+      data_2 <= taks_data_2;
+      address <= task_address;
+      immediate <= task_imm;
+      instr_name <= task_instr_name;
+      rrn <= task_rrn;
+    end
   endtask
 
 endinterface
 
-interface register_values_if#(
+interface register_values_if #(
     parameterint XLEN = 32
 ) ();
   logic [XLEN-1:0] data_1, data_2;
   logic [5:0] src_1, src_2;
   logic valid_1, valid_2;
+endinterface
+
+interface instr_info_if #(
+    parameter int XLEN = 32
+);
+  logic [XLEN-1:0] addresses[2];
+  logic [XLEN-1:0] immediates[2];
+  instr_name_e instr_names[2];
+  instr_type_e instr_types[2];
+  src_dest_t regs[2];
+  flag_vector_t flags[2];
 endinterface

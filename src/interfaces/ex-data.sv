@@ -12,20 +12,18 @@ interface data_memory_bus_if #(
   modport cache(input ready, done, inout data, output address, read, write, data_width);
 endinterface
 
-
-interface data_cache_bus_if #(
+interface cache_bus_if #(
     parameter int WIDTH = 256,
     parameterint XLEN = 32
 ) ();
-  wire [WIDTH-1:0] data;
-  logic [XLEN-1:0] address;
-  logic [31:0] instr;
+  wire  [WIDTH-1:0] data;
+  logic [ XLEN-1:0] address;
   logic read, write, tag, hit;
   data_width_e data_width;
 
-  modport combo(input hit, inout data, output address, instr, read, write, tag, data_width);
+  modport load_store(input hit, inout data, output address, read, write, tag, data_width);
 
-  modport cache(input address, instr, read, write, tag, data_width, inout data, output hit);
+  modport cache(input address, read, write, tag, data_width, inout data, output hit);
 endinterface
 
 interface instr_memory_bus_if #(
@@ -39,19 +37,6 @@ interface instr_memory_bus_if #(
   modport cache(input ready, data, output address, read);
 
   modport mmu(input address, read, output ready, data);
-endinterface
-
-interface instr_cache_bus_if #(
-    parameter int WIDTH = 256,
-    parameterint XLEN = 32
-) ();
-  logic [XLEN-1:0] address;
-  logic [31:0] instr_1, instr_2;
-  logic read, hit;
-
-  modport dispatch(input instr_1, instr_2, hit, output read);
-
-  modport cache(input address, read, output instr_1, instr_2, hit);
 endinterface
 
 interface memory_bus_if #(
