@@ -27,7 +27,7 @@ module instr_processer #(
   ) loader (
       .gsi(gsi),
       .addresses_in(addresses),
-      instrs_in(instrs),
+      .instrs_in(instrs),
       .hit(hit),
       .stop(stop),
       .addresses_out(load_addresses_out),
