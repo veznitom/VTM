@@ -38,7 +38,7 @@ module Decoder (
       7'b0110011: begin  // OP
 
       end
-      7'b0010011: begin // OP-IMM
+      7'b0010011: begin  // OP-IMM
 
       end
       BRANCH: begin

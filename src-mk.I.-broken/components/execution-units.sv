@@ -1,9 +1,12 @@
 import CustomTypes::*;
 
 module ALU (
-  input logic [31:0] data1, data2, address, imm,
-  input PID pid,
-  output logic [31:0] res
+    input logic [31:0] data1,
+    data2,
+    address,
+    imm,
+    input PID pid,
+    output logic [31:0] res
 );
   reg [31:0] dump;
 
@@ -36,73 +39,86 @@ module ALU (
 endmodule
 
 module Branch (
-  input logic [31:0] data1, data2, address, offset, 
-  input PID pid,
-  output logic [31:0] pc, rd
+    input logic [31:0] data1,
+    data2,
+    address,
+    offset,
+    input PID pid,
+    output logic [31:0] pc,
+    rd
 );
   always @(data1 or data2 or address or offset or pid) begin
     case (pid)
-      JAL: begin 
+      JAL: begin
         pc = address + $signed(offset);
         rd = address + 4;
       end
-      
+
       JALR: begin
         pc = data1 + $signed(offset);
         rd = address + 4;
       end
 
-      BEQ:  pc = (data1 === data2) ? (address + offset) : (address + 4);
-      BNE:  pc = (data1 !== data2) ? (address + offset) : (address + 4);
-      BLT:  pc = ($signed(data1) < $signed(data2)) ? (address + offset) : (address + 4);
-      BGE:  pc = (($signed(data1) == $signed(data2)) || ($signed(data1) > $signed(data2))) ? (address + offset) : (address + 4);
+      BEQ: pc = (data1 === data2) ? (address + offset) : (address + 4);
+      BNE: pc = (data1 !== data2) ? (address + offset) : (address + 4);
+      BLT: pc = ($signed(data1) < $signed(data2)) ? (address + offset) : (address + 4);
+      BGE:
+      pc = (($signed(data1) == $signed(data2)) || ($signed(data1) > $signed(data2))) ?
+          (address + offset) : (address + 4);
       BLTU: pc = (data1 < data2) ? (address + offset) : (address + 4);
       BGEU: pc = ((data1 == data2) || (data1 > data2)) ? (address + offset) : (address + 4);
-      
+
       default: begin
         pc = 32'hzzzzzzzz;
         rd = 32'hzzzzzzzz;
-      end 
+      end
     endcase
   end
 endmodule
 
 module LoadStore (
-  GlobalSignals global_signals,
-  // Station
-  input logic [31:0] base, data, offset, instr,
-  input PID pid,
-  input wire tag,
-  // Combo
-  input logic done,
-  output logic [31:0] result,
-  output logic finished,
-  // Memory
-  DataCacheBus data_cache
+    GlobalSignals global_signals,
+    // Station
+    input logic [31:0] base,
+    data,
+    offset,
+    instr,
+    input PID pid,
+    input wire tag,
+    // Combo
+    input logic done,
+    output logic [31:0] result,
+    output logic finished,
+    // Memory
+    DataCacheBus data_cache
 );
 
   wire load, store;
   WordSelect ws;
 
-  ParseLS parse (pid, ws);
+  ParseLS parse (
+      pid,
+      ws
+  );
 
   assign load = (pid == LB || pid == LH || pid == LW || pid == LBU || pid == LHU);
   assign store = (pid == SB || pid == SH || pid == SW);
 
   assign data_cache.data = store ? data : 32'hzzzzzzzz;
 
-  always @( posedge global_signals.clk ) begin
+  always @(posedge global_signals.clk) begin
     if (load) begin
-      if (done)
-        finished <= 1'b0;
+      if (done) finished <= 1'b0;
       if (finished) begin
         data_cache.address <= 32'hzzzzzzzz;
         data_cache.write <= 1'b0;
         data_cache.tag <= 1'b0;
       end else if (data_cache.hit) begin
-        case(ws)
-          BYTE: result <= {(pid == LB ? {24{data_cache.data[7]}} : {24{1'b0}}), data_cache.data[7:0]};
-          HALFWORD: result <= {(pid == LH ? {16{data_cache.data[15]}} : {16{1'b0}}), data_cache.data[15:0]};
+        case (ws)
+          BYTE:
+          result <= {(pid == LB ? {24{data_cache.data[7]}} : {24{1'b0}}), data_cache.data[7:0]};
+          HALFWORD:
+          result <= {(pid == LH ? {16{data_cache.data[15]}} : {16{1'b0}}), data_cache.data[15:0]};
           WORD: result <= data_cache.data;
           default: result = 32'hzzzzzzzz;
         endcase
@@ -128,7 +144,7 @@ module LoadStore (
       data_cache.write <= 1'b0;
       data_cache.tag <= 1'b0;
       data_cache.ws <= EMPTY;
-      
+
       result = 32'hzzzzzzzz;
       finished <= 1'b0;
     end

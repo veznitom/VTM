@@ -1,37 +1,39 @@
-module alu_combo #(
-    parameter int XLEN = 32
+module branch_combo #(
+    parameter int XLEN = 32,
+    parameter logic [7:0] ARBITER_ADDRESS = 8'h00
 ) (
     global_signals_if gsi,
     instr_issue_if issue[2],
     common_data_bus_if cdb[2]
 );
 
-  station_unit_if alu_feed ();
+  station_unit_if branch_feed ();
 
-  logic [XLEN-1:0] alu_result;
+  logic [XLEN-1:0] store_result, jump_result;
   logic get_bus, bus_granted, bus_selected;
 
 
   reservation_station #(
       .XLEN(XLEN),
       .SIZE(16)
-  ) alu_station (
+  ) branch_station (
       .gsi(gsi),
       .issue(issue),
       .cdb(cdb),
-      .exec_feed(alu_feed)
+      .exec_feed(branch_feed)
   );
 
-  alu #(
+  branch #(
       .XLEN(XLEN)
-  ) alu_0 (
-      .exec_feed(alu_feed),
-      .result(alu_result)
+  ) branch (
+      .exec_feed(branch_feed),
+      .store_result(store_result),
+      .jump_result(jump_result)
   );
 
   arbiter #(
-      .ADDRESS(8'h01)
-  ) alu_arbiter (
+      .ADDRESS(ARBITER_ADDRESS)
+  ) branch_arbiter (
       .select({cdb[1].select, cdb.select[0].select}),
       .get_bus(get_bus),
       .bus_granted(bus_granted),

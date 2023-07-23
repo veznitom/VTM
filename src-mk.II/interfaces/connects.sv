@@ -27,3 +27,21 @@ interface pc_interface_if#(
   modport rob(output jmp_address, write);
 endinterface
 
+interface register_values_if #(
+    parameterint XLEN = 32
+) ();
+  logic [XLEN-1:0] data_1, data_2;
+  logic [5:0] src_1, src_2;
+  logic valid_1, valid_2;
+endinterface
+
+interface instr_info_if #(
+    parameter int XLEN = 32
+);
+  logic [XLEN-1:0] addresses[2];
+  logic [XLEN-1:0] immediates[2];
+  instr_name_e instr_names[2];
+  instr_type_e instr_types[2];
+  src_dest_t regs[2];
+  flag_vector_t flags[2];
+endinterface

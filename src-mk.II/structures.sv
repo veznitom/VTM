@@ -1,6 +1,7 @@
 package structures;
 
   typedef enum reg [7:0] {
+    // Memory instructions
     LB,
     LH,
     LW,
@@ -9,6 +10,7 @@ package structures;
     SB,
     SH,
     SW,
+    // Bracnh and jump insructions
     BEQ,
     BNE,
     BLT,
@@ -17,6 +19,7 @@ package structures;
     BGEU,
     JAL,
     JALR,
+    // Arithmetic and logic instructions
     ADDI,
     SLTI,
     SLTIU,
@@ -38,9 +41,27 @@ package structures;
     AND,
     LUI,
     AUIPC,
+    // Multiplication and division instructions
+    MUL,
+    MULH,
+    MULHSU,
+    MULHU,
+    DIV,
+    DIVU,
+    REM,
+    REMU,
+    // Zircsr instructions
+    CSRRW,
+    CSRRS,
+    CSRRC,
+    CSRRWI,
+    CSRRSI,
+    CSRRCI,
+    // System instructions
     ECALL,
     EBREAK,
     FENCE,
+    // Custom value
     UNKNOWN
   } instr_name_e;
 
