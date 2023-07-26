@@ -1,5 +1,7 @@
+import structures::*;
+
 interface instr_issue_if #(
-    parameterint XLEN = 32
+    parameter int XLEN = 32
 ) ();
   logic [XLEN-1:0] address, immediate;
   logic [5:0] src_1, src_2, arn, rrn;
@@ -9,12 +11,12 @@ interface instr_issue_if #(
   st_type_e st_type;
 
   modport dispatch(
-      output address, immediate, src_1, src_2, arn, rrn, jump, tag, instr_type, instr_name,
+      output address, immediate, src_1, src_2, arn, rrn, jump, tag, st_type, instr_name,
       import clear, write
   );
 
   modport combo(
-      input address, immediate, src_1, src_2, arn, rrn, jump, tag, instr_type, instr_name
+      input address, immediate, src_1, src_2, arn, rrn, jump, tag, st_type, instr_name
   );
 
   modport rob(input address, arn, rrn, jump, tag);
@@ -29,8 +31,8 @@ interface instr_issue_if #(
       address <= task_address;
       immediate <= task_imm;
       instr_name <= task_instr_name;
-      src1 <= task_src_1;
-      src2 <= task_src_2;
+      src_1 <= task_src_1;
+      src_2 <= task_src_2;
       arn <= task_arn;
       rrn <= task_rrn;
       st_type <= task_st_type;
@@ -44,8 +46,8 @@ interface instr_issue_if #(
       address <= 32'hzzzzzzzz;
       immediate <= 32'hzzzzzzzz;
       instr_name <= UNKNOWN;
-      src1 <= 6'hzz;
-      src2 <= 6'hzz;
+      src_1 <= 6'hzz;
+      src_2 <= 6'hzz;
       arn <= 6'hzz;
       rrn <= 6'hzz;
       st_type <= XX;

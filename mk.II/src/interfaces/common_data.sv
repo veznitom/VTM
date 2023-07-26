@@ -1,9 +1,10 @@
 interface common_data_bus_if #(
     parameterint XLEN = 32
 ) ();
-  wire [XLEN-1:0] result, address, jmp_address;
-  wire [5:0] arn, rrn;
-  wire free, reg_file_we, data_cache_we;
+  logic [XLEN-1:0] result, address, jmp_address;
+  logic [5:0] arn, rrn;
+  logic [3:0] select;
+  logic free, reg_file_we, data_cache_we;
 
   modport combo(input arn, inout result, address, jmp_address, select, output rrn, reg_file_we);
 

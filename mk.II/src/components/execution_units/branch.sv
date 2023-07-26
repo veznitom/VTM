@@ -1,3 +1,5 @@
+import structures::*;
+
 module branch #(
     parameter int XLEN = 32
 ) (

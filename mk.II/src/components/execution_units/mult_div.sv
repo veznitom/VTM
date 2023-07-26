@@ -1,3 +1,5 @@
+import structures::*;
+
 module mult_div #(
     parameter int XLEN = 32
 ) (
@@ -29,7 +31,7 @@ module mult_div #(
       DIVU: result = divident_u;
       REM: result = remainder_s;
       REMU: result = remainder_u;
-      default: temp_result = {XLEN{1'hz}};
+      default: result = {XLEN{1'hz}};
     endcase
   end
 endmodule

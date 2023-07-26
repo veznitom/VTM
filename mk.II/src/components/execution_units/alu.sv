@@ -1,3 +1,5 @@
+import structures::*;
+
 module alu #(
     parameter int XLEN = 32
 ) (
@@ -10,31 +12,31 @@ module alu #(
 
   always_comb begin
     case (exec_feed.instr_name)
-      // Register-Immediate operations
-      ADDI:  result = data_1 + immediate;
-      SLTI:  result = ($signed(data_1) < $signed(immediate));
-      SLTIU: result = data_1 < immediate;
-      XORI:  result = data_1 ^ immediate;
-      ORI:   result = data_1 | immediate;
-      ANDI:  result = data_1 & immediate;
-      SLLI:  {dump,result} = data_1 << immediate[4:0];
-      SRLI:  result = data_1 >> immediate[4:0];
-      SRAI:  result = $signed(data_1) >>> immediate[4:0];
+      // Register-exec_feed.immediate operations
+      ADDI:  result = exec_feed.data_1 + exec_feed.immediate;
+      SLTI:  result = ($signed(exec_feed.data_1) < $signed(exec_feed.immediate));
+      SLTIU: result = exec_feed.data_1 < exec_feed.immediate;
+      XORI:  result = exec_feed.data_1 ^ exec_feed.immediate;
+      ORI:   result = exec_feed.data_1 | exec_feed.immediate;
+      ANDI:  result = exec_feed.data_1 & exec_feed.immediate;
+      SLLI:  {dump,result} = exec_feed.data_1 << exec_feed.immediate[4:0];
+      SRLI:  result = exec_feed.data_1 >> exec_feed.immediate[4:0];
+      SRAI:  result = $signed(exec_feed.data_1) >>> exec_feed.immediate[4:0];
       // Register-Register operations
-      ADD:   result = data_1 + data_2;
-      SUB:   result = data_1 - data_2;
-      SLL:   {dump, result} = data_1 << data_2[4:0];
-      SLT:   result = $signed(data_1) < $signed(data_2);
-      SLTU:  result = data_1 < data_2;
-      XOR:   result = data_1 ^ data_2;
-      SRL:   result = data_1 >> data_2[4:0];
-      SRA:   result = $signed(data_1) >>> data_2[4:0];
-      OR:    result = data_1 | data_2;
-      AND:   result = data_1 & data_2;
+      ADD:   result = exec_feed.data_1 + exec_feed.data_2;
+      SUB:   result = exec_feed.data_1 - exec_feed.data_2;
+      SLL:   {dump, result} = exec_feed.data_1 << exec_feed.data_2[4:0];
+      SLT:   result = $signed(exec_feed.data_1) < $signed(exec_feed.data_2);
+      SLTU:  result = exec_feed.data_1 < exec_feed.data_2;
+      XOR:   result = exec_feed.data_1 ^ exec_feed.data_2;
+      SRL:   result = exec_feed.data_1 >> exec_feed.data_2[4:0];
+      SRA:   result = $signed(exec_feed.data_1) >>> exec_feed.data_2[4:0];
+      OR:    result = exec_feed.data_1 | exec_feed.data_2;
+      AND:   result = exec_feed.data_1 & exec_feed.data_2;
       // Special cases
-      LUI:   result = immediate;
-      AUIPC: result = address + immediate;
-      default: res = {XLEN1{1'hz}};
+      LUI:   result = exec_feed.immediate;
+      AUIPC: result = exec_feed.address + exec_feed.immediate;
+      default: result = {XLEN{1'hz}};
     endcase
   end
 endmodule

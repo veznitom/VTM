@@ -26,9 +26,9 @@ interface register_query_if;
   endtask
 
   task automatic clear_results();
-    ret_renamed = 6'hzz;
-    reg1_ren = 6'hzz;
-    reg2_ren = 6'hzz;
+    ret_renamed_num = 6'hzz;
+    reg_1_ren_num = 6'hzz;
+    reg_1_ren_num = 6'hzz;
   endtask
 
   task automatic read(input logic [4:0] reg_1, input logic [4:0] reg_2, input logic [4:0] reg_3,
@@ -36,7 +36,7 @@ interface register_query_if;
     reg_1_num = reg_1;
     reg_2_num = reg_2;
     reg_3_num = reg_3;
-    get_renamed = get_ren;
+    get_renamed_num = get_ren_num;
     tag = task_tag;
   endtask
 endinterface

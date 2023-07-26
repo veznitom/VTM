@@ -1,3 +1,5 @@
+import structures::*;
+
 module load_store #(
     parameter int XLEN = 32
 ) (

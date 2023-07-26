@@ -1,13 +1,15 @@
+import structures::*;
+
 interface station_unit_if #(
     parameterint XLEN = 32
 ) ();
-  logic [XLEN-1:0] data_1, data_2, addrres, immediate;
+  logic [XLEN-1:0] data_1, data_2, address, immediate;
   logic [5:0] rrn;
   instr_name_e instr_name;
 
-  modport station(output data_1, data_2, address, immediate, rrn, tag, instr_name, import clear);
+  modport station(output data_1, data_2, address, immediate, rrn, instr_name, import clear);
 
-  modport exec(input data_1, data_2, address, immediate, rrn, tag, instr_name);
+  modport exec(input data_1, data_2, address, immediate, rrn, instr_name);
 
   task automatic clear();
     data_1 <= {XLEN{1'hz}};
@@ -24,7 +26,7 @@ interface station_unit_if #(
     input logic [5:0] task_rrn;
     begin
       data_1 <= task_data_1;
-      data_2 <= taks_data_2;
+      data_2 <= task_data_2;
       address <= task_address;
       immediate <= task_imm;
       instr_name <= task_instr_name;

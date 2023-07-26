@@ -1,4 +1,4 @@
-`include "structures.sv"
+import structures::*;
 
 module cpu #(
     parameter int XLEN = 32
@@ -9,9 +9,36 @@ module cpu #(
     reset
 );
 
-  mem_mng_unit mmu ();
-  cache #(.XLEN(XLEN)) instr_cache ();
-  cache #(.XLEN(XLEN)) data_cache ();
+  global_signals_if gsi ();
+  cache_memory_bus_if data_memory_bus (), instr_memory_bus ();
+
+  cache_bus_if instr_cache_bus ();
+  cache_bus_if data_cache_bus ();
+
+  common_data_bus_if cdb[2];
+
+  mem_mng_unit mmu (
+      .gsi(gsi),
+      .data_bus(data_bus),
+      .instr_bus(instr_bus),
+      .memory_bus(memory_bus)
+  );
+  cache #(
+      .XLEN(XLEN)
+  ) instr_cache (
+      .gsi(gsi),
+      .cache_bus(instr_cache_bus),
+      .memory_bus(instr_memory_bus),
+      .cdb(_)
+  );
+  cache #(
+      .XLEN(XLEN)
+  ) data_cache (
+      .gsi(gsi),
+      .cache_bus(data_cache_bus),
+      .memory_bus(data_memory_bus),
+      .cdb(cdb)
+  );
 
   program_counter #(.XLEN(XLEN)) pc ();
   instr_processer #(.XLEN(XLEN)) instr_processer ();
