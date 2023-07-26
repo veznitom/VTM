@@ -2,9 +2,9 @@ module mult_div_combo #(
     parameter int XLEN = 32,
     parameter logic [7:0] ARBITER_ADDRESS = 8'h00
 ) (
-    global_signals_if gsi,
-    instr_issue_if issue[2],
-    common_data_bus_if cdb[2]
+    global_signals_if.rest gsi,
+    instr_issue_if.combo issue[2],
+    common_data_bus_if.combo cdb[2]
 );
 
   station_unit_if mult_div_feed ();

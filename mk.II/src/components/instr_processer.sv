@@ -6,8 +6,8 @@ module instr_processer #(
 ) (
     global_signals_if gsi,
     // Loaders
-    input logic [XLEN-1:0] addresses[2],
-    input logic [31:0] instrs[2],
+    input logic [XLEN-1:0] address[2],
+    input logic [31:0] instr[2],
     input logic [1:0] hit,
     // Resolvers
     register_query_if query[2],
@@ -17,7 +17,7 @@ module instr_processer #(
 );
   logic stop;
 
-  logic [XLEN-1:0] load_addresses_out[2];
+  logic [XLEN-1:0] load_address_out[2];
   logic [31:0] load_instrs_out[2];
 
   instr_info_if dec_to_res[2] (), res_to_issue[2] ();
@@ -26,11 +26,11 @@ module instr_processer #(
       .XLEN(XLEN)
   ) loader (
       .gsi(gsi),
-      .addresses_in(addresses),
+      .address_in(address),
       .instrs_in(instrs),
       .hit(hit),
       .stop(stop),
-      .addresses_out(load_addresses_out),
+      .address_out(load_address_out),
       .instrs_out(load_instrs_out)
   );
 
@@ -39,7 +39,7 @@ module instr_processer #(
   ) decoder_0 (
       .gsi(gsi),
       .instr_info(dec_to_res[0]),
-      .address_in(load_addresses_out[0]),
+      .address_in(load_address_out[0]),
       .instr(load_instrs_out[0]),
       .stop(stop)
   );
@@ -49,7 +49,7 @@ module instr_processer #(
   ) decoder_1 (
       .gsi(gsi),
       .instr_info(dec_to_res[1]),
-      .address_in(load_addresses_out[1]),
+      .address_in(load_address_out[1]),
       .instr(load_instrs_out[1]),
       .stop(stop)
   );

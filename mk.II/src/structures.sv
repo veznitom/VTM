@@ -130,7 +130,7 @@ package structures;
     reg completed, jumps, tag, ignore;
   } rob_record_t;
 
-  typedef struct packed {logic writes, jumps, uses_imm;} flag_vector_t;
+  typedef struct packed {logic writes, jumps, uses_imm, tag, mem;} flag_vector_t;
 
   typedef struct packed {logic [5:0] rd, rs1, rs2;} src_dest_t;
 endpackage
