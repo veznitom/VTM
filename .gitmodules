@@ -1,7 +1,7 @@
-[submodule "rv32i-tests/riscv-tests"]
+[submodule "rv32i_tests/riscv_tests"]
 	path = rv32i-tests/riscv-tests
 	url = https://github.com/riscv-software-src/riscv-tests.git
 
-[submodule "rv32i-tests/riscv-tests/env"]
+[submodule "rv32i_tests/riscv_tests/env"]
 	path = rv32i-tests/riscv-tests/env
 	url = https://github.com/riscv/riscv-test-env.git
