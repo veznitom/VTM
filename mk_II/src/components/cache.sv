@@ -21,34 +21,43 @@ module cache #(
 
   typedef struct packed {
     logic [XLEN-(SetBits+WordBits+2)-1:0] tag;
-    logic [WordBits-1:0][XLEN-1:0] words;
+    logic [WORDS-1:0][XLEN-1:0] words;
     cache_state_e state;
   } cache_set_t;
 
   typedef struct packed {
     logic [XLEN-1:0] address;
-    logic [WordBits-1:0][XLEN-1:0] words;
+    logic [WORDS-1:0][XLEN-1:0] words;
   } wb_record_t;
 
   cache_set_t data[SETS];
 
   wb_record_t write_buffer[$:SETS];
 
+  assign byte_select[0] = cache_bus[0].address[1:0];
+  assign word_select[0] = cache_bus[0].address[WordBits+1:2];
+  assign set_select[0]  = cache_bus[0].address[SetBits+WordBits+1:WordBits+2];
+  assign byte_select[1] = cache_bus[1].address[1:0];
+  assign word_select[1] = cache_bus[1].address[WordBits+1:2];
+  assign set_select[1]  = cache_bus[1].address[SetBits+WordBits+1:WordBits+2];
+
   always_comb begin : data_reset
     if (gsi.reset) begin
       foreach (data[j]) begin
-        data[j] = '{'z, 'z, INVALID};
+        data[j] = '{'z, '{'z, 'z, 'z, 'z}, INVALID};
       end
     end
   end
 
   genvar i;
   generate
-    for (i = 0; i < PORTS; i++) begin : g_
+    for (i = 0; i < PORTS; i++) begin : gen_per_port
 
       always_comb begin : port_reset
         if (gsi.reset) begin
           cache_bus[i].hit = 0;
+          memory_bus.read  = 0;
+          memory_bus.write = 0;
         end
       end
 
@@ -76,7 +85,8 @@ module cache #(
 
       always_ff @(posedge gsi.clk) begin
         if (cache_bus[i].write) begin
-          if (data[set_select[i]].state == MODIFIED) begin
+          if (cache_bus[i].address[XLEN-1:(SetBits+WordBits+2)] == data[set_select[i]].tag
+          && data[set_select[i]].state == MODIFIED) begin
             write_buffer.push_back('{{data[set_select[i]].tag, set_select[i], {WordBits + 2{1'h0}}},
                                    data[set_select[i]].words});
           end else begin

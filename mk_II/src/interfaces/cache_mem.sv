@@ -11,7 +11,7 @@ endinterface
 
 // From caches to memory management unit
 interface cache_memory_bus_if #(
-    parameter int BUS_WIDTH_BYTE = 256,
+    parameter int BUS_WIDTH_BYTE = 16,
     parameter int BIT_WIDTH_BITS = $clog2(BUS_WIDTH_BYTE),
     parameter int XLEN = 32
 ) ();
