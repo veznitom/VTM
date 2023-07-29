@@ -23,14 +23,14 @@ module cache_test ();
   );
 
   initial begin
-    clk   <= 0;
-    reset <= 1;
-    #20 reset <= 0;
-    #10 cache_bus[0].address <= 10;
-    cache_bus[0].read <= 1;
+    clk   = 0;
+    reset = 1;
+    #20 reset = 0;
+    #10 cache_bus[0].address = 10;
+    cache_bus[0].read = 1;
     #100 $finish;
   end
 
-  always clk <= #10 ~clk;
+  always #10 clk <= ~clk;
 
 endmodule
