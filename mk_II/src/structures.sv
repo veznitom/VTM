@@ -132,7 +132,7 @@ package structures;
 
   typedef struct packed {logic writes, jumps, uses_imm, tag, mem;} flag_vector_t;
 
-  typedef struct packed {logic [5:0] rd, rs_1, rs_2;} src_dest_t;
+  typedef struct packed {logic [5:0] rd, rs_1, rs_2, rn;} src_dest_t;
 endpackage
 
 

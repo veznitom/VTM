@@ -5,11 +5,87 @@ if there is no free register for rename then it stalls the loader and decoder
 module resolver #(
     parameter int XLEN = 32
 ) (
-    global_signals_if gsi,
-    register_query_if query[2],
-    instr_info_if instr_info_in[2], instr_info_out[2],
-    inout logic stop
+    global_signals_if.rest gsi,
+    register_query_if.resolv query[2],
+    instr_info_if instr_info_in[2],
+    instr_info_out[2],
+    inout logic stop_in,
+    output logic stop_out
 );
-  TODO();
+
+  instr_types_e instr_type;
+
+  logic tag_active;
+
+  function automatic bit match_regs(input logic [5:0] rd, input logic [5:0] rs);
+    return (rd != 6'h00 && rd == rs);
+  endfunction
+
+  always_ff @(posedge gsi.clk) begin : fetch
+    if (!stop && instr_info_in[0].instr_name != UNKNOWN
+    && instr_info_in[1].instr_name != UNKNOWN) begin
+      case ({
+        instr_info_in[0].flags.jumps, instr_info_in[1].flags.jumps
+      })
+        2'b00:   instr_type <= NJ1NJ2;
+        2'b01:   instr_type <= NJ1J2;
+        2'b10:   instr_type <= J1NJ2;
+        2'b11:   instr_type <= J1J2;
+        default: instr_type <= ERROR;
+      endcase
+    end
+
+    query[0].reg_1_num <= instr_info_in[0].regs.rs_1;
+    query[0].reg_2_num <= instr_info_in[0].regs.rs_2;
+    query[0].reg_3_num <= instr_info_in[0].regs.rd;
+    if (instr_info_in[0].flags.jumps) query[0].get_renamed_num <= 1'h1;
+    query[0].tag <= tag_active;
+
+    query[1].reg_1_num <= instr_info_in[1].regs.rs_1;
+    query[1].reg_2_num <= instr_info_in[1].regs.rs_2;
+    query[1].reg_3_num <= instr_info_in[1].regs.rd;
+    if (instr_info_in[1].flags.jumps) query[1].get_renamed_num <= 1'h1;
+    query[1].tag <= tag_active;
+
+    stop_out <= 1'h1;
+  end
+
+  always_ff @(posedge gsi.clk) begin : prepare
+    if (stop_out) begin
+      instr_info_out[0].address <= instr_info_in[0].address;
+      instr_info_out[0].immediate <= instr_info_in[0].immediate;
+      instr_info_out[0].instr_name <= instr_info_in[0].instr_name;
+      instr_info_out[0].regs.rs_1 <= query[0].reg_1_ren_num;
+      instr_info_out[0].regs.rs_2 <= query[0].reg_2_ren_num;
+      instr_info_out[0].regs.rd <= instr_info_in[0].regs.rd;
+      if (dec_instr1.writes && instr_info_in[0].regs.rd != 5'h0)
+        instr_info_out[0].regs.rn <= query[0].ret_renamed_num;
+      else instr_info_out[0].regs.rn <= 6'h00;
+      instr_info_out[0].st_type <= instr_info_in[0].st_type;
+      instr_info_out[0].flags <= instr_info_in[0].flags;
+      instr_info_out[0].flags.tag <= instr_info_in[0].flags.jumps ? 1'b0 : tag_active;
+
+      instr_info_out[1].address <= instr_info_in[1].address;
+      instr_info_out[1].immediate <= dec_instr2.immediate;
+      instr_info_out[1].instr_name <= dec_instr2.instr_name;
+      if (match_regs(instr_info_in[0].regs.rd, instr_info_in[1].regs.rs_1))
+        instr_info_out[1].regs.rs_1 <= query[0].ret_renamed_num;
+      else instr_info_out[1].regs.rs_1 <= query[1].reg_1_ren_num;
+      if (match_regs(instr_info_in[0].regs.rd, instr_info_in[1].regs.rs_2))
+        instr_info_out[1].regs.rs_2 <= query[0].ret_renamed_num;
+      else instr_info_out[1].regs.rs_2 <= query[1].reg_2_ren_num;
+      instr_info_out[1].regs.rd <= instr_info_in[1].regs.rd;
+      if (instr_info_in[1].flags.writes && instr_info_in[1].regs.rd != 6'h00)
+        instr_info_out[1].rrn <= query[1].ret_renamed_num;
+      else instr_info_out[1].rrn <= 6'h00;
+      instr_info_out[1].st_type <= instr_info_in[1].st_type;
+      instr_info_out[1].flags   <= instr_info_in[1].flags;
+      if (instr_info_in[1].flags.jumps) instr_info_out[1].flags.tag <= 1'b0;
+      else if (instr_info_in[0].flags.jumps) instr_info_out[1].flags.tag <= 1'b1;
+      else instr_info_out[1].flags.tag <= tag_active;
+
+      stop_out <= 1'h0;
+    end
+  end
 endmodule
 

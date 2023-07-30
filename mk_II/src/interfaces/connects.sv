@@ -35,10 +35,10 @@ endinterface
 interface instr_info_if #(
     parameter int XLEN = 32
 );
-  logic [XLEN-1:0] address[2];
-  logic [XLEN-1:0] immediate[2];
-  instr_name_e instr_name[2];
-  st_type_e st_type[2];
-  src_dest_t regs[2];
-  flag_vector_t flags[2];
+  logic [XLEN-1:0] address;
+  logic [XLEN-1:0] immediate;
+  instr_name_e instr_name;
+  st_type_e st_type;
+  src_dest_t regs;
+  flag_vector_t flags;
 endinterface

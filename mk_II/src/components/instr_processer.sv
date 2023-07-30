@@ -39,7 +39,7 @@ module instr_processer #(
   ) decoder_0 (
       .gsi(gsi),
       .instr_info(dec_to_res[0]),
-      .address_in(load_address_out[0]),
+      .address(load_address_out[0]),
       .instr(load_instrs_out[0]),
       .stop(stop)
   );
@@ -49,7 +49,7 @@ module instr_processer #(
   ) decoder_1 (
       .gsi(gsi),
       .instr_info(dec_to_res[1]),
-      .address_in(load_address_out[1]),
+      .address(load_address_out[1]),
       .instr(load_instrs_out[1]),
       .stop(stop)
   );
