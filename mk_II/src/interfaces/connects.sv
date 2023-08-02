@@ -28,15 +28,14 @@ interface register_values_if #(
   logic [XLEN-1:0] data_1, data_2;
   logic [5:0] src_1, src_2;
   logic valid_1, valid_2;
-  modport cmp(inout data_1, data_2, src_1, src_2, valid_1, valid_2);
+  modport cmp(input data_1, data_2, valid_1, valid_2, output src_1, src_2);
   modport reg_file(input src_1, src_2, output data_1, data_2, valid_1, valid_2);
 endinterface
 
 interface instr_info_if #(
     parameter int XLEN = 32
 );
-  logic [XLEN-1:0] address;
-  logic [XLEN-1:0] immediate;
+  logic [XLEN-1:0] address, immediate;
   instr_name_e instr_name;
   st_type_e st_type;
   src_dest_t regs;

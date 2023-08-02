@@ -7,5 +7,13 @@ module reservation_station #(
     common_data_bus_if cdb[2],
     station_unit_if exec_feed
 );
-    TODO();
+
+  typedef struct packed {
+    reg [31:0] data_1, data_2, address, imm;
+    reg [5:0] src_1, src_2, rrn;
+    reg valid_1, valid_2, tag, skip;
+    instr_name_e instr_name;
+  } station_record_t;
+
+  TODO();
 endmodule

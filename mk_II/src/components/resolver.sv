@@ -35,16 +35,18 @@ module resolver #(
       endcase
     end
 
-    query[0].reg_1_num <= instr_info_in[0].regs.rs_1;
-    query[0].reg_2_num <= instr_info_in[0].regs.rs_2;
-    query[0].reg_3_num <= instr_info_in[0].regs.rd;
-    if (instr_info_in[0].flags.jumps) query[0].get_renamed_num <= 1'h1;
+    query[0].inputs.rs_1 <= instr_info_in[0].regs.rs_1;
+    query[0].inputs.rs_2 <= instr_info_in[0].regs.rs_2;
+    query[0].inputs.rd   <= instr_info_in[0].regs.rd;
+    if (instr_info_in[0].flags.writes) query[0].raname <= 1'h1;
+    else query[0].raname <= 1'h0;
     query[0].tag <= tag_active;
 
-    query[1].reg_1_num <= instr_info_in[1].regs.rs_1;
-    query[1].reg_2_num <= instr_info_in[1].regs.rs_2;
-    query[1].reg_3_num <= instr_info_in[1].regs.rd;
-    if (instr_info_in[1].flags.jumps) query[1].get_renamed_num <= 1'h1;
+    query[1].inputs.rs_1 <= instr_info_in[1].regs.rs_1;
+    query[1].inputs.rs_2 <= instr_info_in[1].regs.rs_2;
+    query[1].inputs.rd <= instr_info_in[1].regs.rd;
+    if (instr_info_in[1].flags.writes) query[1].rename <= 1'h1;
+    else query[1].rename <= 1'h0;
     query[1].tag <= tag_active;
 
     stop_out <= 1'h1;
@@ -55,11 +57,11 @@ module resolver #(
       instr_info_out[0].address <= instr_info_in[0].address;
       instr_info_out[0].immediate <= instr_info_in[0].immediate;
       instr_info_out[0].instr_name <= instr_info_in[0].instr_name;
-      instr_info_out[0].regs.rs_1 <= query[0].reg_1_ren_num;
-      instr_info_out[0].regs.rs_2 <= query[0].reg_2_ren_num;
+      instr_info_out[0].regs.rs_1 <= query[0].outputs.rs_1;
+      instr_info_out[0].regs.rs_2 <= query[0].outputs.rs_2;
       instr_info_out[0].regs.rd <= instr_info_in[0].regs.rd;
       if (dec_instr1.writes && instr_info_in[0].regs.rd != 5'h0)
-        instr_info_out[0].regs.rn <= query[0].ret_renamed_num;
+        instr_info_out[0].regs.rn <= query[0].outputs.rn;
       else instr_info_out[0].regs.rn <= 6'h00;
       instr_info_out[0].st_type <= instr_info_in[0].st_type;
       instr_info_out[0].flags <= instr_info_in[0].flags;
@@ -69,14 +71,14 @@ module resolver #(
       instr_info_out[1].immediate <= dec_instr2.immediate;
       instr_info_out[1].instr_name <= dec_instr2.instr_name;
       if (match_regs(instr_info_in[0].regs.rd, instr_info_in[1].regs.rs_1))
-        instr_info_out[1].regs.rs_1 <= query[0].ret_renamed_num;
-      else instr_info_out[1].regs.rs_1 <= query[1].reg_1_ren_num;
+        instr_info_out[1].regs.rs_1 <= query[0].outputs.rn;
+      else instr_info_out[1].regs.rs_1 <= query[1].outputs.rs_1;
       if (match_regs(instr_info_in[0].regs.rd, instr_info_in[1].regs.rs_2))
-        instr_info_out[1].regs.rs_2 <= query[0].ret_renamed_num;
-      else instr_info_out[1].regs.rs_2 <= query[1].reg_2_ren_num;
+        instr_info_out[1].regs.rs_2 <= query[0].outputs.rn;
+      else instr_info_out[1].regs.rs_2 <= query[1].outputs.rs_2;
       instr_info_out[1].regs.rd <= instr_info_in[1].regs.rd;
       if (instr_info_in[1].flags.writes && instr_info_in[1].regs.rd != 6'h00)
-        instr_info_out[1].rrn <= query[1].ret_renamed_num;
+        instr_info_out[1].rrn <= query[1].outputs.rn;
       else instr_info_out[1].rrn <= 6'h00;
       instr_info_out[1].st_type <= instr_info_in[1].st_type;
       instr_info_out[1].flags   <= instr_info_in[1].flags;

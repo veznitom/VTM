@@ -6,10 +6,25 @@ module issuer #(
     parameter int XLEN = 32
 ) (
     global_signals_if gsi,
-    instr_issue_if issue[2],
-    instr_info_if instr_info[2],
-    input logic [2:0] st_fullness,
+    instr_issue_if instr_info_in[2],
+    instr_info_out[2],
+    input logic st_fullness[4],
     output logic stop
 );
-    TODO();
+
+  always_ff @(posedge gsi.clk) begin : issue
+    if (instr_info[0].instr_name != UNKNOWN && instr_info[1].instr_name != UNKNOWN) begin
+      if (!st_fullness[instr_info[0].st_type] && !st_fullness[instr_info[1].st_type]) begin
+        for (int i = 0; i < 2; i++) begin
+          instr_info_out[i].address <= instr_info_in[i].address;
+          instr_info_out[i].immediate <= instr_info_in[i].immediate;
+          instr_info_out[i].instr_name <= instr_info_in[i].instr_name;
+          instr_info_out[i].st_type <= instr_info_in[i].st_type;
+          instr_info_out[i].regs <= instr_info_in[i].regs;
+          instr_info_out[i].flags <= instr_info_in[i].flags;
+        end
+        stop <= 1'h0;
+      end else stop <= 1'h1;
+    end
+  end
 endmodule

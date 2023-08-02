@@ -15,7 +15,8 @@ module cpu #(
   cache_bus_if data_cache_bus ();
   common_data_bus_if cdb[2] ();
   pc_interface_if pc_if ();
-  instr_issue_if issue_pre[2] (), issue_post[2] ();
+  instr_info_if instr_info[2] ();
+  instr_issue_if issue[2] ();
   register_query_if query[2] ();
   register_values_if reg_val[2] ();
 
@@ -82,10 +83,17 @@ module cpu #(
       .issue(issue)
   );
 
-  comparator comparator (
-      .issue_in(issue_pre),
-      .issue_in(issue_post),
-      .reg_val(reg_val),
+  comparator comparator_1 (
+      .instr_info(instr_info[0]),
+      .issue_in(issue[0]),
+      .reg_val(reg_val[0]),
+      .cdb(cdb)
+  );
+
+  comparator comparator_2 (
+      .instr_info(instr_info[1]),
+      .issue_in(issue[1]),
+      .reg_val(reg_val[1]),
       .cdb(cdb)
   );
 
