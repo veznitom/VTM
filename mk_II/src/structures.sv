@@ -90,6 +90,7 @@ package structures;
     AL,
     LS,
     MD,
+    RB,
     XX
   } st_type_e;
 

@@ -4,7 +4,8 @@ module alu_combo #(
 ) (
     global_signals_if.rest gsi,
     instr_issue_if.combo issue[2],
-    common_data_bus_if.combo cdb[2]
+    common_data_bus_if.combo cdb[2],
+    output logic full
 );
 
   station_unit_if alu_feed ();
@@ -20,7 +21,9 @@ module alu_combo #(
       .gsi(gsi),
       .issue(issue),
       .cdb(cdb),
-      .exec_feed(alu_feed)
+      .exec_feed(alu_feed),
+      .next(bus_granted),
+      .full(full)
   );
 
   alu #(

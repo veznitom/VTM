@@ -15,15 +15,14 @@ module cpu #(
   cache_bus_if data_cache_bus ();
   common_data_bus_if cdb[2] ();
   pc_interface_if pc_if ();
-  instr_info_if instr_info[2] ();
   instr_issue_if issue[2] ();
   register_query_if query[2] ();
   register_values_if reg_val[2] ();
+  fullness_indication_if fullness ();
 
   logic [XLEN-1:0] addresses[2];
   logic [31:0] instrs[2];
   logic [1:0] hit;
-  logic [2:0] st_fullness;
 
   mem_mng_unit mmu (
       .gsi(gsi),
@@ -61,7 +60,10 @@ module cpu #(
       .hit(hit),
       .query(query),
       .issue(issue),
-      .st_fullness(st_fullness)
+      .fullness(fullness),
+      .issue(issue),
+      .reg_val(reg_val),
+      .cdb(cdb)
   );
 
   register_file #(
@@ -80,21 +82,8 @@ module cpu #(
       .gsi(gsi),
       .pc(pc_if),
       .cdb(cdb),
-      .issue(issue)
-  );
-
-  comparator comparator_1 (
-      .instr_info(instr_info[0]),
-      .issue_in(issue[0]),
-      .reg_val(reg_val[0]),
-      .cdb(cdb)
-  );
-
-  comparator comparator_2 (
-      .instr_info(instr_info[1]),
-      .issue_in(issue[1]),
-      .reg_val(reg_val[1]),
-      .cdb(cdb)
+      .issue(issue),
+      .full(fullnes.rob)
   );
 
   alu_combo #(
@@ -103,7 +92,8 @@ module cpu #(
   ) alu_combo (
       .gsi  (gsi),
       .issue(issue_post),
-      .cdb  (cdb)
+      .cdb  (cdb),
+      .full (fullnes.alu)
   );
   branch_combo #(
       .XLEN(XLEN),
@@ -111,7 +101,8 @@ module cpu #(
   ) branch_combo (
       .gsi  (gsi),
       .issue(issue_post),
-      .cdb  (cdb)
+      .cdb  (cdb),
+      .full (fullnes.branch)
   );
   load_store_combo #(
       .XLEN(XLEN),
@@ -120,7 +111,8 @@ module cpu #(
       .gsi(gsi),
       .issue(issue_post),
       .cdb(cdb),
-      .data_bus(data_cache_bus)
+      .data_bus(data_cache_bus),
+      .full(fullnes.load_store)
   );
   mult_div_combo #(
       .XLEN(XLEN),
@@ -128,7 +120,8 @@ module cpu #(
   ) mult_div_combo (
       .gsi  (gsi),
       .issue(issue_post),
-      .cdb  (cdb)
+      .cdb  (cdb),
+      .full (fullnes.mult_div)
   );
 
   assign addresses = {pc_if.address, pc_if.address + 4};

@@ -41,3 +41,7 @@ interface instr_info_if #(
   src_dest_t regs;
   flag_vector_t flags;
 endinterface
+
+interface fullness_indication_if;
+  logic alu, bracnh, load_store, rob, mult_div;
+endinterface

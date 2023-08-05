@@ -6,15 +6,24 @@ module issuer #(
     parameter int XLEN = 32
 ) (
     global_signals_if gsi,
-    instr_issue_if instr_info_in[2],
+    instr_info_if instr_info_in[2],
     instr_info_out[2],
-    input logic st_fullness[4],
+    fullness_indication_if fullnes,
     output logic stop
 );
 
+  logic fullnes_split[5];
+
+  assign fullnes_split[AL] = fullnes.alu;
+  assign fullnes_split[BR] = fullnes.bracnh;
+  assign fullnes_split[LS] = fullnes.load_store;
+  assign fullnes_split[RB] = fullnes.rob;
+  assign fullnes_split[MD] = fullnes.mult_div;
+
   always_ff @(posedge gsi.clk) begin : issue
     if (instr_info[0].instr_name != UNKNOWN && instr_info[1].instr_name != UNKNOWN) begin
-      if (!st_fullness[instr_info[0].st_type] && !st_fullness[instr_info[1].st_type]) begin
+      if (!st_fullness[instr_info[0].st_type] && !st_fullness[instr_info[1].st_type]
+      && !fullnes[RB]) begin
         for (int i = 0; i < 2; i++) begin
           instr_info_out[i].address <= instr_info_in[i].address;
           instr_info_out[i].immediate <= instr_info_in[i].immediate;

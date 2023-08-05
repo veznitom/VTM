@@ -13,14 +13,18 @@ module instr_processer #(
     register_query_if query[2],
     // Issuesrs
     instr_issue_if issue[2],
-    input logic [2:0] st_fullness
+    fullness_indication_if fullness,
+    // Comparator
+    instr_issue_if issue,
+    register_values_if reg_val,
+    common_data_bus_if cdb[2]
 );
   logic stop;
 
   logic [XLEN-1:0] load_address_out[2];
   logic [31:0] load_instrs_out[2];
 
-  instr_info_if dec_to_res[2] (), res_to_issue[2] ();
+  instr_info_if dec_to_res[2] (), res_to_issue[2] (), issue_to_cmp[2] ();
 
   loader #(
       .XLEN(XLEN)
@@ -68,10 +72,24 @@ module instr_processer #(
       .XLEN(XLEN)
   ) issuer (
       .gsi(gsi),
-      .issue(issue),
-      .instr_info_if(res_to_issue),
-      .st_fullness(st_fullness),
+      .instr_info_in(res_to_issue),
+      .instr_info_out(issue_to_cmp),
+      .fullness(fullness),
       .stop(stop)
+  );
+
+  comparator comparator_1 (
+      .instr_info(issue_to_cmp[0]),
+      .issue_in(issue[0]),
+      .reg_val(reg_val[0]),
+      .cdb(cdb)
+  );
+
+  comparator comparator_2 (
+      .instr_info(issue_to_cmp[1]),
+      .issue_in(issue[1]),
+      .reg_val(reg_val[1]),
+      .cdb(cdb)
   );
 endmodule
 

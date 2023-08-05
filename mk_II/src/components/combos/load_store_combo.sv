@@ -5,7 +5,8 @@ module load_store_combo #(
     global_signals_if.rest gsi,
     instr_issue_if.combo issue[2],
     common_data_bus_if.combo cdb[2],
-    cache_bus_if.comp data_bus
+    cache_bus_if.comp data_bus,
+    output logic full
 );
 
   station_unit_if load_store_feed ();
@@ -21,7 +22,9 @@ module load_store_combo #(
       .gsi(gsi),
       .issue(issue),
       .cdb(cdb),
-      .exec_feed(load_store_feed)
+      .exec_feed(load_store_feed),
+      .next(bus_granted),
+      .full(full)
   );
 
   load_store #(
