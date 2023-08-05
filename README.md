@@ -1,5 +1,5 @@
 # VTM (Veznik Tomas Microarchitecture)
-Expansion and continuing of the bachelor thesis RISC-V Superscalar Processor. (https://gitlab.fit.cvut.cz/veznitom/bakalarsky-projekt)
+Expansion and continuing of the bachelor thesis RISC-V Superscalar Processor. ([VTM-official](https://gitlab.fit.cvut.cz/veznitom/VTM-official))
 
 ### Overview
 The VTM microarchitecture is newly separated into generations.
