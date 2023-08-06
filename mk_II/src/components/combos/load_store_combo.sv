@@ -30,7 +30,7 @@ module load_store_combo #(
   load_store #(
       .XLEN(XLEN)
   ) load_store (
-      .exec_feed(load_store_fseed),
+      .exec_feed(load_store_feed),
       .data_bus(data_bus),
       .result(load_store_result)
   );

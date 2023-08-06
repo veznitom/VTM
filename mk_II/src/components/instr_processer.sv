@@ -12,17 +12,16 @@ module instr_processer #(
     // Resolvers
     register_query_if query[2],
     // Issuesrs
-    instr_issue_if issue[2],
     fullness_indication_if fullness,
     // Comparator
-    instr_issue_if issue,
-    register_values_if reg_val,
+    instr_issue_if issue[2],
+    register_values_if reg_val[2],
     common_data_bus_if cdb[2]
 );
   logic stop;
 
   logic [XLEN-1:0] load_address_out[2];
-  logic [31:0] load_instrs_out[2];
+  logic [31:0] load_instr_out[2];
 
   instr_info_if dec_to_res[2] (), res_to_issue[2] (), issue_to_cmp[2] ();
 
@@ -31,11 +30,11 @@ module instr_processer #(
   ) loader (
       .gsi(gsi),
       .address_in(address),
-      .instrs_in(instrs),
+      .instr_in(instr),
       .hit(hit),
       .stop(stop),
       .address_out(load_address_out),
-      .instrs_out(load_instrs_out)
+      .instr_out(load_instr_out)
   );
 
   decoder #(
@@ -44,7 +43,7 @@ module instr_processer #(
       .gsi(gsi),
       .instr_info(dec_to_res[0]),
       .address(load_address_out[0]),
-      .instr(load_instrs_out[0]),
+      .instr(load_instr_out[0]),
       .stop(stop)
   );
 
@@ -54,7 +53,7 @@ module instr_processer #(
       .gsi(gsi),
       .instr_info(dec_to_res[1]),
       .address(load_address_out[1]),
-      .instr(load_instrs_out[1]),
+      .instr(load_instr_out[1]),
       .stop(stop)
   );
 
@@ -65,7 +64,8 @@ module instr_processer #(
       .query(query),
       .instr_info_in(dec_to_res),
       .instr_info_out(res_to_issue),
-      .stop(stop)
+      .stop_in(stop),
+      .stop_out(stop)
   );
 
   issuer #(
@@ -80,14 +80,14 @@ module instr_processer #(
 
   comparator comparator_1 (
       .instr_info(issue_to_cmp[0]),
-      .issue_in(issue[0]),
+      .issue(issue[0]),
       .reg_val(reg_val[0]),
       .cdb(cdb)
   );
 
   comparator comparator_2 (
       .instr_info(issue_to_cmp[1]),
-      .issue_in(issue[1]),
+      .issue(issue[1]),
       .reg_val(reg_val[1]),
       .cdb(cdb)
   );

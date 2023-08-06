@@ -19,10 +19,10 @@ module comparator (
 
   always_comb begin : compare
     if (instr_info.regs.rs_1 == cdb[0].arn || instr_info.regs.rs_1 == cdb[0].rrn) begin
-      issue.data_1  = cdb[0].data;
+      issue.data_1  = cdb[0].result;
       issue.valid_1 = 1'h1;
     end else if (instr_info.regs.rs_1 == cdb[1].arn || instr_info.regs.rs_1 == cdb[1].rrn) begin
-      issue.data_1  = cdb[1].data;
+      issue.data_1  = cdb[1].result;
       issue.valid_1 = 1'h1;
     end else begin
       issue.data_1  = reg_val.data_1;
@@ -30,10 +30,10 @@ module comparator (
     end
 
     if (instr_info.regs.rs_2 == cdb[0].arn || instr_info.regs.rs_2 == cdb[0].rrn) begin
-      issue.data_2  = cdb[0].data;
+      issue.data_2  = cdb[0].result;
       issue.valid_2 = 1'h1;
     end else if (instr_info.regs.rs_2 == cdb[1].arn || instr_info.regs.rs_2 == cdb[1].rrn) begin
-      issue.data_2  = cdb[1].data;
+      issue.data_2  = cdb[1].result;
       issue.valid_2 = 1'h1;
     end else begin
       issue.data_2  = reg_val.data_2;

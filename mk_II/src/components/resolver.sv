@@ -22,7 +22,7 @@ module resolver #(
   endfunction
 
   always_ff @(posedge gsi.clk) begin : fetch
-    if (!stop && instr_info_in[0].instr_name != UNKNOWN
+    if (!stop_in && instr_info_in[0].instr_name != UNKNOWN
     && instr_info_in[1].instr_name != UNKNOWN) begin
       case ({
         instr_info_in[0].flags.jumps, instr_info_in[1].flags.jumps

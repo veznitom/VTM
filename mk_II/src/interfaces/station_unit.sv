@@ -1,7 +1,7 @@
 import structures::*;
 
 interface station_unit_if #(
-    parameterint XLEN = 32
+    parameter int XLEN = 32
 ) ();
   logic [XLEN-1:0] data_1, data_2, address, immediate;
   logic [5:0] rrn;

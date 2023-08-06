@@ -13,5 +13,4 @@ module arbiter #(
     output logic bus_granted,
     output logic bus_selected
 );
-  TODO();
 endmodule

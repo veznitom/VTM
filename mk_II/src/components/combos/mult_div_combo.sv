@@ -30,7 +30,7 @@ module mult_div_combo #(
       .XLEN(XLEN)
   ) mult_div (
       .exec_feed(mult_div_feed),
-      .store_result(mult_div_result)
+      .result(mult_div_result)
   );
 
   arbiter #(

@@ -2,38 +2,44 @@
     issuer halts and waits for them to free up (halt also stops loader, decoder, resolver unless there is bubble in the form of zero instruction).
 */
 
+import structures::*;
+
 module issuer #(
     parameter int XLEN = 32
 ) (
     global_signals_if gsi,
     instr_info_if instr_info_in[2],
     instr_info_out[2],
-    fullness_indication_if fullnes,
+    fullness_indication_if fullness,
     output logic stop
 );
 
-  logic fullnes_split[5];
+  logic fullness_split[5];
 
-  assign fullnes_split[AL] = fullnes.alu;
-  assign fullnes_split[BR] = fullnes.bracnh;
-  assign fullnes_split[LS] = fullnes.load_store;
-  assign fullnes_split[RB] = fullnes.rob;
-  assign fullnes_split[MD] = fullnes.mult_div;
+  assign fullness_split[AL] = fullness.alu;
+  assign fullness_split[BR] = fullness.bracnh;
+  assign fullness_split[LS] = fullness.load_store;
+  assign fullness_split[RB] = fullness.rob;
+  assign fullness_split[MD] = fullness.mult_div;
 
-  always_ff @(posedge gsi.clk) begin : issue
-    if (instr_info[0].instr_name != UNKNOWN && instr_info[1].instr_name != UNKNOWN) begin
-      if (!st_fullness[instr_info[0].st_type] && !st_fullness[instr_info[1].st_type]
-      && !fullnes[RB]) begin
-        for (int i = 0; i < 2; i++) begin
-          instr_info_out[i].address <= instr_info_in[i].address;
-          instr_info_out[i].immediate <= instr_info_in[i].immediate;
-          instr_info_out[i].instr_name <= instr_info_in[i].instr_name;
-          instr_info_out[i].st_type <= instr_info_in[i].st_type;
-          instr_info_out[i].regs <= instr_info_in[i].regs;
-          instr_info_out[i].flags <= instr_info_in[i].flags;
+  genvar i;
+  generate
+    for (i = 0; i < 2; i++) begin : gen_instr_info
+      always_ff @(posedge gsi.clk) begin : issue
+        if (instr_info[0].instr_name != UNKNOWN && instr_info[1].instr_name != UNKNOWN) begin
+          if (!fullness_split[instr_info[0].st_type] && !fullness_split[instr_info[1].st_type]
+      && !fullness_split[RB]) begin
+            instr_info_out[i].address <= instr_info_in[i].address;
+            instr_info_out[i].immediate <= instr_info_in[i].immediate;
+            instr_info_out[i].instr_name <= instr_info_in[i].instr_name;
+            instr_info_out[i].st_type <= instr_info_in[i].st_type;
+            instr_info_out[i].regs <= instr_info_in[i].regs;
+            instr_info_out[i].flags <= instr_info_in[i].flags;
+            stop <= 1'h0;
+          end else stop <= 1'h1;
         end
-        stop <= 1'h0;
-      end else stop <= 1'h1;
+      end
     end
-  end
+  endgenerate
+
 endmodule

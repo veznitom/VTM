@@ -1,5 +1,7 @@
 // Translates instructions based on RISC-V instruction encoding
 
+import structures::*;
+
 module decoder #(
     parameter int XLEN = 32
 ) (
@@ -193,7 +195,7 @@ module decoder #(
 
               2'b11: begin : BR  // BRANCH
                 instr_info.flags.jumps <= 1'b1;
-                instr_info.st_type <= BRANCH;
+                instr_info.st_type <= BR;
                 case (funct3)
                   3'b000:  instr_info.instr_name <= BEQ;  // BEQ
                   3'b001:  instr_info.instr_name <= BNE;  // BNE
@@ -212,19 +214,19 @@ module decoder #(
           3'b001: begin  // JALR
             instr_info.flags.writes <= 1'b1;
             instr_info.flags.jumps <= 1'b1;
-            instr_info.st_type <= BRANCH;
+            instr_info.st_type <= BR;
             instr_info.instr_name <= JALR;
           end
 
           3'b011: begin  // MISC-MEM, JAL
             case (opcode[6:5])
               2'b00: begin
-                instr_info.st_type <= ALU;
+                instr_info.st_type <= AL;
                 instr_info.instr_name <= ADDI;  // FENCE
               end
 
               2'b11: begin
-                instr_info.st_type <= BRANCH;
+                instr_info.st_type <= BR;
                 instr_info.flags.writes <= 1'b1;
                 instr_info.flags.jumps <= 1'b1;
                 instr_info.instr_name <= JAL;
@@ -235,7 +237,7 @@ module decoder #(
           end
 
           3'b100: begin  // OP, OP-IMM, SYSTEM
-            instr_info.st_type <= ALU;
+            instr_info.st_type <= AL;
             case (opcode[6:5])
               2'b00: begin
                 instr_info.flags.writes   <= 1'b1;
@@ -278,7 +280,7 @@ module decoder #(
 
           3'b101: begin  // LUI, AUIPC
             instr_info.flags.writes <= 1'b1;
-            instr_info.st_type <= ALU;
+            instr_info.st_type <= AL;
             instr_info.instr_name <= opcode[5] == 1'b0 ? AUIPC : LUI;
           end
 

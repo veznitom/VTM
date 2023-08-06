@@ -36,33 +36,39 @@ module reservation_station #(
     end
   end
 
-  always_ff @(posedge gsi.clk) begin : receive_instruction
-    for (int i = 0; i < 2; i++) begin
-      if (issue[i].st_type == ST_TYPE && !gsi.delete_tagged) begin
-        records.push_back('{issue[i].data_1, issue[i].data_2, issue[i].address, issue[i].immediate,
-                          issue[i].regs.rs_1, issue[i].regs.rs_2, issue[i].regs.rn,
-                          issue[i].valid_1, issue[i].valid_2, issue[i].flags.tag, 1'h0,
-                          issue[i].instr_name});
+  genvar i;
+  generate
+    for (i = 0; i < 2; i++) begin : gen_issue
+      always_ff @(posedge gsi.clk) begin : receive_instruction
+        if (issue[i].st_type == ST_TYPE && !gsi.delete_tagged) begin
+          records.push_back('{issue[i].data_1, issue[i].data_2, issue[i].address,
+                            issue[i].immediate, issue[i].regs.rs_1, issue[i].regs.rs_2,
+                            issue[i].regs.rn, issue[i].valid_1, issue[i].valid_2,
+                            issue[i].flags.tag, 1'h0, issue[i].instr_name});
+        end
       end
     end
-  end
+  endgenerate
 
-  always_ff @(posedge gsi.clk) begin : update_records
-    foreach (records[i]) begin
-      for (int j = 0; j < 2; j++) begin
-        if (match_cdb(records[i].src_1, records[i].valid_1, cdb[j].arn, cdb[j].rrn));
-        begin
-          records[i].data_1  <= cdb[j].result;
-          records[i].valid_1 <= 1'h1;
-        end
-        if (match_cdb(records[i].src_2, records[i].valid_2, cdb[j].arn, cdb[j].rrn));
-        begin
-          records[i].data_2  <= cdb[j].result;
-          records[i].valid_2 <= 1'h1;
+
+  generate
+    for (i = 0; i < 2; i++) begin : gen_cdb
+      always_ff @(posedge gsi.clk) begin : update_records
+        foreach (records[j]) begin
+          if (match_cdb(records[j].src_1, records[j].valid_1, cdb[i].arn, cdb[i].rrn));
+          begin
+            records[j].data_1  <= cdb[i].result;
+            records[j].valid_1 <= 1'h1;
+          end
+          if (match_cdb(records[j].src_2, records[j].valid_2, cdb[i].arn, cdb[i].rrn));
+          begin
+            records[j].data_2  <= cdb[i].result;
+            records[j].valid_2 <= 1'h1;
+          end
         end
       end
     end
-  end
+  endgenerate
 
   always_ff @(posedge gsi.clk) begin : feed_ex_unit
     for (int i = 0; i < SIZE; i++) begin

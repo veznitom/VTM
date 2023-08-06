@@ -62,59 +62,82 @@ module reorder_buffer #(
     end
   end
 
-  always_ff @(posedge gsi.clk) begin : get_bus
+  always_ff @(posedge gsi.clk) begin : bus_requesting
     if (records[0].status == COMPLETED) get_bus <= 1'h1;
     else get_bus <= 1'h0;
   end
 
   always_ff @(posedge gsi.clk) begin : write_to_bus
     if (bus_granted) begin
-      cdb[bus_selected].result <= records[0].result;
-      cdb[bus_selected].address <= records[0].address;
-      cdb[bus_selected].jmp_address <= records[0].jmp_address;
-      cdb[bus_selected].arn <= records[0].regs.rd;
-      cdb[bus_selected].rrn <= records[0].regs.rn;
-      cdb[bus_selected].reg_file_we <= records[0].flags.writes;
-      cdb[bus_selected].data_cache_we <= records[0].flags.mem & records[0].flags.writes;
+      if (bus_selected) begin
+        cdb[1].result <= records[0].result;
+        cdb[1].address <= records[0].address;
+        cdb[1].jmp_address <= records[0].jmp_address;
+        cdb[1].arn <= records[0].regs.rd;
+        cdb[1].rrn <= records[0].regs.rn;
+        cdb[1].reg_file_we <= records[0].flags.writes;
+        cdb[1].data_cache_we <= records[0].flags.mem & records[0].flags.writes;
+      end else begin
+        cdb[0].result <= records[0].result;
+        cdb[0].address <= records[0].address;
+        cdb[0].jmp_address <= records[0].jmp_address;
+        cdb[0].arn <= records[0].regs.rd;
+        cdb[0].rrn <= records[0].regs.rn;
+        cdb[0].reg_file_we <= records[0].flags.writes;
+        cdb[0].data_cache_we <= records[0].flags.mem & records[0].flags.writes;
+      end
     end else begin
-      cdb[bus_selected].result <= 'z;
-      cdb[bus_selected].address <= 'z;
-      cdb[bus_selected].jmp_address <= 'z;
-      cdb[bus_selected].arn <= 'z;
-      cdb[bus_selected].rrn <= 'z;
-      cdb[bus_selected].reg_file_we <= 'z;
-      cdb[bus_selected].data_cache_we <= 'z;
+      cdb[0].result <= 'z;
+      cdb[0].address <= 'z;
+      cdb[0].jmp_address <= 'z;
+      cdb[0].arn <= 'z;
+      cdb[0].rrn <= 'z;
+      cdb[0].reg_file_we <= 'z;
+      cdb[0].data_cache_we <= 'z;
+      cdb[1].result <= 'z;
+      cdb[1].address <= 'z;
+      cdb[1].jmp_address <= 'z;
+      cdb[1].arn <= 'z;
+      cdb[1].rrn <= 'z;
+      cdb[1].reg_file_we <= 'z;
+      cdb[1].data_cache_we <= 'z;
     end
   end
 
-  always_ff @(posedge gsi.clk) begin : add_record
-    for (int i = 0; i < 2; i++)
-    if (issue[i].st_type != XX && !gsi.delete_tagged)
-      records.push_back('{'z, issue[i].address, 'z, 1'h0, 1'h0, issue[i].regs, issue[i].flags});
-  end
+  genvar i;
+  generate
+    for (i = 0; i < 2; i++) begin : gen_issue
+      always_ff @(posedge gsi.clk) begin : add_record
+        if (issue[i].st_type != XX && !gsi.delete_tagged)
+          records.push_back('{'z, issue[i].address, 'z, WAITING, issue[i].regs, issue[i].flags});
+      end
+    end
+  endgenerate
 
-  always_ff @(posedge gsi.clk) begin : cdb_fetch
-    for (int i = 2; i < 2; i++) begin
-      foreach (records[j]) begin
-        if (records[j].address == cdb[i].address) begin
-          records[j].result <= cdb[i].result;
-          records[j].jump_address <= records[j].flags.jumps ? cdb[i].jmp_address : 'z;
-          records[j].status <= COMPLETED;
+  generate
+    for (i = 2; i < 2; i++) begin : gen_cdb
+      always_ff @(posedge gsi.clk) begin : cdb_fetch
+        foreach (records[j]) begin
+          if (records[j].address == cdb[i].address) begin
+            records[j].result <= cdb[i].result;
+            records[j].jump_address <= records[j].flags.jumps ? cdb[i].jmp_address : 'z;
+            records[j].status <= COMPLETED;
+          end
         end
       end
     end
-  end
+  endgenerate
 
   always_ff @(posedge gsi.clk) begin : pop_ignored
     if (records[0].status == IGNORE) records.pop_front();
   end
 
   always_ff @(posedge global_signals.delete_tagged) begin : ignore_tagged
-    for (int i = 0; i < rob_size; i++) if (records[i].flags.tag) records[i].status <= IGNORE;
+    for (int i = 0; i < SIZE; i++) if (records[i].flags.tag) records[i].status <= IGNORE;
   end
 
   always_ff @(posedge global_signals.clear_tags) begin : clear_tagged
-    for (int i = 0; i < rob_size; i++) if (records[i].tag) records[i].flags.tag <= 1'b0;
+    for (int i = 0; i < SIZE; i++) if (records[i].tag) records[i].flags.tag <= 1'b0;
   end
 
 endmodule

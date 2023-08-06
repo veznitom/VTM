@@ -7,13 +7,20 @@ interface global_signals_if (
   modport rest(input clk, reset, delete_tagged, clear_tags);
 endinterface
 
-interface debug_interface_if;
+interface cpu_debug_if;
   logic [31:0] reg_11_value;
   logic [ 6:0] ren_queue_size;
 endinterface
 
+interface memory_debug_if #(
+    parameter int SIZE_BYTES = 128
+);
+  logic [7:0] bytes[SIZE_BYTES];
+  logic en_debug;
+endinterface
+
 interface pc_interface_if #(
-    parameterint XLEN = 32
+    parameter int XLEN = 32
 ) ();
   logic [31:0] jmp_address, address;
   logic plus_4, plus_8, write;
@@ -23,7 +30,7 @@ interface pc_interface_if #(
 endinterface
 
 interface register_values_if #(
-    parameterint XLEN = 32
+    parameter int XLEN = 32
 ) ();
   logic [XLEN-1:0] data_1, data_2;
   logic [5:0] src_1, src_2;

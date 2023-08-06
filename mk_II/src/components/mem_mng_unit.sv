@@ -10,10 +10,10 @@ module mem_mng_unit (
     DATA
   } mmu_state_e;
 
-  mmu_state_e state;
+  mmu_state_e lock;
 
   always_comb begin : reset
-    if (gsi.reset) state = FREE;
+    if (gsi.reset) lock = FREE;
   end
 
   always_comb begin : access_management

@@ -4,10 +4,10 @@ module top_test #(
   logic clk, reset;
 
   memory_bus_if memory_bus ();
-  debug_interface_if debug ();
+  memory_debug_if memory_debug ();
+  cpu_debug_if cpu_debug ();
 
   localparam int MemorySizeBytes = 128;
-  logic [7:0] MemoryData [MemorySizeBytes];
 
   cpu #(
       .XLEN(XLEN)
@@ -19,7 +19,8 @@ module top_test #(
   );
 
   ram #(
-      .MEM_SIZE_BYTES(128)
+      .MEM_SIZE_BYTES(MemorySizeBytes),
+      .MEM_FILE_PATH("")
   ) ram (
       .memory_bus(memory_bus),
       .clk(clk),
@@ -27,8 +28,7 @@ module top_test #(
   );
 
   initial begin
-    $readmemh("../../rv32i-tests/hex", MemoryData);
-    $finish;
+    #100 $finish;
   end
 
 endmodule

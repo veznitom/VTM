@@ -1,7 +1,7 @@
 module program_counter #(
     parameter int XLEN = 32
 ) (
-    global_signals.rest gsi,
+    global_signals_if.rest gsi,
     pc_interface_if.pc  inter
 );
   logic [XLEN-1:0] address;

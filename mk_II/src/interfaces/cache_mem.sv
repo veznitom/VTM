@@ -16,7 +16,7 @@ interface cache_memory_bus_if #(
     parameter int XLEN = 32
 ) ();
   logic [(BUS_WIDTH_BYTE*8)-1:0] data;
-  logic [ XLEN-1:0] address;
+  logic [XLEN-1:0] address;
   logic read, write, ready, done;
   modport mmu(input data, address, read, write, output ready, done);
   modport cache(input ready, done, inout data, output address, read, write);
@@ -28,7 +28,7 @@ interface memory_bus_if #(
     parameter int BIT_WIDTH_BITS = $clog2(BUS_WIDTH_BYTE),
     parameter int XLEN = 32
 ) ();
-  logic [(BUS_WIDTH_BYTE*8)-1:0] data;
+  logic [7:0] data[BUS_WIDTH_BYTE];
   logic [XLEN-1:0] address;
   logic read, write, ready, done;
   modport ram(input address, read, write, inout data, output ready, done);
