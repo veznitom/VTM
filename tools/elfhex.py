@@ -61,9 +61,9 @@ def main():
     parser = argparse.ArgumentParser(
         prog='elf_to_hex.py',
         description='Simple convertor from an elf file to a hex file.')
-    parser.add_argument('-s', '--src', action='store', default='rv32i-tests/isa/elf', dest='source',
+    parser.add_argument('-s', '--src', action='store', default='../rv32i-tests/isa/elf', dest='source',
                         help='Path to the directory with the elf files.')
-    parser.add_argument('-d', '--dst', action='store', default='rv32i-tests/hex', dest='dest',
+    parser.add_argument('-d', '--dst', action='store', default='../rv32i-tests/hex', dest='dest',
                         help='Path to the directory where for the hex files.')
     parser.add_argument('--debug', action='count', default=0, dest='debug',
                         help='Enables file location printing.')

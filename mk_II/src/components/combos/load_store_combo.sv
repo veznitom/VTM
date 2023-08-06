@@ -2,14 +2,15 @@ module load_store_combo #(
     parameter int XLEN = 32,
     parameter logic [7:0] ARBITER_ADDRESS = 8'h00
 ) (
-    global_signals_if.rest gsi,
-    instr_issue_if.combo issue[2],
-    common_data_bus_if.combo cdb[2],
-    cache_bus_if.comp data_bus,
+    global_bus_if.rest global_bus,
+    issue_bus_if.combo issue[2],
+    common_data_bus_if.combo data_bus[2],
+    memory_bus_if.load_store cache_bus[1],
+
     output logic full
 );
 
-  station_unit_if load_store_feed ();
+  feed_bus_if #(.XLEN(XLEN)) load_store_feed ();
 
   logic [XLEN-1:0] load_store_result;
   logic get_bus, bus_granted, bus_selected;
@@ -19,10 +20,10 @@ module load_store_combo #(
       .XLEN(XLEN),
       .SIZE(16)
   ) load_store_station (
-      .gsi(gsi),
+      .global_bus(global_bus),
       .issue(issue),
-      .cdb(cdb),
-      .exec_feed(load_store_feed),
+      .data_bus(data_bus),
+      .feed_bus(load_store_feed),
       .next(bus_granted),
       .full(full)
   );
@@ -30,15 +31,15 @@ module load_store_combo #(
   load_store #(
       .XLEN(XLEN)
   ) load_store (
-      .exec_feed(load_store_feed),
-      .data_bus(data_bus),
+      .feed_bus(load_store_feed),
+      .cache_bus(cache_bus[0]),
       .result(load_store_result)
   );
 
   arbiter #(
       .ADDRESS(ARBITER_ADDRESS)
   ) load_store_arbiter (
-      .select({cdb[1].select, cdb.select[0].select}),
+      .select({data_bus[1].select, data_bus[0].select}),
       .get_bus(get_bus),
       .bus_granted(bus_granted),
       .bus_selected(bus_selected)

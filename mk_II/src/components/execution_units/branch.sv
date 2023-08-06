@@ -3,58 +3,58 @@ import structures::*;
 module branch #(
     parameter int XLEN = 32
 ) (
-    station_unit_if.exec exec_feed,
+    feed_bus_if.exec feed_bus,
 
     output logic [XLEN-1:0] store_result,
-    jump_result
+    output logic [XLEN-1:0] jump_result
 );
   always_comb begin
-    case (exec_feed.instr_name)
+    case (feed_bus.instr_name)
       JAL: begin
-        jump_result  = exec_feed.address + $signed(exec_feed.immediate);
-        store_result = exec_feed.address + 4;
+        jump_result  = feed_bus.address + $signed(feed_bus.immediate);
+        store_result = feed_bus.address + 4;
       end
       JALR: begin
-        jump_result  = exec_feed.data_1 + $signed(exec_feed.immediate);
-        store_result = exec_feed.address + 4;
+        jump_result  = feed_bus.data_1 + $signed(feed_bus.immediate);
+        store_result = feed_bus.address + 4;
       end
       BEQ: begin
-        if (exec_feed.data_1 === exec_feed.data_2)
-          jump_result = exec_feed.address + exec_feed.immediate;
-        else jump_result = exec_feed.address + 4;
+        if (feed_bus.data_1 === feed_bus.data_2)
+          jump_result = feed_bus.address + feed_bus.immediate;
+        else jump_result = feed_bus.address + 4;
       end
       BNE: begin
-        if (exec_feed.data_1 !== exec_feed.data_2)
-          jump_result = exec_feed.address + exec_feed.immediate;
-        else jump_result = exec_feed.address + 4;
+        if (feed_bus.data_1 !== feed_bus.data_2)
+          jump_result = feed_bus.address + feed_bus.immediate;
+        else jump_result = feed_bus.address + 4;
       end
       BLT: begin
-        if ($signed(exec_feed.data_1) < $signed(exec_feed.data_2))
-          jump_result = exec_feed.address + exec_feed.immediate;
-        else jump_result = exec_feed.address + 4;
+        if ($signed(feed_bus.data_1) < $signed(feed_bus.data_2))
+          jump_result = feed_bus.address + feed_bus.immediate;
+        else jump_result = feed_bus.address + 4;
       end
       BGE: begin
         if (($signed(
-                exec_feed.data_1
+                feed_bus.data_1
             ) == $signed(
-                exec_feed.data_2
+                feed_bus.data_2
             )) || ($signed(
-                exec_feed.data_1
+                feed_bus.data_1
             ) > $signed(
-                exec_feed.data_2
+                feed_bus.data_2
             )))
-          jump_result = exec_feed.address + exec_feed.immediate;
-        else jump_result = exec_feed.address + 4;
+          jump_result = feed_bus.address + feed_bus.immediate;
+        else jump_result = feed_bus.address + 4;
       end
       BLTU: begin
-        if (exec_feed.data_1 < exec_feed.data_2)
-          jump_result = exec_feed.address + exec_feed.immediate;
-        else jump_result = exec_feed.address + 4;
+        if (feed_bus.data_1 < feed_bus.data_2)
+          jump_result = feed_bus.address + feed_bus.immediate;
+        else jump_result = feed_bus.address + 4;
       end
       BGEU: begin
-        if ((exec_feed.data_1 == exec_feed.data_2) || (exec_feed.data_1 > exec_feed.data_2))
-          jump_result = exec_feed.address + exec_feed.immediate;
-        else jump_result = exec_feed.address + 4;
+        if ((feed_bus.data_1 == feed_bus.data_2) || (feed_bus.data_1 > feed_bus.data_2))
+          jump_result = feed_bus.address + feed_bus.immediate;
+        else jump_result = feed_bus.address + 4;
       end
       default: begin
         jump_result  = {XLEN{1'hz}};

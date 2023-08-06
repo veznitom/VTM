@@ -3,8 +3,8 @@ import structures::*;
 module load_store #(
     parameter int XLEN = 32
 ) (
-    station_unit_if.exec exec_feed,
-    cache_bus_if data_bus,
+    feed_bus_if.exec feed_bus,
+    memory_bus_if.load_store cache_bus,
 
     output logic [XLEN-1:0] result
 );
@@ -26,31 +26,31 @@ module load_store #(
 
   always_comb begin
     case (is_load_store(
-        exec_feed.instr_name
+        feed_bus.instr_name
     ))
       2'h1: begin
-        if (data_bus.hit)
-          case (exec_feed.instr_name)
-            LB: result = {{XLEN - 8{data_bus.data[7]}}, data_bus.data[7:0]};
-            LBU: result = {{XLEN - 8{1'h0}}, data_bus.data[7:0]};
-            LH: result = {{XLEN - 16{data_bus.data[15]}}, data_bus.data[15:0]};
-            LHU: result = {{XLEN - 8{1'h0}}, data_bus.data[15:0]};
-            default: result = data_bus.data;
+        if (cache_bus.hit)
+          case (feed_bus.instr_name)
+            LB: result = {{XLEN - 8{cache_bus.data[7]}}, cache_bus.data[7:0]};
+            LBU: result = {{XLEN - 8{1'h0}}, cache_bus.data[7:0]};
+            LH: result = {{XLEN - 16{cache_bus.data[15]}}, cache_bus.data[15:0]};
+            LHU: result = {{XLEN - 8{1'h0}}, cache_bus.data[15:0]};
+            default: result = cache_bus.data;
           endcase
         else begin
-          data_bus.read = 1'h1;
-          data_bus.address = exec_feed.data_1 + exec_feed.immediate;
+          cache_bus.read = 1'h1;
+          cache_bus.address = feed_bus.data_1 + feed_bus.immediate;
         end
       end
       2'h2: begin
-        data_bus.write = 1'h1;
-        data_bus.address = exec_feed.data_1 + exec_feed.immediate;
-        data_bus.data = exec_feed.data_2;
-        result = exec_feed.data_2;
+        cache_bus.write = 1'h1;
+        cache_bus.address = feed_bus.data_1 + feed_bus.immediate;
+        cache_bus.data = feed_bus.data_2;
+        result = feed_bus.data_2;
       end
       default: begin
-        data_bus.read = 1'h0;
-        data_bus.write = 1'h0;
+        cache_bus.read = 1'h0;
+        cache_bus.write = 1'h0;
         result = {XLEN{1'hz}};
       end
     endcase

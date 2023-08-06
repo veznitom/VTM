@@ -1,8 +1,8 @@
-module mem_mng_unit (
-    global_signals_if.rest gsi,
-    cache_memory_bus_if.mmu data_bus,
-    cache_memory_bus_if.mmu instr_bus,
-    memory_bus_if memory_bus
+module memory_management_unit (
+    global_bus_if.rest global_bus,
+    memory_bus_if.mmu  data_bus,
+    memory_bus_if.mmu  instr_bus,
+    memory_bus_if.cpu  memory_bus
 );
   typedef enum logic [1:0] {
     FREE,
@@ -12,12 +12,9 @@ module mem_mng_unit (
 
   mmu_state_e lock;
 
-  always_comb begin : reset
-    if (gsi.reset) lock = FREE;
-  end
-
   always_comb begin : access_management
-    if (instr_bus.read && lock != DATA) begin : instructions_read
+    if (global_bus.reset) lock = FREE;
+    else if (instr_bus.read && lock != DATA) begin : instructions_read
       lock = INSTR;
       if (memory_bus.ready) begin
         instr_bus.data  = memory_bus.data;

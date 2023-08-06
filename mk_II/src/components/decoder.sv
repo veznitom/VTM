@@ -5,8 +5,9 @@ import structures::*;
 module decoder #(
     parameter int XLEN = 32
 ) (
-    global_signals_if gsi,
-    instr_info_if instr_info,
+    global_bus_if.rest   global_bus,
+    instr_info_bus_if.out instr_info,
+
     input logic [XLEN-1:0] address,
     input logic [31:0] instr,
     input logic stop
@@ -22,7 +23,7 @@ module decoder #(
 
   assign instr_info.address = address;
 
-  always_ff @(posedge gsi.clk) begin : value_sources
+  always_ff @(posedge global_bus.clock) begin : value_sources
     if (!stop)
       case (instr[4:2])
         3'b000: begin : LSB  // LOAD, STORE, BRANCH
@@ -163,7 +164,7 @@ module decoder #(
       endcase
   end
 
-  always_ff @(posedge gsi.clk) begin : instr_name
+  always_ff @(posedge global_bus.clock) begin : instr_name
     if (!stop)
       if (instr == 32'h0000) instr_info.instr_name <= UNKNOWN;
       else
@@ -193,7 +194,7 @@ module decoder #(
                 endcase
               end
 
-              2'b11: begin : BR  // BRANCH
+              2'b11: begin : BR_  // BRANCH
                 instr_info.flags.jumps <= 1'b1;
                 instr_info.st_type <= BR;
                 case (funct3)

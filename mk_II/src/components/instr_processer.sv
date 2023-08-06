@@ -4,43 +4,41 @@
 module instr_processer #(
     parameter int XLEN = 32
 ) (
-    global_signals_if gsi,
-    // Loaders
-    input logic [XLEN-1:0] address[2],
-    input logic [31:0] instr[2],
-    input logic [1:0] hit,
-    // Resolvers
-    register_query_if query[2],
-    // Issuesrs
-    fullness_indication_if fullness,
-    // Comparator
-    instr_issue_if issue[2],
-    register_values_if reg_val[2],
-    common_data_bus_if cdb[2]
+    global_bus_if.rest global_bus,
+    pc_bus_if.loader pc_bus,
+    memory_bus_if.loader cache_bus[2],
+    reg_query_bus_if.resolver query[2],
+    fullness_bus_if.issuer fullness,
+    issue_bus_if.cmp issue[2],
+    reg_val_bus_if.cmp reg_val[2],
+    common_data_bus_if.cmp data_bus[2]
 );
-  logic stop;
+  logic stop_res, stop_iss, stop;
 
   logic [XLEN-1:0] load_address_out[2];
   logic [31:0] load_instr_out[2];
 
-  instr_info_if dec_to_res[2] (), res_to_issue[2] (), issue_to_cmp[2] ();
+  instr_info_bus_if dec_to_res[2] ();
+  instr_info_bus_if res_to_issue[2] ();
+  instr_info_bus_if issue_to_cmp[2] ();
+
+  assign stop = stop_res | stop_iss;
 
   loader #(
       .XLEN(XLEN)
   ) loader (
-      .gsi(gsi),
-      .address_in(address),
-      .instr_in(instr),
-      .hit(hit),
+      .global_bus(global_bus),
+      .pc_bus(pc_bus),
+      .cache_bus(cache_bus),
       .stop(stop),
-      .address_out(load_address_out),
-      .instr_out(load_instr_out)
+      .address(load_address_out),
+      .instr(load_instr_out)
   );
 
   decoder #(
       .XLEN(XLEN)
   ) decoder_0 (
-      .gsi(gsi),
+      .global_bus(global_bus),
       .instr_info(dec_to_res[0]),
       .address(load_address_out[0]),
       .instr(load_instr_out[0]),
@@ -50,7 +48,7 @@ module instr_processer #(
   decoder #(
       .XLEN(XLEN)
   ) decoder_1 (
-      .gsi(gsi),
+      .global_bus(global_bus),
       .instr_info(dec_to_res[1]),
       .address(load_address_out[1]),
       .instr(load_instr_out[1]),
@@ -60,36 +58,36 @@ module instr_processer #(
   resolver #(
       .XLEN(XLEN)
   ) resolver (
-      .gsi(gsi),
+      .global_bus(global_bus),
       .query(query),
       .instr_info_in(dec_to_res),
       .instr_info_out(res_to_issue),
       .stop_in(stop),
-      .stop_out(stop)
+      .stop_out(stop_res)
   );
 
   issuer #(
       .XLEN(XLEN)
   ) issuer (
-      .gsi(gsi),
+      .global_bus(global_bus),
       .instr_info_in(res_to_issue),
       .instr_info_out(issue_to_cmp),
       .fullness(fullness),
-      .stop(stop)
+      .stop(stop_iss)
   );
 
-  comparator comparator_1 (
+  comparator comparator_0 (
       .instr_info(issue_to_cmp[0]),
       .issue(issue[0]),
       .reg_val(reg_val[0]),
-      .cdb(cdb)
+      .data_bus(data_bus)
   );
 
-  comparator comparator_2 (
+  comparator comparator_1 (
       .instr_info(issue_to_cmp[1]),
       .issue(issue[1]),
       .reg_val(reg_val[1]),
-      .cdb(cdb)
+      .data_bus(data_bus)
   );
 endmodule
 

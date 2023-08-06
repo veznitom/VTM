@@ -4,7 +4,8 @@ module ram #(
     parameter string MEM_FILE_PATH = ""
 ) (
     memory_bus_if memory_bus,
-    input logic clk,
+
+    input logic clock,
     input logic reset
 );
 
@@ -12,11 +13,11 @@ module ram #(
 
   always_comb begin
     if (reset) begin
-      
+      $readmemh(MEM_FILE_PATH, data);
     end
   end
 
-  always_ff @(posedge clk) begin
+  always_ff @(posedge clock) begin
     if (memory_bus.read) begin
       for (int i = 0; i < memory_bus.BUS_WIDTH_BYTE; i++)
       memory_bus.data[i] <= data[memory_bus.address[ADDRESS_WIDTH-1:0]+i];

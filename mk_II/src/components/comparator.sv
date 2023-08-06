@@ -1,11 +1,11 @@
-/*  Checks if common data bus and issued values clash if so then choose the cdb data as they are always newer than register data.
+/*  Checks if common data bus and issued values clash if so then choose the data_bus data as they are always newer than register data.
     Should contain only combinational logic (it's basicvaly a switch).*/
 
 module comparator (
-    instr_info_if instr_info,
-    instr_issue_if.cmp issue,
-    register_values_if.cmp reg_val,
-    common_data_bus_if cdb[2]
+    instr_info_bus_if.in instr_info,
+    issue_bus_if.cmp issue,
+    reg_val_bus_if.cmp reg_val,
+    common_data_bus_if.cmp data_bus[2]
 );
 
   assign reg_val.src_1 = instr_info.regs.rs_1;
@@ -18,22 +18,26 @@ module comparator (
   assign issue.flags = instr_info.flags;
 
   always_comb begin : compare
-    if (instr_info.regs.rs_1 == cdb[0].arn || instr_info.regs.rs_1 == cdb[0].rrn) begin
-      issue.data_1  = cdb[0].result;
+    if (instr_info.regs.rs_1 == data_bus[0].arn || instr_info.regs.rs_1 == data_bus[0].rrn) begin
+      issue.data_1  = data_bus[0].result;
       issue.valid_1 = 1'h1;
-    end else if (instr_info.regs.rs_1 == cdb[1].arn || instr_info.regs.rs_1 == cdb[1].rrn) begin
-      issue.data_1  = cdb[1].result;
+    end else if (
+      instr_info.regs.rs_1 == data_bus[1].arn ||
+      instr_info.regs.rs_1 == data_bus[1].rrn) begin
+      issue.data_1  = data_bus[1].result;
       issue.valid_1 = 1'h1;
     end else begin
       issue.data_1  = reg_val.data_1;
       issue.valid_1 = reg_val.valid_1;
     end
 
-    if (instr_info.regs.rs_2 == cdb[0].arn || instr_info.regs.rs_2 == cdb[0].rrn) begin
-      issue.data_2  = cdb[0].result;
+    if (instr_info.regs.rs_2 == data_bus[0].arn || instr_info.regs.rs_2 == data_bus[0].rrn) begin
+      issue.data_2  = data_bus[0].result;
       issue.valid_2 = 1'h1;
-    end else if (instr_info.regs.rs_2 == cdb[1].arn || instr_info.regs.rs_2 == cdb[1].rrn) begin
-      issue.data_2  = cdb[1].result;
+    end else if (
+      instr_info.regs.rs_2 == data_bus[1].arn ||
+      instr_info.regs.rs_2 == data_bus[1].rrn) begin
+      issue.data_2  = data_bus[1].result;
       issue.valid_2 = 1'h1;
     end else begin
       issue.data_2  = reg_val.data_2;

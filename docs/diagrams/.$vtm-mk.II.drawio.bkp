@@ -1,4 +1,4 @@
-<mxfile host="Electron" modified="2023-08-05T10:14:12.291Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.3.7 Chrome/112.0.5615.204 Electron/24.5.0 Safari/537.36" etag="LPpBkhyX7nki1MlawZz9" version="21.3.7" type="device">
+<mxfile host="Electron" modified="2023-08-05T10:15:19.586Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.3.7 Chrome/112.0.5615.204 Electron/24.5.0 Safari/537.36" etag="7Uq5IqxW4vq8p54SIp0K" version="21.3.7" type="device">
   <diagram name="Page-1" id="jCOoQlf_-H1OvfI_m8Ck">
     <mxGraphModel dx="1195" dy="696" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -406,7 +406,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="z0uz1GrBiMd9gZm8dgzP-14" value="register values and validity" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];rounded=0;" vertex="1" connectable="0" parent="z0uz1GrBiMd9gZm8dgzP-4">
+        <mxCell id="z0uz1GrBiMd9gZm8dgzP-14" value="register values and validity" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];rounded=0;fontSize=14;" vertex="1" connectable="0" parent="z0uz1GrBiMd9gZm8dgzP-4">
           <mxGeometry x="-0.7096" relative="1" as="geometry">
             <mxPoint x="-30" y="10" as="offset" />
           </mxGeometry>

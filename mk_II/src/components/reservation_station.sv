@@ -3,17 +3,16 @@ module reservation_station #(
     parameter int SIZE = 16,
     parameter st_type_e ST_TYPE = XX
 ) (
-    global_signals_if gsi,
-    instr_issue_if issue[2],
-    common_data_bus_if cdb[2],
-    station_unit_if exec_feed,
-    input logic next,
+    global_bus_if.rest global_bus,
+    issue_bus_if.combo issue[2],
+    common_data_bus_if.combo data_bus[2],
+    feed_bus_if.station feed_bus,
+
+    input  logic next,
     output logic full
 );
-
-
-  function automatic bit match_cdb(input logic [5:0] src, input logic valid, input logic [5:0] arn,
-                                   input logic [5:0] rrn);
+  function automatic bit match_data_bus(input logic [5:0] src, input logic valid,
+                                        input logic [5:0] arn, input logic [5:0] rrn);
     return (arn == src || rrn == src) && !valid;
   endfunction
 
@@ -29,9 +28,8 @@ module reservation_station #(
   assign full = SIZE - records.size();
 
   always_comb begin : reset
-    if (gsi.reset) begin
-      exec_feed[0].instr_name = UNKNOWN;
-      exec_feed[1].instr_name = UNKNOWN;
+    if (global_bus.reset) begin
+      feed_bus.instr_name = UNKNOWN;
       records.delete();
     end
   end
@@ -39,8 +37,8 @@ module reservation_station #(
   genvar i;
   generate
     for (i = 0; i < 2; i++) begin : gen_issue
-      always_ff @(posedge gsi.clk) begin : receive_instruction
-        if (issue[i].st_type == ST_TYPE && !gsi.delete_tagged) begin
+      always_ff @(posedge global_bus.clock) begin : receive_instruction
+        if (issue[i].st_type == ST_TYPE && !global_bus.delete_tag) begin
           records.push_back('{issue[i].data_1, issue[i].data_2, issue[i].address,
                             issue[i].immediate, issue[i].regs.rs_1, issue[i].regs.rs_2,
                             issue[i].regs.rn, issue[i].valid_1, issue[i].valid_2,
@@ -52,17 +50,21 @@ module reservation_station #(
 
 
   generate
-    for (i = 0; i < 2; i++) begin : gen_cdb
-      always_ff @(posedge gsi.clk) begin : update_records
+    for (i = 0; i < 2; i++) begin : gen_data_bus
+      always_ff @(posedge global_bus.clock) begin : update_records
         foreach (records[j]) begin
-          if (match_cdb(records[j].src_1, records[j].valid_1, cdb[i].arn, cdb[i].rrn));
+          if (match_data_bus(
+                  records[j].src_1, records[j].valid_1, data_bus[i].arn, data_bus[i].rrn
+              ));
           begin
-            records[j].data_1  <= cdb[i].result;
+            records[j].data_1  <= data_bus[i].result;
             records[j].valid_1 <= 1'h1;
           end
-          if (match_cdb(records[j].src_2, records[j].valid_2, cdb[i].arn, cdb[i].rrn));
+          if (match_data_bus(
+                  records[j].src_2, records[j].valid_2, data_bus[i].arn, data_bus[i].rrn
+              ));
           begin
-            records[j].data_2  <= cdb[i].result;
+            records[j].data_2  <= data_bus[i].result;
             records[j].valid_2 <= 1'h1;
           end
         end
@@ -70,18 +72,18 @@ module reservation_station #(
     end
   endgenerate
 
-  always_ff @(posedge gsi.clk) begin : feed_ex_unit
+  always_ff @(posedge global_bus.clock) begin : feed_ex_unit
     for (int i = 0; i < SIZE; i++) begin
       if (records[i].valid_1 && records[i].valid_2 && !records[i].skip) begin
-        exec_feed.data_1 <= records[i].data_1;
-        exec_feed.data_2 <= records[i].data_2;
-        exec_feed.address <= records[i].address;
-        exec_feed.immediate <= records[i].immediate;
-        exec_feed.rrn <= records[i].rrn;
-        exec_feed.instr_name <= records[i].instr_name;
+        feed_bus.data_1 <= records[i].data_1;
+        feed_bus.data_2 <= records[i].data_2;
+        feed_bus.address <= records[i].address;
+        feed_bus.immediate <= records[i].immediate;
+        feed_bus.rrn <= records[i].rrn;
+        feed_bus.instr_name <= records[i].instr_name;
         break;
       end else begin
-        exec_feed.instr_name <= UNKNOWN;
+        feed_bus.instr_name <= UNKNOWN;
       end
     end
   end
@@ -91,6 +93,6 @@ module reservation_station #(
   end
 
   always_comb begin : skip
-    if (gsi.delete_tagged) foreach (records[i]) records[i].skip = records[i].tag;
+    if (global_bus.delete_tag) foreach (records[i]) records[i].skip = records[i].tag;
   end
 endmodule

@@ -4,13 +4,13 @@ module cache #(
     parameter int XLEN  = 32,
     parameter int SETS  = 8,
     parameter int WORDS = 4,
-    parameter int PORTS = 2
+    parameter int PORTS = 1
 ) (
-    global_signals_if.rest gsi,
+    global_bus_if.rest global_bus,
 
-    cache_bus_if.cache cache_bus[PORTS],
-    cache_memory_bus_if.cache memory_bus,
-    common_data_bus_if.cache cdb[2]
+    memory_bus_if.cache_cpu cpu_bus[PORTS],
+    memory_bus_if.cache_mem memory_bus,
+    common_data_bus_if.cache data_bus[2]
 );
   localparam int SetBits = $clog2(SETS);
   localparam int WordBits = $clog2(WORDS);
@@ -34,64 +34,65 @@ module cache #(
 
   wb_record_t write_buffer[$:SETS];
 
-  assign byte_select[0] = cache_bus[0].address[1:0];
-  assign word_select[0] = cache_bus[0].address[WordBits+1:2];
-  assign set_select[0]  = cache_bus[0].address[SetBits+WordBits+1:WordBits+2];
-  assign byte_select[1] = cache_bus[1].address[1:0];
-  assign word_select[1] = cache_bus[1].address[WordBits+1:2];
-  assign set_select[1]  = cache_bus[1].address[SetBits+WordBits+1:WordBits+2];
+  genvar i;
+  generate
+    for (i = 0; i < PORTS; i++) begin : gen_selects
+      assign byte_select[i] = cpu_bus[i].address[1:0];
+      assign word_select[i] = cpu_bus[i].address[WordBits+1:2];
+      assign set_select[i]  = cpu_bus[i].address[SetBits+WordBits+1:WordBits+2];
+    end
+  endgenerate
 
   always_comb begin : data_reset
-    if (gsi.reset) begin
+    if (global_bus.reset) begin
       foreach (data[j]) begin
         data[j] = '{'z, '{'z, 'z, 'z, 'z}, INVALID};
       end
     end
   end
 
-  genvar i;
   generate
     for (i = 0; i < PORTS; i++) begin : gen_per_port
 
       always_comb begin : port_reset
-        if (gsi.reset) begin
-          cache_bus[i].hit = 0;
+        if (global_bus.reset) begin
+          cpu_bus[i].hit   = 0;
           memory_bus.read  = 0;
           memory_bus.write = 0;
         end
       end
 
-      always_ff @(posedge gsi.clk) begin
-        if (cache_bus[i].read) begin
-          if (cache_bus[i].address[XLEN-1:(SetBits+WordBits+2)] == data[set_select[i]].tag) begin
-            cache_bus[i].hit  <= 1'h1;
-            cache_bus[i].data <= data[set_select[i]].words[word_select[i]];
+      always_ff @(posedge global_bus.clock) begin
+        if (cpu_bus[i].read) begin
+          if (cpu_bus[i].address[XLEN-1:(SetBits+WordBits+2)] == data[set_select[i]].tag) begin
+            cpu_bus[i].hit  <= 1'h1;
+            cpu_bus[i].data <= data[set_select[i]].words[word_select[i]];
           end else if (!(memory_bus.read || memory_bus.write)) begin
             memory_bus.read <= 1'h1;
-            memory_bus.address <= cache_bus[i].address;
-            cache_bus[i].hit <= 1'h0;
+            memory_bus.address <= cpu_bus[i].address;
+            cpu_bus[i].hit <= 1'h0;
           end else if (memory_bus.read && !memory_bus.write &&
-          memory_bus.address == cache_bus[i].address)
+          memory_bus.address == cpu_bus[i].address)
             if (memory_bus.ready) begin
-              data[set_select[i]].tag <= cache_bus[i].address[XLEN-1:(SetBits+WordBits+2)];
+              data[set_select[i]].tag <= cpu_bus[i].address[XLEN-1:(SetBits+WordBits+2)];
               data[set_select[i]].words <= memory_bus.data;
               data[set_select[i]].state <= VALID;
 
               memory_bus.read <= 1'h0;
               memory_bus.address <= 'z;
-            end else cache_bus[i].hit <= 1'h0;
+            end else cpu_bus[i].hit <= 1'h0;
         end
       end
 
-      always_ff @(posedge gsi.clk) begin
-        if (cache_bus[i].write) begin
-          if (cache_bus[i].address[XLEN-1:(SetBits+WordBits+2)] == data[set_select[i]].tag
+      always_ff @(posedge global_bus.clock) begin
+        if (cpu_bus[i].write) begin
+          if (cpu_bus[i].address[XLEN-1:(SetBits+WordBits+2)] == data[set_select[i]].tag
           && data[set_select[i]].state == MODIFIED) begin
             write_buffer.push_back('{{data[set_select[i]].tag, set_select[i], {WordBits + 2{1'h0}}},
                                    data[set_select[i]].words});
           end else begin
-            data[set_select[i]].tag <= cache_bus[i].address[XLEN-1:(SetBits+WordBits+2)];
-            data[set_select[i]].words[word_select[i]] <= cache_bus[i].data;
+            data[set_select[i]].tag <= cpu_bus[i].address[XLEN-1:(SetBits+WordBits+2)];
+            data[set_select[i]].words[word_select[i]] <= cpu_bus[i].data;
             data[set_select[i]].state <= MODIFIED;
           end
         end
@@ -99,7 +100,7 @@ module cache #(
     end
   endgenerate
 
-  always_ff @(posedge gsi.clk) begin
+  always_ff @(posedge global_bus.clock) begin
     if (write_buffer.size() != 0 && !memory_bus.read) begin
       memory_bus.write <= 1'h1;
       memory_bus.address <= write_buffer[0].address;

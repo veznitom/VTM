@@ -1,45 +1,38 @@
-interface global_signals_if (
-    input logic clk,
-    reset
+import structures::*;
+
+interface global_bus_if (
+    input logic clock,
+    input logic reset
 );
-  logic delete_tagged, clear_tags;
-  modport rob(input clk, reset, output delete_tagged, clear_tags);
-  modport rest(input clk, reset, delete_tagged, clear_tags);
+  logic delete_tag, clear_tag;
+
+  modport rob(input clock, reset, output delete_tag, clear_tag);
+  modport rest(input clock, reset, delete_tag, clear_tag);
 endinterface
 
-interface cpu_debug_if;
-  logic [31:0] reg_11_value;
-  logic [ 6:0] ren_queue_size;
-endinterface
-
-interface memory_debug_if #(
-    parameter int SIZE_BYTES = 128
-);
-  logic [7:0] bytes[SIZE_BYTES];
-  logic en_debug;
-endinterface
-
-interface pc_interface_if #(
+interface pc_bus_if #(
     parameter int XLEN = 32
 ) ();
   logic [31:0] jmp_address, address;
   logic plus_4, plus_8, write;
+
   modport pc(input jmp_address, plus_4, plus_8, write, output address);
-  modport dispatch(input address, output plus_4, plus_8);
+  modport loader(output plus_4, plus_8);
   modport rob(output jmp_address, write);
 endinterface
 
-interface register_values_if #(
+interface reg_val_bus_if #(
     parameter int XLEN = 32
 ) ();
   logic [XLEN-1:0] data_1, data_2;
   logic [5:0] src_1, src_2;
   logic valid_1, valid_2;
+
   modport cmp(input data_1, data_2, valid_1, valid_2, output src_1, src_2);
   modport reg_file(input src_1, src_2, output data_1, data_2, valid_1, valid_2);
 endinterface
 
-interface instr_info_if #(
+interface instr_info_bus_if #(
     parameter int XLEN = 32
 );
   logic [XLEN-1:0] address, immediate;
@@ -47,8 +40,12 @@ interface instr_info_if #(
   st_type_e st_type;
   src_dest_t regs;
   flag_vector_t flags;
+
+  modport in(input address, immediate, instr_name, st_type, regs, flags);
+  modport out(output address, immediate, instr_name, st_type, regs, flags);
 endinterface
 
-interface fullness_indication_if;
-  logic alu, bracnh, load_store, rob, mult_div;
+interface fullness_bus_if;
+  logic alu, branch, load_store, rob, mult_div;
+  modport issuer(input alu, branch, load_store, rob, mult_div);
 endinterface
