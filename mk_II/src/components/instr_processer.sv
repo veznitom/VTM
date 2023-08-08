@@ -22,7 +22,7 @@ module instr_processer #(
   instr_info_bus_if res_to_issue[2] ();
   instr_info_bus_if issue_to_cmp[2] ();
 
-  assign stop = stop_res | stop_iss;
+  assign stop = stop_res | stop_iss | 1'h0;
 
   loader #(
       .XLEN(XLEN)

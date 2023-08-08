@@ -133,12 +133,13 @@ module reorder_buffer #(
     if (records[0].status == IGNORE) records.pop_front();
   end
 
-  always_ff @(posedge global_bus.delete_tag) begin : ignore_tagged
-    for (int i = 0; i < SIZE; i++) if (records[i].flags.tag) records[i].status <= IGNORE;
+  always_comb begin : ignore_tagged
+    if (global_bus.delete_tag)
+      foreach (records[i]) if (records[i].flags.tag) records[i].status = IGNORE;
   end
 
-  always_ff @(posedge global_bus.clear_tag) begin : clear_tag
-    for (int i = 0; i < SIZE; i++) if (records[i].flags.tag) records[i].flags.tag <= 1'b0;
+  always_comb begin : clear_tag
+    if (global_bus.delete_tag)
+      foreach (records[i]) if (records[i].flags.tag) records[i].flags.tag = 1'h0;
   end
-
 endmodule

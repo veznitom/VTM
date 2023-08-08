@@ -14,7 +14,7 @@ module issuer #(
 
     output logic stop
 );
-
+  logic stops[2];
   logic fullness_split[5];
 
   assign fullness_split[AL] = fullness.alu;
@@ -23,22 +23,28 @@ module issuer #(
   assign fullness_split[RB] = fullness.rob;
   assign fullness_split[MD] = fullness.mult_div;
 
+  assign stop = stops[0] | stops[1] | 1'h0;
+
+  always_comb begin : reset
+    if (global_bus.reset) stop = 1'h0;
+  end
+
   genvar i;
   generate
     for (i = 0; i < 2; i++) begin : gen_instr_info
       always_ff @(posedge global_bus.clock) begin : issue
         if (instr_info_in[0].instr_name != UNKNOWN && instr_info_in[1].instr_name != UNKNOWN) begin
           if (!fullness_split[instr_info_in[0].st_type] && !fullness_split[instr_info_in[1].st_type]
-      && !fullness_split[RB]) begin
+          && !fullness_split[RB]) begin
             instr_info_out[i].address <= instr_info_in[i].address;
             instr_info_out[i].immediate <= instr_info_in[i].immediate;
             instr_info_out[i].instr_name <= instr_info_in[i].instr_name;
             instr_info_out[i].st_type <= instr_info_in[i].st_type;
             instr_info_out[i].regs <= instr_info_in[i].regs;
             instr_info_out[i].flags <= instr_info_in[i].flags;
-            stop <= 1'h0;
-          end else stop <= 1'h1;
-        end
+            stops[i] <= 1'h0;
+          end else stops[i] <= 1'h1;
+        end else stops[i] <= 1'h0;
       end
     end
   endgenerate

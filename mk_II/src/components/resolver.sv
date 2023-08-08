@@ -51,7 +51,7 @@ module resolver #(
       query[1].tag <= tag_active;
 
       stop_out <= 1'h1;
-    end
+    end else stop_out <= 1'h0;
 
     if (stop_out) begin
       instr_info_out[0].address <= instr_info_in[0].address;

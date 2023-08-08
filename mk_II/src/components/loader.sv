@@ -12,6 +12,15 @@ module loader #(
     input logic stop
 );
 
+  always_comb begin : reset
+    if (global_bus.reset) begin
+      pc_bus.plus_4 = 1'h0;
+      pc_bus.plus_8 = 1'h0;
+      cache_bus[0].read = 1'h0;
+      cache_bus[1].read = 1'h0;
+    end
+  end
+
   always_ff @(posedge global_bus.clock) begin : instr_load
     if (!stop && cache_bus[0].hit && cache_bus[1].hit) begin
       address[0] <= cache_bus[0].address;

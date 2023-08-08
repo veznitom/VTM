@@ -38,7 +38,7 @@ module cache #(
   generate
     for (i = 0; i < PORTS; i++) begin : gen_selects
       assign byte_select[i] = cpu_bus[i].address[1:0];
-      assign word_select[i] = cpu_bus[i].address[WordBits+1:2];
+      assign word_select[i] = WORDS - 1 - cpu_bus[i].address[WordBits+1:2];
       assign set_select[i]  = cpu_bus[i].address[SetBits+WordBits+1:WordBits+2];
     end
   endgenerate
@@ -46,7 +46,7 @@ module cache #(
   always_comb begin : data_reset
     if (global_bus.reset) begin
       foreach (data[j]) begin
-        data[j] = '{'z, '{'z, 'z, 'z, 'z}, INVALID};
+        data[j] = '{'z, 'z, INVALID};
       end
     end
   end

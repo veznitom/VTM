@@ -9,14 +9,20 @@ module cpu #(
     input logic reset
 );
 
+  localparam int InstrCacheWords = memory_bus.BUS_WIDTH_BYTES / 4;
+  localparam int InstrCacheSets = 8;
+
+  localparam int DataCacheWords = memory_bus.BUS_WIDTH_BYTES / 4;
+  localparam int DataCacheSets = 4;
+
   global_bus_if global_bus (
       .clock(clock),
       .reset(reset)
   );
-  memory_bus_if data_memory_bus ();
-  memory_bus_if instr_memory_bus ();
-  memory_bus_if instr_cache_bus[2] ();
-  memory_bus_if data_cache_bus[1] ();
+  memory_bus_if #(.BUS_WIDTH_BYTES(memory_bus.BUS_WIDTH_BYTES)) data_memory_bus ();
+  memory_bus_if #(.BUS_WIDTH_BYTES(memory_bus.BUS_WIDTH_BYTES)) instr_memory_bus ();
+  memory_bus_if #(.BUS_WIDTH_BYTES(XLEN / 8)) instr_cache_bus[2] ();
+  memory_bus_if #(.BUS_WIDTH_BYTES(XLEN / 8)) data_cache_bus[1] ();
 
   common_data_bus_if data_bus[2] ();
   common_data_bus_if dummy[2] ();
@@ -36,6 +42,8 @@ module cpu #(
 
   cache #(
       .XLEN (XLEN),
+      .SETS (InstrCacheSets),
+      .WORDS(InstrCacheWords),
       .PORTS(2)
   ) instr_cache (
       .global_bus(global_bus),
@@ -46,6 +54,8 @@ module cpu #(
 
   cache #(
       .XLEN (XLEN),
+      .SETS (DataCacheSets),
+      .WORDS(DataCacheWords),
       .PORTS(1)
   ) data_cache (
       .global_bus(global_bus),
@@ -134,4 +144,12 @@ module cpu #(
 
   assign instr_cache_bus[0].address = pc_bus.address;
   assign instr_cache_bus[1].address = pc_bus.address + 4;
+
+  genvar i;
+  generate
+    for (i = 0; i < 2; i++) begin : gen_zero
+      assign instr_cache_bus[i].write = 1'h0;
+      assign instr_cache_bus[i].tag   = 1'h0;
+    end
+  endgenerate
 endmodule
