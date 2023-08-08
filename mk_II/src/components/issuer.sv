@@ -33,7 +33,8 @@ module issuer #(
     for (i = 0; i < 2; i++) begin : gen_instr_info
       always_ff @(posedge global_bus.clock) begin : issue
         if (instr_info_in[0].instr_name != UNKNOWN && instr_info_in[1].instr_name != UNKNOWN) begin
-          if (!fullness_split[instr_info_in[0].instr_type] && !fullness_split[instr_info_in[1].instr_type]
+          if (!fullness_split[instr_info_in[0].instr_type]
+          && !fullness_split[instr_info_in[1].instr_type]
           && !fullness_split[RB]) begin
             instr_info_out[i].address <= instr_info_in[i].address;
             instr_info_out[i].immediate <= instr_info_in[i].immediate;
