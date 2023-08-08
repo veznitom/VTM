@@ -1,7 +1,9 @@
+import structures::*;
+
 module reservation_station #(
     parameter int XLEN = 32,
     parameter int SIZE = 16,
-    parameter st_type_e ST_TYPE = XX
+    parameter instr_type_e INSTR_TYPE = XX
 ) (
     global_bus_if.rest global_bus,
     issue_bus_if.combo issue[2],
@@ -38,7 +40,7 @@ module reservation_station #(
   generate
     for (i = 0; i < 2; i++) begin : gen_issue
       always_ff @(posedge global_bus.clock) begin : receive_instruction
-        if (issue[i].st_type == ST_TYPE && !global_bus.delete_tag) begin
+        if (issue[i].instr_type == INSTR_TYPE && !global_bus.delete_tag) begin
           records.push_back('{issue[i].data_1, issue[i].data_2, issue[i].address,
                             issue[i].immediate, issue[i].regs.rs_1, issue[i].regs.rs_2,
                             issue[i].regs.rn, issue[i].valid_1, issue[i].valid_2,

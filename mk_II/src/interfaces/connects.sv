@@ -32,19 +32,6 @@ interface reg_val_bus_if #(
   modport reg_file(input src_1, src_2, output data_1, data_2, valid_1, valid_2);
 endinterface
 
-interface instr_info_bus_if #(
-    parameter int XLEN = 32
-);
-  logic [XLEN-1:0] address, immediate;
-  instr_name_e instr_name;
-  st_type_e st_type;
-  src_dest_t regs;
-  flag_vector_t flags;
-
-  modport in(input address, immediate, instr_name, st_type, regs, flags);
-  modport out(output address, immediate, instr_name, st_type, regs, flags);
-endinterface
-
 interface fullness_bus_if;
   logic alu, branch, load_store, rob, mult_div;
   modport issuer(input alu, branch, load_store, rob, mult_div);

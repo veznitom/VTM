@@ -11,4 +11,14 @@ interface common_data_bus_if #(
   modport reg_file(input result, address, arn, rrn, reg_write);
   modport cache(input result, address, cache_write);
   modport cmp(input result, arn, rrn);
+
+  task automatic clear();
+    result = {XLEN{1'h0}};
+    address = {XLEN{1'h0}};
+    jmp_address = {XLEN{1'h0}};
+    arn = 6'h0;
+    rrn = 6'h0;
+    reg_write = 1'h0;
+    cache_write = 1'h0;
+  endtask  //automatic
 endinterface

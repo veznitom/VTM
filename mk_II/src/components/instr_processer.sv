@@ -1,5 +1,6 @@
 /*  Instruction processer combines loader, decoder, resolver, and issuer into one block to ease the cpu module complexity
 */
+import structures::*;
 
 module instr_processer #(
     parameter int XLEN = 32
@@ -21,7 +22,6 @@ module instr_processer #(
   instr_info_bus_if dec_to_res[2] ();
   instr_info_bus_if res_to_issue[2] ();
   instr_info_bus_if issue_to_cmp[2] ();
-
   assign stop = stop_res | stop_iss | 1'h0;
 
   loader #(
@@ -89,5 +89,18 @@ module instr_processer #(
       .reg_val(reg_val[1]),
       .data_bus(data_bus)
   );
+
+  genvar i;
+  generate
+    for (i = 0; i < 2; i++) begin : gen_wire_clear
+      always_comb begin
+        if (global_bus.reset) begin
+          dec_to_res[i].clear();
+          res_to_issue[i].clear();
+          issue_to_cmp[i].clear();
+        end
+      end
+    end
+  endgenerate
 endmodule
 

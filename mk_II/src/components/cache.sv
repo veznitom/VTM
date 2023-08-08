@@ -56,32 +56,32 @@ module cache #(
 
       always_comb begin : port_reset
         if (global_bus.reset) begin
-          cpu_bus[i].hit   = 0;
-          memory_bus.read  = 0;
-          memory_bus.write = 0;
+          cpu_bus[i].hit   = 1'h0;
+          memory_bus.read  = 1'h0;
+          memory_bus.write = 1'h0;
         end
       end
 
-      always_ff @(posedge global_bus.clock) begin
+      always_comb/*always_ff @(posedge global_bus.clock)*/ begin
         if (cpu_bus[i].read) begin
           if (cpu_bus[i].address[XLEN-1:(SetBits+WordBits+2)] == data[set_select[i]].tag) begin
-            cpu_bus[i].hit  <= 1'h1;
-            cpu_bus[i].data <= data[set_select[i]].words[word_select[i]];
+            cpu_bus[i].hit  = 1'h1;
+            cpu_bus[i].data = data[set_select[i]].words[word_select[i]];
           end else if (!(memory_bus.read || memory_bus.write)) begin
-            memory_bus.read <= 1'h1;
-            memory_bus.address <= cpu_bus[i].address;
-            cpu_bus[i].hit <= 1'h0;
+            memory_bus.read = 1'h1;
+            memory_bus.address = cpu_bus[i].address;
+            cpu_bus[i].hit = 1'h0;
           end else if (memory_bus.read && !memory_bus.write &&
           memory_bus.address == cpu_bus[i].address)
             if (memory_bus.ready) begin
-              data[set_select[i]].tag <= cpu_bus[i].address[XLEN-1:(SetBits+WordBits+2)];
-              data[set_select[i]].words <= memory_bus.data;
-              data[set_select[i]].state <= VALID;
+              data[set_select[i]].tag = cpu_bus[i].address[XLEN-1:(SetBits+WordBits+2)];
+              data[set_select[i]].words = memory_bus.data;
+              data[set_select[i]].state = VALID;
 
-              memory_bus.read <= 1'h0;
-              memory_bus.address <= 'z;
-            end else cpu_bus[i].hit <= 1'h0;
-        end
+              memory_bus.read = 1'h0;
+              memory_bus.address = 'z;
+            end else cpu_bus[i].hit = 1'h0;
+        end else cpu_bus[i].hit = 1'h0;
       end
 
       always_ff @(posedge global_bus.clock) begin

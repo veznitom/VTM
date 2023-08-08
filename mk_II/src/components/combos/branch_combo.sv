@@ -17,7 +17,8 @@ module branch_combo #(
 
   reservation_station #(
       .XLEN(XLEN),
-      .SIZE(16)
+      .SIZE(16),
+      .INSTR_TYPE(BR)
   ) branch_station (
       .global_bus(global_bus),
       .issue(issue),

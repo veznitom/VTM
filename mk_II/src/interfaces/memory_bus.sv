@@ -15,5 +15,11 @@ interface memory_bus_if #(
   modport mmu(input data, address, read, write, output ready, done);
   modport ram(input address, read, write, inout data, output ready, done);
   modport cpu(input ready, done, inout data, output address, read, write);
+
+  task automatic clear();
+    data = {XLEN{1'h0}};
+    address = {XLEN{1'h0}};
+    {read, write, tag, ready, done, hit} = {1'h0, 1'h0, 1'h0, 1'h0, 1'h0, 1'h0};
+  endtask  // clear all wires
 endinterface
 

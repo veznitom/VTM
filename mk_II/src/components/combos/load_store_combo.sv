@@ -18,7 +18,8 @@ module load_store_combo #(
 
   reservation_station #(
       .XLEN(XLEN),
-      .SIZE(16)
+      .SIZE(16),
+      .INSTR_TYPE(LS)
   ) load_store_station (
       .global_bus(global_bus),
       .issue(issue),

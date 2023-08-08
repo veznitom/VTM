@@ -1,3 +1,5 @@
+import structures::*;
+
 module register_file #(
     parameter int XLEN = 32
 ) (
@@ -29,6 +31,12 @@ module register_file #(
 
   genvar i;
   generate
+    for (i = 0; i < 2; i++) begin : gen_q_rn_clear
+      assign query[i].outputs.rd = 6'h0;
+    end
+  endgenerate
+
+  generate
     for (i = 0; i < 2; i++) begin : gen_reg_val
       always_comb begin : data_return
         reg_val[i].data_1  = registers[reg_val[i].src_1].value;
@@ -40,9 +48,23 @@ module register_file #(
   endgenerate
 
   generate
+    for (i = 0; i < 2; i++) begin : gen_reg_nums
+      always_comb begin
+        if (registers[query[i].inputs.rs_1].rrn != 00)
+          query[i].outputs.rs_1 = registers[query[i].inputs.rs_1];
+        else query[i].outputs.rs_1 = query[i].inputs.rs_1;
+
+        if (registers[query[i].inputs.rs_2].rrn != 00)
+          query[i].outputs.rs_2 = registers[query[i].inputs.rs_2];
+        else query[i].outputs.rs_2 = query[i].inputs.rs_2;
+      end
+    end
+  endgenerate
+
+  generate
     for (i = 0; i < 2; i++) begin : gen_rename
-      always_ff @(posedge global_bus.clock) begin : renaming
-        if ((32 - ren_queue.size()) >= 2) begin
+      always_ff @(posedge query[i].rename) begin : renaming
+        if (ren_queue.size() >= 2) begin
           if (query[i].rename) begin
             query[i].outputs.rn <= ren_queue[0];
             registers[query[i].inputs.rd].rrn <= ren_queue[0];

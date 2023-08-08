@@ -1,3 +1,5 @@
+import structures::*;
+
 module memory_management_unit (
     global_bus_if.rest global_bus,
     memory_bus_if.mmu  data_bus,

@@ -1,6 +1,6 @@
 package structures;
 
-  typedef enum reg [7:0] {
+  typedef enum logic [7:0] {
     // Memory instructions
     LB,
     LH,
@@ -65,38 +65,38 @@ package structures;
     UNKNOWN
   } instr_name_e;
 
-  typedef enum reg [2:0] {
+  typedef enum logic [2:0] {
     NJ1NJ2,
     NJ1J2,
     J1NJ2,
     J1J2,
     ERROR
-  } instr_types_e;
+  } jmp_relation_e;
 
-  typedef enum reg [1:0] {
+  typedef enum logic [1:0] {
     VALID,
     INVALID,
     MODIFIED
   } cache_state_e;
 
-  typedef enum reg [1:0] {
+  typedef enum logic [1:0] {
     IDLE,
     READ,
     WRITE
   } mmu_state_e;
 
-  typedef enum reg [2:0] {
+  typedef enum logic [2:0] {
     BR,
     AL,
     LS,
     MD,
     RB,
     XX
-  } st_type_e;
+  } instr_type_e;
 
   typedef struct packed {logic writes, jumps, uses_imm, tag, mem;} flag_vector_t;
 
-  typedef struct packed {logic [5:0] rd, rs_1, rs_2, rn;} src_dest_t;
+  typedef struct packed {logic [5:0] rd, rs_1, rs_2, rn;} registers_t;
 endpackage
 
 

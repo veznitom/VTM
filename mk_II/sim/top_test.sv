@@ -1,5 +1,5 @@
 module top_test #(
-    parameter int XLEN = 32,
+    parameter int XLEN  = 32,
     parameter int WORDS = 4
 ) ();
   logic clock, reset;
@@ -30,10 +30,10 @@ module top_test #(
 
   initial begin
     clock = 0;
-    reset = 1;
-    #40;
     reset = 0;
-    #100 $finish;
+    #10 reset = 1;
+    #10 reset = 0;
+    #300 $finish;
   end
 
   always #10 clock = ~clock;

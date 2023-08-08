@@ -1,3 +1,5 @@
+import structures::*;
+
 module reorder_buffer #(
     parameter int XLEN = 32,
     parameter logic [7:0] ARBITER_ADDRESS = 8'h00,
@@ -19,7 +21,7 @@ module reorder_buffer #(
   typedef struct packed {
     logic [31:0] result, address, jmp_address;
     record_status_e status;
-    src_dest_t regs;
+    registers_t regs;
     flag_vector_t flags;
   } rob_record_t;
 
@@ -109,7 +111,7 @@ module reorder_buffer #(
   generate
     for (i = 0; i < 2; i++) begin : gen_issue
       always_ff @(posedge global_bus.clock) begin : add_record
-        if (issue[i].st_type != XX && !global_bus.delete_tag)
+        if (issue[i].instr_type != XX && !global_bus.delete_tag)
           records.push_back('{'z, issue[i].address, 'z, WAITING, issue[i].regs, issue[i].flags});
       end
     end

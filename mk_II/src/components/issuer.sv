@@ -1,7 +1,6 @@
 /*  Controls if destination stations or reorder buffer has enough space to hold another instructions, if they do then the instructions are issued otherwise,
     issuer halts and waits for them to free up (halt also stops loader, decoder, resolver unless there is bubble in the form of zero instruction).
 */
-
 import structures::*;
 
 module issuer #(
@@ -34,12 +33,12 @@ module issuer #(
     for (i = 0; i < 2; i++) begin : gen_instr_info
       always_ff @(posedge global_bus.clock) begin : issue
         if (instr_info_in[0].instr_name != UNKNOWN && instr_info_in[1].instr_name != UNKNOWN) begin
-          if (!fullness_split[instr_info_in[0].st_type] && !fullness_split[instr_info_in[1].st_type]
+          if (!fullness_split[instr_info_in[0].instr_type] && !fullness_split[instr_info_in[1].instr_type]
           && !fullness_split[RB]) begin
             instr_info_out[i].address <= instr_info_in[i].address;
             instr_info_out[i].immediate <= instr_info_in[i].immediate;
             instr_info_out[i].instr_name <= instr_info_in[i].instr_name;
-            instr_info_out[i].st_type <= instr_info_in[i].st_type;
+            instr_info_out[i].instr_type <= instr_info_in[i].instr_type;
             instr_info_out[i].regs <= instr_info_in[i].regs;
             instr_info_out[i].flags <= instr_info_in[i].flags;
             stops[i] <= 1'h0;

@@ -10,7 +10,7 @@ module cpu #(
 );
 
   localparam int InstrCacheWords = memory_bus.BUS_WIDTH_BYTES / 4;
-  localparam int InstrCacheSets = 8;
+  localparam int InstrCacheSets = 4;
 
   localparam int DataCacheWords = memory_bus.BUS_WIDTH_BYTES / 4;
   localparam int DataCacheSets = 4;
@@ -145,11 +145,22 @@ module cpu #(
   assign instr_cache_bus[0].address = pc_bus.address;
   assign instr_cache_bus[1].address = pc_bus.address + 4;
 
-  genvar i;
+  /*genvar i;
   generate
     for (i = 0; i < 2; i++) begin : gen_zero
       assign instr_cache_bus[i].write = 1'h0;
       assign instr_cache_bus[i].tag   = 1'h0;
     end
+
+    always_comb begin : clear_isssue
+      if (reset) issue[i].clear();
+    end
   endgenerate
+
+  */ always_comb begin : clear_wires
+    if (reset) begin
+      data_bus[0].clear();
+      data_bus[1].clear();
+    end
+  end
 endmodule

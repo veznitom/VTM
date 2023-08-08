@@ -20,8 +20,9 @@ module ram #(
     end
   end
 
-  assign start_address = memory_bus.address[ADDRESS_WIDTH-1:0] & {memory_bus.BUS_BIT_LOG{1'h0}};
-  assign end_address   = memory_bus.address[ADDRESS_WIDTH-1:0] | {memory_bus.BUS_BIT_LOG{1'h1}};
+  assign start_address = memory_bus.address[ADDRESS_WIDTH-1:0] &
+    {{(ADDRESS_WIDTH-memory_bus.BUS_BIT_LOG){1'h1}}, {memory_bus.BUS_BIT_LOG{1'h0}}};
+  assign end_address = memory_bus.address[ADDRESS_WIDTH-1:0] | {memory_bus.BUS_BIT_LOG{1'h1}};
 
   always_ff @(posedge clock) begin
     if (memory_bus.read) begin
