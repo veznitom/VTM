@@ -6,6 +6,7 @@ module register_file #(
     global_bus_if.rest global_bus,
     reg_query_bus_if.reg_file query[2],
     reg_val_bus_if.reg_file reg_val[2],
+    common_data_bus_if.reg_file data_bus[2],
     cpu_debug_if debug
 );
   typedef struct packed {
@@ -15,16 +16,16 @@ module register_file #(
   } register_t;
 
   register_t registers[64];
-  logic [5:0] ren_queue[$:32];
+  logic [5:0] ren_queue[32];
 
   always_comb begin : reset
     if (global_bus.reset) begin
       foreach (registers[j]) begin
         registers[j] = '{0, 0, 0, 0};
       end
-      ren_queue.delete();
+      //ren_queue.delete();
       for (int i = 32; i < 64; i++) begin
-        ren_queue.push_back(i);
+        //ren_queue.push_back(i);
       end
     end
   end
@@ -64,14 +65,14 @@ module register_file #(
   generate
     for (i = 0; i < 2; i++) begin : gen_rename
       always_ff @(posedge query[i].rename) begin : renaming
-        if (ren_queue.size() >= 2) begin
+        if (/*ren_queue.size()*/10 >= 2) begin
           if (query[i].rename) begin
             query[i].outputs.rn <= ren_queue[0];
             registers[query[i].inputs.rd].rrn <= ren_queue[0];
             registers[ren_queue[0]] <= '{0, 0, 0, query[i].tag};
             if (!query[i].tag) registers[query[i].inputs.rd].valid <= 1'h0;
             registers[query[i].inputs.rd].tag <= query[i].tag;
-            ren_queue.pop_front();
+            //ren_queue.pop_front();
           end else query[i].outputs.rn <= 6'h00;
         end else query[i].outputs.rn <= 6'h00;
       end
@@ -96,7 +97,7 @@ module register_file #(
               registers[data_bus[i].arn].valid <= 1'h1;
             end
             registers[data_bus[i].rrn] <= '{0, 0, 0, 0};
-            ren_queue.push_back(registers[data_bus[i].arn].rrn);
+            //ren_queue.push_back(registers[data_bus[i].arn].rrn);
           end
         end
       end
@@ -122,7 +123,7 @@ module register_file #(
     for (int i = 32; i < 64; i++) begin
       if (registers[i].tag) begin
         registers[i] <= '{0, 0, 0, 0};
-        ren_queue.push_back(i);
+        //ren_queue.push_back(i);
       end
     end
   end

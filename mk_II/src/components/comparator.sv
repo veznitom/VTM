@@ -8,7 +8,6 @@ module comparator (
     reg_val_bus_if.cmp reg_val,
     common_data_bus_if.cmp data_bus[2]
 );
-
   assign reg_val.src_1 = instr_info.regs.rs_1;
   assign reg_val.src_2 = instr_info.regs.rs_2;
 
@@ -18,7 +17,7 @@ module comparator (
   assign issue.regs = instr_info.regs;
   assign issue.flags = instr_info.flags;
 
-  always_comb begin : compare
+  always_comb begin
     if (instr_info.regs.rs_1 == data_bus[0].arn || instr_info.regs.rs_1 == data_bus[0].rrn) begin
       issue.data_1  = data_bus[0].result;
       issue.valid_1 = 1'h1;

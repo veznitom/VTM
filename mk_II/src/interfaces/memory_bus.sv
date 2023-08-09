@@ -12,7 +12,7 @@ interface memory_bus_if #(
   modport loader(input data, address, hit, output read);
   modport cache_cpu(input address, read, write, tag, inout data, output hit);
   modport cache_mem(input ready, done, inout data, output address, read, write);
-  modport mmu(input data, address, read, write, output ready, done);
+  modport mmu(inout data, address, input read, write, output ready, done);
   modport ram(input address, read, write, inout data, output ready, done);
   modport cpu(input ready, done, inout data, output address, read, write);
 

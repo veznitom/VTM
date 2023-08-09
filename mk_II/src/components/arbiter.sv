@@ -13,4 +13,5 @@ module arbiter #(
     output logic bus_granted,
     output logic bus_selected
 );
+  assign bus_granted = get_bus;
 endmodule

@@ -25,7 +25,7 @@ interface reg_val_bus_if #(
     parameter int XLEN = 32
 ) ();
   logic [XLEN-1:0] data_1, data_2;
-  logic [5:0] src_1, src_2;
+  wire [5:0] src_1, src_2;
   logic valid_1, valid_2;
 
   modport cmp(input data_1, data_2, valid_1, valid_2, output src_1, src_2);

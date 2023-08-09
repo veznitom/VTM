@@ -97,6 +97,19 @@ package structures;
   typedef struct packed {logic writes, jumps, uses_imm, tag, mem;} flag_vector_t;
 
   typedef struct packed {logic [5:0] rd, rs_1, rs_2, rn;} registers_t;
+
+  typedef enum logic [1:0] {
+    WAITING,
+    COMPLETED,
+    IGNORE
+  } record_status_e;
+
+  typedef struct packed {
+    logic [31:0] result, address, jmp_address;
+    record_status_e status;
+    registers_t regs;
+    flag_vector_t flags;
+  } rob_record_t;
 endpackage
 
 

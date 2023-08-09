@@ -12,20 +12,18 @@ module reorder_buffer #(
 
     output logic full
 );
-  typedef enum logic [1:0] {
-    WAITING,
-    COMPLETED,
-    IGNORE
-  } record_status_e;
+  rob_record_t records[SIZE];
 
-  typedef struct packed {
-    logic [31:0] result, address, jmp_address;
-    record_status_e status;
-    registers_t regs;
-    flag_vector_t flags;
-  } rob_record_t;
+  logic [3:0] read_address;
+  logic [3:0] write_address;
 
-  logic get_bus, bus_granted, bus_selected;
+  logic get_bus;
+  logic bus_granted;
+  logic bus_selected;
+
+  logic read;
+  logic write;
+  logic empty;
 
   arbiter #(
       .ADDRESS(ARBITER_ADDRESS)
@@ -35,14 +33,6 @@ module reorder_buffer #(
       .bus_granted(bus_granted),
       .bus_selected(bus_selected)
   );
-
-  rob_record_t records[$:SIZE];
-
-  assign full = (SIZE - 2 == records.size()) ? 1'h1 : 1'h0;
-
-  always_comb begin : reset
-    if (global_bus.reset) records.delete();
-  end
 
   always_ff @(posedge global_bus.clock) begin : jmp_resolve
     if (records[0].status == COMPLETED && records[0].flags.jumps) begin
@@ -65,65 +55,47 @@ module reorder_buffer #(
     end
   end
 
-  always_ff @(posedge global_bus.clock) begin : bus_requesting
-    if (records[0].status == COMPLETED) get_bus <= 1'h1;
-    else get_bus <= 1'h0;
-  end
-
-  always_ff @(posedge global_bus.clock) begin : write_to_bus
-    if (bus_granted) begin
-      if (bus_selected) begin
-        data_bus[1].result <= records[0].result;
-        data_bus[1].address <= records[0].address;
-        data_bus[1].jmp_address <= records[0].jmp_address;
-        data_bus[1].arn <= records[0].regs.rd;
-        data_bus[1].rrn <= records[0].regs.rn;
-        data_bus[1].reg_write <= records[0].flags.writes;
-        data_bus[1].cache_write <= records[0].flags.mem & records[0].flags.writes;
-      end else begin
-        data_bus[0].result <= records[0].result;
-        data_bus[0].address <= records[0].address;
-        data_bus[0].jmp_address <= records[0].jmp_address;
-        data_bus[0].arn <= records[0].regs.rd;
-        data_bus[0].rrn <= records[0].regs.rn;
-        data_bus[0].reg_write <= records[0].flags.writes;
-        data_bus[0].cache_write <= records[0].flags.mem & records[0].flags.writes;
-      end
-    end else begin
-      data_bus[0].result <= 'z;
-      data_bus[0].address <= 'z;
-      data_bus[0].jmp_address <= 'z;
-      data_bus[0].arn <= 'z;
-      data_bus[0].rrn <= 'z;
-      data_bus[0].reg_write <= 'z;
-      data_bus[0].cache_write <= 'z;
-      data_bus[1].result <= 'z;
-      data_bus[1].address <= 'z;
-      data_bus[1].jmp_address <= 'z;
-      data_bus[1].arn <= 'z;
-      data_bus[1].rrn <= 'z;
-      data_bus[1].reg_write <= 'z;
-      data_bus[1].cache_write <= 'z;
-    end
+  always_comb begin : bus_requesting
+    if (records[read_address].status == COMPLETED) get_bus = 1'h1;
+    else get_bus = 1'h0;
   end
 
   genvar i;
   generate
-    for (i = 0; i < 2; i++) begin : gen_issue
-      always_ff @(posedge global_bus.clock) begin : add_record
-        if (issue[i].instr_type != XX && !global_bus.delete_tag)
-          records.push_back('{'z, issue[i].address, 'z, WAITING, issue[i].regs, issue[i].flags});
+    for (i = 0; i < 2; i++) begin : gen_rob
+      always_ff @(posedge global_bus.clock) begin : write_to_bus
+        if (bus_granted) begin
+          if (bus_selected == i) begin
+            data_bus[i].result <= records[read_address].result;
+            data_bus[i].address <= records[read_address].address;
+            data_bus[i].jmp_address <= records[read_address].jmp_address;
+            data_bus[i].arn <= records[read_address].regs.rd;
+            data_bus[i].rrn <= records[read_address].regs.rn;
+            data_bus[i].reg_write <= records[read_address].flags.writes;
+            data_bus[i].cache_write <= records[read_address].flags.mem & records[read_address].flags.writes;
+          end
+        end
       end
-    end
-  endgenerate
 
-  generate
-    for (i = 2; i < 2; i++) begin : gen_data_bus
+      always_ff @(posedge global_bus.clock) begin : add_record
+        if (issue[i].instr_type != XX && !global_bus.delete_tag) begin
+          records[write_address] <= '{
+              'z,
+              issue[i].address,
+              'z,
+              WAITING,
+              issue[i].regs,
+              issue[i].flags
+          };
+          write_address <= write_address + 1;
+        end
+      end
+
       always_ff @(posedge global_bus.clock) begin : data_bus_fetch
         foreach (records[j]) begin
           if (records[j].address == data_bus[i].address) begin
             records[j].result <= data_bus[i].result;
-            records[j].jump_address <= records[j].flags.jumps ? data_bus[i].jmp_address : 'z;
+            records[j].jmp_address <= records[j].flags.jumps ? data_bus[i].jmp_address : 'z;
             records[j].status <= COMPLETED;
           end
         end
@@ -131,8 +103,9 @@ module reorder_buffer #(
     end
   endgenerate
 
-  always_ff @(posedge global_bus.clock) begin : pop_ignored
-    if (records[0].status == IGNORE) records.pop_front();
+  always_comb begin : pop_ignored
+    if (records[read_address].status == IGNORE || bus_granted) read = 1'h1;
+    else read = 1'h0;
   end
 
   always_comb begin : ignore_tagged
@@ -143,5 +116,44 @@ module reorder_buffer #(
   always_comb begin : clear_tag
     if (global_bus.delete_tag)
       foreach (records[i]) if (records[i].flags.tag) records[i].flags.tag = 1'h0;
+  end
+
+  // Queue control -------------------------------------------------------------------------------
+
+  always_comb begin
+    if (global_bus.reset) begin
+      foreach (records[i]) begin
+        records[i] = '{
+            {XLEN{1'hz}},
+            {XLEN{1'hz}},
+            {XLEN{1'hz}},
+            WAITING,
+            '{6'h00, 6'h00, 6'h00, 6'h00},
+            '{1'h0, 1'h0, 1'h0, 1'h0, 1'h0}
+        };
+      end
+      read_address  = 8'h00;
+      write_address = 8'h00;
+    end
+  end
+
+  always_ff @(posedge global_bus.clock) begin
+    if (read && !empty) begin
+      read_address <= read_address + 1;
+    end
+  end
+
+  /*always_ff @(posedge global_bus.clock) begin
+    if (write && !full) begin
+      write_address <= write_address + 1;
+    end
+  end*/
+
+  always_comb begin
+    if (read_address == write_address + 1) full = 1'h1;
+    else full = 1'h0;
+
+    if (read_address == write_address) empty = 1'h1;
+    else empty = 1'h0;
   end
 endmodule

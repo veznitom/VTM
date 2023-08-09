@@ -1,31 +1,29 @@
 import structures::*;
 
 module cpu #(
-    parameter int XLEN = 32
+    parameter int XLEN = 32,
+    parameter int MEMORY_BUS_WIDTH_BYTES = 256,
+    parameter int INSTR_CACHE_WORDS = 4,
+    parameter int INSTR_CACHE_SETS = 8,
+    parameter int DATA_CACHE_WORDS = 4,
+    parameter int DATA_CACHE_SETS = 10
 ) (
     memory_bus_if.cpu memory_bus,
     cpu_debug_if debug,
     input logic clock,
     input logic reset
 );
-
-  localparam int InstrCacheWords = memory_bus.BUS_WIDTH_BYTES / 4;
-  localparam int InstrCacheSets = 4;
-
-  localparam int DataCacheWords = memory_bus.BUS_WIDTH_BYTES / 4;
-  localparam int DataCacheSets = 4;
-
   global_bus_if global_bus (
       .clock(clock),
       .reset(reset)
   );
-  memory_bus_if #(.BUS_WIDTH_BYTES(memory_bus.BUS_WIDTH_BYTES)) data_memory_bus ();
-  memory_bus_if #(.BUS_WIDTH_BYTES(memory_bus.BUS_WIDTH_BYTES)) instr_memory_bus ();
+  memory_bus_if #(.BUS_WIDTH_BYTES(MEMORY_BUS_WIDTH_BYTES)) data_memory_bus ();
+  memory_bus_if #(.BUS_WIDTH_BYTES(MEMORY_BUS_WIDTH_BYTES)) instr_memory_bus ();
   memory_bus_if #(.BUS_WIDTH_BYTES(XLEN / 8)) instr_cache_bus[2] ();
   memory_bus_if #(.BUS_WIDTH_BYTES(XLEN / 8)) data_cache_bus[1] ();
 
-  common_data_bus_if data_bus[2] ();
-  common_data_bus_if dummy[2] ();
+  common_data_bus_if #(.XLEN(XLEN)) data_bus[2] ();
+  common_data_bus_if #(.XLEN(XLEN)) dummy[2] ();
 
   pc_bus_if pc_bus ();
   issue_bus_if issue[2] ();
@@ -42,8 +40,8 @@ module cpu #(
 
   cache #(
       .XLEN (XLEN),
-      .SETS (InstrCacheSets),
-      .WORDS(InstrCacheWords),
+      .SETS (INSTR_CACHE_SETS),
+      .WORDS(INSTR_CACHE_WORDS),
       .PORTS(2)
   ) instr_cache (
       .global_bus(global_bus),
@@ -54,8 +52,8 @@ module cpu #(
 
   cache #(
       .XLEN (XLEN),
-      .SETS (DataCacheSets),
-      .WORDS(DataCacheWords),
+      .SETS (DATA_CACHE_SETS),
+      .WORDS(DATA_CACHE_WORDS),
       .PORTS(1)
   ) data_cache (
       .global_bus(global_bus),
@@ -86,10 +84,11 @@ module cpu #(
 
   register_file #(
       .XLEN(XLEN)
-  ) register_file (
+  ) reg_file (
       .global_bus(global_bus),
       .query(query),
       .reg_val(reg_val),
+      .data_bus(data_bus),
       .debug(debug)
   );
 
@@ -145,19 +144,16 @@ module cpu #(
   assign instr_cache_bus[0].address = pc_bus.address;
   assign instr_cache_bus[1].address = pc_bus.address + 4;
 
-  /*genvar i;
+  genvar i;
   generate
     for (i = 0; i < 2; i++) begin : gen_zero
-      assign instr_cache_bus[i].write = 1'h0;
-      assign instr_cache_bus[i].tag   = 1'h0;
-    end
-
-    always_comb begin : clear_isssue
-      if (reset) issue[i].clear();
+      always_comb begin : gen_cdb_clear
+        if (reset) data_bus[i].clear();
+      end
     end
   endgenerate
 
-  */ always_comb begin : clear_wires
+  always_comb begin : clear_wires
     if (reset) begin
       data_bus[0].clear();
       data_bus[1].clear();

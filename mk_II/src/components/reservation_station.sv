@@ -25,14 +25,14 @@ module reservation_station #(
     instr_name_e instr_name;
   } station_record_t;
 
-  station_record_t records[$:SIZE];
+  station_record_t records[SIZE];
 
-  assign full = SIZE - records.size();
+  assign full = SIZE /*- records.size()*/;
 
   always_comb begin : reset
     if (global_bus.reset) begin
       feed_bus.instr_name = UNKNOWN;
-      records.delete();
+      //records.delete();
     end
   end
 
@@ -41,11 +41,11 @@ module reservation_station #(
     for (i = 0; i < 2; i++) begin : gen_issue
       always_ff @(posedge global_bus.clock) begin : receive_instruction
         if (issue[i].instr_type == INSTR_TYPE && !global_bus.delete_tag) begin
-          records.push_back('{issue[i].data_1, issue[i].data_2, issue[i].address,
+          /*records.push_back('{issue[i].data_1, issue[i].data_2, issue[i].address,
                             issue[i].immediate, issue[i].regs.rs_1, issue[i].regs.rs_2,
                             issue[i].regs.rn, issue[i].valid_1, issue[i].valid_2,
                             issue[i].flags.tag, 1'h0, issue[i].instr_name});
-        end
+        */end
       end
     end
   endgenerate
@@ -91,7 +91,7 @@ module reservation_station #(
   end
 
   always_comb begin : pop_record
-    if (next) records.pop_front();
+    //if (next) records.pop_front();
   end
 
   always_comb begin : skip

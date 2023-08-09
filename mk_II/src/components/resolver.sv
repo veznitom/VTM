@@ -55,16 +55,17 @@ module resolver #(
       always_ff @(posedge global_bus.clock) begin : dec_delay
         if (!stop_in && instr_info_in[0].instr_name != UNKNOWN
     && instr_info_in[1].instr_name != UNKNOWN) begin
-          instr_buff[i].address <= dec_to_res[i].address;
-          instr_buff[i].immediate <= dec_to_res[i].immediate;
-          instr_buff[i].instr_name <= dec_to_res[i].instr_name;
-          instr_buff[i].instr_type <= dec_to_res[i].instr_type;
-          instr_buff[i].regs <= dec_to_res[i].regs;
-          instr_buff[i].flags <= dec_to_res[i].flags;
+          instr_buff[i].address <= instr_info_in[i].address;
+          instr_buff[i].immediate <= instr_info_in[i].immediate;
+          instr_buff[i].instr_name <= instr_info_in[i].instr_name;
+          instr_buff[i].instr_type <= instr_info_in[i].instr_type;
+          instr_buff[i].regs <= instr_info_in[i].regs;
+          instr_buff[i].flags <= instr_info_in[i].flags;
         end
       end
     end
   endgenerate
+
   always_ff @(posedge global_bus.clock) begin : fetch
     if (!stop_in && instr_info_in[0].instr_name != UNKNOWN
     && instr_info_in[1].instr_name != UNKNOWN) begin

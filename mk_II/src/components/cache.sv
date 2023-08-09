@@ -32,7 +32,7 @@ module cache #(
 
   cache_set_t data[SETS];
 
-  wb_record_t write_buffer[$:SETS];
+  wb_record_t write_buffer[SETS];
 
   genvar i;
   generate
@@ -88,8 +88,8 @@ module cache #(
         if (cpu_bus[i].write) begin
           if (cpu_bus[i].address[XLEN-1:(SetBits+WordBits+2)] == data[set_select[i]].tag
           && data[set_select[i]].state == MODIFIED) begin
-            write_buffer.push_back('{{data[set_select[i]].tag, set_select[i], {WordBits + 2{1'h0}}},
-                                   data[set_select[i]].words});
+            /*write_buffer.push_back('{{data[set_select[i]].tag, set_select[i], {WordBits + 2{1'h0}}},
+                                   data[set_select[i]].words});*/
           end else begin
             data[set_select[i]].tag <= cpu_bus[i].address[XLEN-1:(SetBits+WordBits+2)];
             data[set_select[i]].words[word_select[i]] <= cpu_bus[i].data;
@@ -101,14 +101,14 @@ module cache #(
   endgenerate
 
   always_ff @(posedge global_bus.clock) begin
-    if (write_buffer.size() != 0 && !memory_bus.read) begin
+    if (/*write_buffer.size() != 0 &&*/ !memory_bus.read) begin
       memory_bus.write <= 1'h1;
       memory_bus.address <= write_buffer[0].address;
       memory_bus.data <= write_buffer[0].words;
     end
     if (memory_bus.write && memory_bus.done) begin
       memory_bus.write <= 1'h0;
-      write_buffer.pop_front();
+      //write_buffer.pop_front();
     end
   end
 
