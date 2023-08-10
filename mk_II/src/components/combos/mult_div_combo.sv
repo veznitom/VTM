@@ -1,9 +1,11 @@
+import structures::*;
+
 module mult_div_combo #(
     parameter int XLEN = 32,
     parameter logic [7:0] ARBITER_ADDRESS = 8'h00
 ) (
     global_bus_if.rest global_bus,
-    issue_bus_if.combo issue[2],
+    issue_bus_if.combo issue_bus[2],
     common_data_bus_if.combo data_bus[2],
 
     output logic full
@@ -21,7 +23,7 @@ module mult_div_combo #(
       .INSTR_TYPE(MD)
   ) mult_div_station (
       .global_bus(global_bus),
-      .issue(issue),
+      .issue_bus(issue_bus),
       .data_bus(data_bus),
       .feed_bus(mult_div_feed),
       .next(bus_granted),

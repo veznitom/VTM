@@ -6,20 +6,19 @@ interface memory_bus_if #(
 ) ();
   logic [(BUS_WIDTH_BYTES*8)-1:0] data;
   logic [XLEN-1:0] address;
-  logic read, write, tag, ready, done, hit;
+  logic read;
+  logic write;
+  logic ready;
+  logic done;
 
-  modport load_store(input hit, inout data, output address, read, write, tag);
-  modport loader(input data, address, hit, output read);
-  modport cache_cpu(input address, read, write, tag, inout data, output hit);
-  modport cache_mem(input ready, done, inout data, output address, read, write);
-  modport mmu(inout data, address, input read, write, output ready, done);
+  modport cache(input ready, done, inout data, output address, read, write);
+  modport mmu(input read, write, inout data, address, output ready, done);
   modport ram(input address, read, write, inout data, output ready, done);
   modport cpu(input ready, done, inout data, output address, read, write);
 
   task automatic clear();
     data = {XLEN{1'h0}};
     address = {XLEN{1'h0}};
-    {read, write, tag, ready, done, hit} = {1'h0, 1'h0, 1'h0, 1'h0, 1'h0, 1'h0};
+    {read, write, ready, done} = {1'h0, 1'h0, 1'h0, 1'h0};
   endtask  // clear all wires
 endinterface
-

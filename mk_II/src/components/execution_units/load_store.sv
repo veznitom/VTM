@@ -4,7 +4,7 @@ module load_store #(
     parameter int XLEN = 32
 ) (
     feed_bus_if.exec feed_bus,
-    memory_bus_if.load_store cache_bus,
+    data_cache_bus_if.load_store cache_bus,
 
     output logic [XLEN-1:0] result
 );

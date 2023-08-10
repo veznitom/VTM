@@ -5,6 +5,7 @@ module cpu #(
     parameter int MEMORY_BUS_WIDTH_BYTES = 256,
     parameter int INSTR_CACHE_WORDS = 4,
     parameter int INSTR_CACHE_SETS = 8,
+    parameter int INSTR_CACHE_PORTS = 2,
     parameter int DATA_CACHE_WORDS = 4,
     parameter int DATA_CACHE_SETS = 10
 ) (
@@ -19,16 +20,16 @@ module cpu #(
   );
   memory_bus_if #(.BUS_WIDTH_BYTES(MEMORY_BUS_WIDTH_BYTES)) data_memory_bus ();
   memory_bus_if #(.BUS_WIDTH_BYTES(MEMORY_BUS_WIDTH_BYTES)) instr_memory_bus ();
-  memory_bus_if #(.BUS_WIDTH_BYTES(XLEN / 8)) instr_cache_bus[2] ();
-  memory_bus_if #(.BUS_WIDTH_BYTES(XLEN / 8)) data_cache_bus[1] ();
+  instr_cache_bus_if #(.XLEN(XLEN)) instr_cache_bus[INSTR_CACHE_PORTS] ();
+  data_cache_bus_if #(.XLEN(XLEN)) data_cache_bus ();
 
   common_data_bus_if #(.XLEN(XLEN)) data_bus[2] ();
   common_data_bus_if #(.XLEN(XLEN)) dummy[2] ();
 
   pc_bus_if pc_bus ();
-  issue_bus_if issue[2] ();
-  reg_query_bus_if query[2] ();
-  reg_val_bus_if reg_val[2] ();
+  issue_bus_if issue_bus[2] ();
+  reg_query_bus_if query_bus[2] ();
+  reg_val_bus_if reg_val_bus[2] ();
   fullness_bus_if fullness ();
 
   memory_management_unit mmu (
@@ -38,28 +39,26 @@ module cpu #(
       .memory_bus(memory_bus)
   );
 
-  cache #(
+  instr_cache #(
       .XLEN (XLEN),
       .SETS (INSTR_CACHE_SETS),
       .WORDS(INSTR_CACHE_WORDS),
-      .PORTS(2)
+      .PORTS(INSTR_CACHE_PORTS)
   ) instr_cache (
       .global_bus(global_bus),
-      .cpu_bus(instr_cache_bus),
       .memory_bus(instr_memory_bus),
-      .data_bus(dummy)
+      .cache_bus (instr_cache_bus)
   );
 
-  cache #(
+  data_cache #(
       .XLEN (XLEN),
       .SETS (DATA_CACHE_SETS),
-      .WORDS(DATA_CACHE_WORDS),
-      .PORTS(1)
+      .WORDS(DATA_CACHE_WORDS)
   ) data_cache (
       .global_bus(global_bus),
-      .cpu_bus(data_cache_bus),
       .memory_bus(data_memory_bus),
-      .data_bus(data_bus)
+      .cache_bus (data_cache_bus),
+      .data_bus  (data_bus)
   );
 
   program_counter #(
@@ -75,10 +74,10 @@ module cpu #(
       .global_bus(global_bus),
       .pc_bus(pc_bus),
       .cache_bus(instr_cache_bus),
-      .query(query),
+      .query_bus(query_bus),
       .fullness(fullness),
-      .issue(issue),
-      .reg_val(reg_val),
+      .issue_bus(issue_bus),
+      .reg_val_bus(reg_val_bus),
       .data_bus(data_bus)
   );
 
@@ -86,8 +85,8 @@ module cpu #(
       .XLEN(XLEN)
   ) reg_file (
       .global_bus(global_bus),
-      .query(query),
-      .reg_val(reg_val),
+      .query_bus(query_bus),
+      .reg_val_bus(reg_val_bus),
       .data_bus(data_bus),
       .debug(debug)
   );
@@ -99,7 +98,7 @@ module cpu #(
       .global_bus(global_bus),
       .pc_bus(pc_bus),
       .data_bus(data_bus),
-      .issue(issue),
+      .issue_bus(issue_bus),
       .full(fullness.rob)
   );
 
@@ -108,7 +107,7 @@ module cpu #(
       .ARBITER_ADDRESS(8'h02)
   ) alu_combo (
       .global_bus(global_bus),
-      .issue(issue),
+      .issue_bus(issue_bus),
       .data_bus(data_bus),
       .full(fullness.alu)
   );
@@ -117,7 +116,7 @@ module cpu #(
       .ARBITER_ADDRESS(8'h05)
   ) branch_combo (
       .global_bus(global_bus),
-      .issue(issue),
+      .issue_bus(issue_bus),
       .data_bus(data_bus),
       .full(fullness.branch)
   );
@@ -126,9 +125,9 @@ module cpu #(
       .ARBITER_ADDRESS(8'h04)
   ) load_store_combo (
       .global_bus(global_bus),
-      .issue(issue),
-      .data_bus(data_bus),
+      .issue_bus(issue_bus),
       .cache_bus(data_cache_bus),
+      .data_bus(data_bus),
       .full(fullness.load_store)
   );
   mult_div_combo #(
@@ -136,13 +135,20 @@ module cpu #(
       .ARBITER_ADDRESS(8'h03)
   ) mult_div_combo (
       .global_bus(global_bus),
-      .issue(issue),
+      .issue_bus(issue_bus),
       .data_bus(data_bus),
       .full(fullness.mult_div)
   );
 
   assign instr_cache_bus[0].address = pc_bus.address;
   assign instr_cache_bus[1].address = pc_bus.address + 4;
+
+  always_comb begin : clear_wires
+    if (reset) begin
+      data_bus[0].clear();
+      data_bus[1].clear();
+    end
+  end
 
   genvar i;
   generate
@@ -152,11 +158,4 @@ module cpu #(
       end
     end
   endgenerate
-
-  always_comb begin : clear_wires
-    if (reset) begin
-      data_bus[0].clear();
-      data_bus[1].clear();
-    end
-  end
 endmodule

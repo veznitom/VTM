@@ -8,22 +8,22 @@ module reorder_buffer #(
     global_bus_if.rob global_bus,
     pc_bus_if.rob pc_bus,
     common_data_bus_if.rob data_bus[2],
-    issue_bus_if.rob issue[2],
+    issue_bus_if.rob issue_bus[2],
 
     output logic full
 );
   rob_record_t records[SIZE];
 
-  logic [3:0] read_address;
-  logic [3:0] write_address;
+  logic [3:0] read_index;
+  logic [3:0] write_index;
+  logic read;
+  logic empty;
 
   logic get_bus;
   logic bus_granted;
   logic bus_selected;
 
-  logic read;
-  logic write;
-  logic empty;
+
 
   arbiter #(
       .ADDRESS(ARBITER_ADDRESS)
@@ -35,8 +35,8 @@ module reorder_buffer #(
   );
 
   always_ff @(posedge global_bus.clock) begin : jmp_resolve
-    if (records[0].status == COMPLETED && records[0].flags.jumps) begin
-      if (records[0].address + 4 == records[0].jmp_address) begin
+    if (records[read_index].status == COMPLETED && records[0].flags.jumps) begin
+      if (records[read_index].address + 4 == records[read_index].jmp_address) begin
         pc_bus.jmp_address <= 'z;
         pc_bus.write <= 1'h0;
         global_bus.clear_tag <= 1'h1;
@@ -56,7 +56,7 @@ module reorder_buffer #(
   end
 
   always_comb begin : bus_requesting
-    if (records[read_address].status == COMPLETED) get_bus = 1'h1;
+    if (records[read_index].status == COMPLETED) get_bus = 1'h1;
     else get_bus = 1'h0;
   end
 
@@ -66,28 +66,29 @@ module reorder_buffer #(
       always_ff @(posedge global_bus.clock) begin : write_to_bus
         if (bus_granted) begin
           if (bus_selected == i) begin
-            data_bus[i].result <= records[read_address].result;
-            data_bus[i].address <= records[read_address].address;
-            data_bus[i].jmp_address <= records[read_address].jmp_address;
-            data_bus[i].arn <= records[read_address].regs.rd;
-            data_bus[i].rrn <= records[read_address].regs.rn;
-            data_bus[i].reg_write <= records[read_address].flags.writes;
-            data_bus[i].cache_write <= records[read_address].flags.mem & records[read_address].flags.writes;
+            data_bus[i].result <= records[read_index].result;
+            data_bus[i].address <= records[read_index].address;
+            data_bus[i].jmp_address <= records[read_index].jmp_address;
+            data_bus[i].arn <= records[read_index].regs.rd;
+            data_bus[i].rrn <= records[read_index].regs.rn;
+            data_bus[i].reg_write <= records[read_index].flags.writes;
+            data_bus[i].cache_write <=
+            records[read_index].flags.mem & records[read_index].flags.writes;
           end
         end
       end
 
       always_ff @(posedge global_bus.clock) begin : add_record
-        if (issue[i].instr_type != XX && !global_bus.delete_tag) begin
-          records[write_address] <= '{
+        if (issue_bus[i].instr_type != XX && !global_bus.delete_tag) begin
+          records[write_index] <= '{
               'z,
-              issue[i].address,
+              issue_bus[i].address,
               'z,
               WAITING,
-              issue[i].regs,
-              issue[i].flags
+              issue_bus[i].regs,
+              issue_bus[i].flags
           };
-          write_address <= write_address + 1;
+          write_index <= write_index + 1;
         end
       end
 
@@ -104,7 +105,7 @@ module reorder_buffer #(
   endgenerate
 
   always_comb begin : pop_ignored
-    if (records[read_address].status == IGNORE || bus_granted) read = 1'h1;
+    if (records[read_index].status == IGNORE || bus_granted) read = 1'h1;
     else read = 1'h0;
   end
 
@@ -132,28 +133,22 @@ module reorder_buffer #(
             '{1'h0, 1'h0, 1'h0, 1'h0, 1'h0}
         };
       end
-      read_address  = 8'h00;
-      write_address = 8'h00;
+      read_index  = 8'h00;
+      write_index = 8'h00;
     end
   end
 
   always_ff @(posedge global_bus.clock) begin
     if (read && !empty) begin
-      read_address <= read_address + 1;
+      read_index <= read_index + 1;
     end
   end
 
-  /*always_ff @(posedge global_bus.clock) begin
-    if (write && !full) begin
-      write_address <= write_address + 1;
-    end
-  end*/
-
   always_comb begin
-    if (read_address == write_address + 1) full = 1'h1;
+    if (read_index == write_index + 1) full = 1'h1;
     else full = 1'h0;
 
-    if (read_address == write_address) empty = 1'h1;
+    if (read_index == write_index) empty = 1'h1;
     else empty = 1'h0;
   end
 endmodule

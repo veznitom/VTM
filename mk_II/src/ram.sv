@@ -1,7 +1,12 @@
+import structures::*;
+
 module ram #(
     parameter int XLEN = 32,
     parameter int MEM_SIZE_BYTES = 8192,
     parameter int ADDRESS_WIDTH = $clog2(MEM_SIZE_BYTES),
+    parameter int ADDRESS_MASK_BITS = 8,
+    parameter int MEMORY_BUS_WIDTH_BYTES = 16,
+    parameter int MEMORY_BUS_WIDTH_BITS = 4,
     parameter string MEM_FILE_PATH = ""
 ) (
     memory_bus_if memory_bus,
@@ -21,16 +26,16 @@ module ram #(
   end
 
   assign start_address = memory_bus.address[ADDRESS_WIDTH-1:0] &
-    {{(ADDRESS_WIDTH-memory_bus.BUS_BIT_LOG){1'h1}}, {memory_bus.BUS_BIT_LOG{1'h0}}};
-  assign end_address = memory_bus.address[ADDRESS_WIDTH-1:0] | {memory_bus.BUS_BIT_LOG{1'h1}};
+    {{(ADDRESS_WIDTH-MEMORY_BUS_WIDTH_BITS){1'h1}}, {MEMORY_BUS_WIDTH_BITS{1'h0}}};
+  assign end_address = memory_bus.address[ADDRESS_WIDTH-1:0] | {MEMORY_BUS_WIDTH_BITS{1'h1}};
 
   always_ff @(posedge clock) begin
     if (memory_bus.read) begin
-      for (int i = 0; i < memory_bus.BUS_WIDTH_BYTES; i++)
-      memory_bus.data <= memory_bus_data_t'(data[start_address+:memory_bus.BUS_WIDTH_BYTES]);
+      for (int i = 0; i < MEMORY_BUS_WIDTH_BYTES; i++)
+      memory_bus.data <= memory_bus_data_t'(data[start_address+:MEMORY_BUS_WIDTH_BYTES]);
       memory_bus.ready <= 1'h1;
     end else if (memory_bus.write) begin
-      for (int i = 0; i < memory_bus.BUS_WIDTH_BYTES; i++)
+      for (int i = 0; i < MEMORY_BUS_WIDTH_BYTES; i++)
       data[memory_bus.address[ADDRESS_WIDTH-1:0]+i] <= memory_bus.data[i];
       memory_bus.done <= 1'h1;
     end else begin

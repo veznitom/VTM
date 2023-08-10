@@ -12,8 +12,9 @@ module decoder #(
     input logic stop
 );
   logic [11:0] system;
-  logic [6:0] opcode, funct7;
-  logic [2:0] funct3;
+  logic [ 6:0] opcode;
+  logic [ 6:0] funct7;
+  logic [ 2:0] funct3;
 
   assign system = instr[31:20];
   assign opcode = instr[6:0];
@@ -168,7 +169,7 @@ module decoder #(
             case (opcode[6:5])
               2'b00: begin : LD  // LOAD
                 instr_info.flags.writes <= 1'b1;
-                instr_info.instr_type <= LS;
+                instr_info.instr_type   <= LS;
                 case (funct3)
                   3'b000:  instr_info.instr_name <= LB;  // LB
                   3'b001:  instr_info.instr_name <= LH;  // LH
@@ -191,7 +192,7 @@ module decoder #(
 
               2'b11: begin : BR_  // BRANCH
                 instr_info.flags.jumps <= 1'b1;
-                instr_info.instr_type <= BR;
+                instr_info.instr_type  <= BR;
                 case (funct3)
                   3'b000:  instr_info.instr_name <= BEQ;  // BEQ
                   3'b001:  instr_info.instr_name <= BNE;  // BNE
@@ -209,9 +210,9 @@ module decoder #(
 
           3'b001: begin  // JALR
             instr_info.flags.writes <= 1'b1;
-            instr_info.flags.jumps <= 1'b1;
-            instr_info.instr_type <= BR;
-            instr_info.instr_name <= JALR;
+            instr_info.flags.jumps  <= 1'b1;
+            instr_info.instr_type   <= BR;
+            instr_info.instr_name   <= JALR;
           end
 
           3'b011: begin  // MISC-MEM, JAL
@@ -222,10 +223,10 @@ module decoder #(
               end
 
               2'b11: begin
-                instr_info.instr_type <= BR;
+                instr_info.instr_type   <= BR;
                 instr_info.flags.writes <= 1'b1;
-                instr_info.flags.jumps <= 1'b1;
-                instr_info.instr_name <= JAL;
+                instr_info.flags.jumps  <= 1'b1;
+                instr_info.instr_name   <= JAL;
               end
 
               default: instr_info.instr_name <= UNKNOWN;
@@ -276,8 +277,8 @@ module decoder #(
 
           3'b101: begin  // LUI, AUIPC
             instr_info.flags.writes <= 1'b1;
-            instr_info.instr_type <= AL;
-            instr_info.instr_name <= opcode[5] == 1'b0 ? AUIPC : LUI;
+            instr_info.instr_type   <= AL;
+            instr_info.instr_name   <= opcode[5] == 1'b0 ? AUIPC : LUI;
           end
 
           default: instr_info.instr_name <= UNKNOWN;

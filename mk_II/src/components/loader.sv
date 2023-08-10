@@ -6,7 +6,7 @@ module loader #(
 ) (
     global_bus_if.rest global_bus,
     pc_bus_if.loader pc_bus,
-    memory_bus_if.loader cache_bus[2],
+    instr_cache_bus_if.loader cache_bus[2],
 
     output logic [XLEN-1:0] address[2],
     output logic [31:0] instr[2],
@@ -24,9 +24,9 @@ module loader #(
     for (i = 0; i < 2; i++) begin : gen_var_reset
       always_comb begin
         if (global_bus.reset) begin
-        address[i] = {XLEN{1'h0}};
-        instr[i] = {32{1'h0}};
-        cache_bus[i].read = 1'h1;
+          address[i] = {XLEN{1'h0}};
+          instr[i] = {32{1'h0}};
+          cache_bus[i].read = 1'h1;
         end
       end
     end
@@ -35,9 +35,9 @@ module loader #(
   always_ff @(posedge global_bus.clock) begin : instr_load
     if (!stop && cache_bus[0].hit && cache_bus[1].hit) begin
       address[0] <= cache_bus[0].address;
-      instr[0] <= cache_bus[0].data;
+      instr[0] <= cache_bus[0].instr;
       address[1] <= cache_bus[1].address;
-      instr[1] <= cache_bus[1].data;
+      instr[1] <= cache_bus[1].instr;
       pc_bus.plus_8 <= 1'h1;
     end else begin
       address[0] <= {XLEN{1'h0}};

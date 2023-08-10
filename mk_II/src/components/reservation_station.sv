@@ -6,7 +6,7 @@ module reservation_station #(
     parameter instr_type_e INSTR_TYPE = XX
 ) (
     global_bus_if.rest global_bus,
-    issue_bus_if.combo issue[2],
+    issue_bus_if.combo issue_bus[2],
     common_data_bus_if.combo data_bus[2],
     feed_bus_if.station feed_bus,
 
@@ -27,32 +27,38 @@ module reservation_station #(
 
   station_record_t records[SIZE];
 
-  assign full = SIZE /*- records.size()*/;
+  logic [3:0] read_index;
+  logic [3:0] write_index;
+  logic empty;
 
   always_comb begin : reset
     if (global_bus.reset) begin
       feed_bus.instr_name = UNKNOWN;
-      //records.delete();
     end
   end
 
   genvar i;
   generate
-    for (i = 0; i < 2; i++) begin : gen_issue
+    for (i = 0; i < 2; i++) begin : gen_issue_bus
       always_ff @(posedge global_bus.clock) begin : receive_instruction
-        if (issue[i].instr_type == INSTR_TYPE && !global_bus.delete_tag) begin
-          /*records.push_back('{issue[i].data_1, issue[i].data_2, issue[i].address,
-                            issue[i].immediate, issue[i].regs.rs_1, issue[i].regs.rs_2,
-                            issue[i].regs.rn, issue[i].valid_1, issue[i].valid_2,
-                            issue[i].flags.tag, 1'h0, issue[i].instr_name});
-        */end
+        if (issue_bus[i].instr_type == INSTR_TYPE && !global_bus.delete_tag) begin
+          records[write_index] <= '{
+              issue_bus[i].data_1,
+              issue_bus[i].data_2,
+              issue_bus[i].address,
+              issue_bus[i].immediate,
+              issue_bus[i].regs.rs_1,
+              issue_bus[i].regs.rs_2,
+              issue_bus[i].regs.rn,
+              issue_bus[i].valid_1,
+              issue_bus[i].valid_2,
+              issue_bus[i].flags.tag,
+              1'h0,
+              issue_bus[i].instr_name
+          };
+        end
       end
-    end
-  endgenerate
 
-
-  generate
-    for (i = 0; i < 2; i++) begin : gen_data_bus
       always_ff @(posedge global_bus.clock) begin : update_records
         foreach (records[j]) begin
           if (match_data_bus(
@@ -90,11 +96,46 @@ module reservation_station #(
     end
   end
 
-  always_comb begin : pop_record
-    //if (next) records.pop_front();
-  end
-
   always_comb begin : skip
     if (global_bus.delete_tag) foreach (records[i]) records[i].skip = records[i].tag;
+  end
+
+  // Queue control -------------------------------------------------------------------------------
+
+  always_comb begin
+    if (global_bus.reset) begin
+      foreach (records[i]) begin
+        records[i] = '{
+            {XLEN{1'hz}},
+            {XLEN{1'hz}},
+            {XLEN{1'hz}},
+            {XLEN{1'hz}},
+            6'h00,
+            6'h00,
+            6'h00,
+            1'h0,
+            1'h0,
+            1'h0,
+            1'h0,
+            UNKNOWN
+        };
+      end
+      read_index  = 8'h00;
+      write_index = 8'h00;
+    end
+  end
+
+  always_ff @(posedge global_bus.clock) begin
+    if (next && !empty) begin
+      read_index <= read_index + 1;
+    end
+  end
+
+  always_comb begin
+    if (read_index == write_index + 1) full = 1'h1;
+    else full = 1'h0;
+
+    if (read_index == write_index) empty = 1'h1;
+    else empty = 1'h0;
   end
 endmodule
