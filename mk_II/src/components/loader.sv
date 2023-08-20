@@ -32,19 +32,21 @@ module loader #(
     end
   endgenerate
 
-  always_ff @(posedge global_bus.clock) begin : instr_load
-    if (!stop && cache_bus[0].hit && cache_bus[1].hit) begin
-      address[0] <= cache_bus[0].address;
-      instr[0] <= cache_bus[0].instr;
-      address[1] <= cache_bus[1].address;
-      instr[1] <= cache_bus[1].instr;
-      pc_bus.plus_8 <= 1'h1;
-    end else begin
-      address[0] <= {XLEN{1'h0}};
-      instr[0] <= {32{1'h0}};
-      address[1] <= {XLEN{1'h0}};
-      instr[1] <= {32{1'h0}};
-      pc_bus.plus_8 <= 1'h0;
-    end
+  always_ff @(global_bus.clock) begin : instr_load
+    if (global_bus.clock)
+      if (!stop && cache_bus[0].hit && cache_bus[1].hit) begin
+        address[0] <= cache_bus[0].address;
+        instr[0] <= cache_bus[0].instr;
+        address[1] <= cache_bus[1].address;
+        instr[1] <= cache_bus[1].instr;
+        pc_bus.plus_8 <= 1'h1;
+      end else begin
+        address[0] <= {XLEN{1'h0}};
+        instr[0] <= {32{1'h0}};
+        address[1] <= {XLEN{1'h0}};
+        instr[1] <= {32{1'h0}};
+        pc_bus.plus_8 <= 1'h0;
+      end
+    else pc_bus.plus_8 <= 1'h0;
   end
 endmodule

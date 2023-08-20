@@ -18,8 +18,8 @@ module register_file #(
   register_t registers[64];
   logic [5:0] ren_queue[32];
 
-  logic [3:0] read_index;
-  logic [3:0] write_index;
+  logic [4:0] read_index;
+  logic [4:0] write_index;
 
   logic read[2];
   logic empty;
@@ -54,17 +54,18 @@ module register_file #(
         else query_bus[i].outputs.rs_2 = query_bus[i].inputs.rs_2;
       end
 
-      always_ff @(posedge query_bus[i].rename) begin : renaming
-        if (!empty) begin
-          query_bus[i].outputs.rn <= ren_queue[0];
-          registers[query_bus[i].inputs.rd].rrn <= ren_queue[0];
-          registers[ren_queue[0]] <= '{0, 0, 0, query_bus[i].tag};
-          if (!query_bus[i].tag) registers[query_bus[i].inputs.rd].valid <= 1'h0;
-          registers[query_bus[i].inputs.rd].tag <= query_bus[i].tag;
-          read[i] <= 1'h1;
+      always_comb begin : renaming
+        if (!empty && query_bus[i].rename) begin
+          query_bus[i].outputs.rn = ren_queue[read_index+i];
+          registers[query_bus[i].inputs.rd].rrn = ren_queue[read_index+i];
+          registers[ren_queue[0]] = '{0, 0, 0, query_bus[i].tag};
+          if (!query_bus[i].tag) registers[query_bus[i].inputs.rd].valid = 1'h0;
+          registers[query_bus[i].inputs.rd].tag = query_bus[i].tag;
+          read[i] = 1'h1;
         end else begin
-          query_bus[i].outputs.rn <= 6'h00;
-          read[i] <= 1'h0;
+          query_bus[i].outputs.rn = 6'h00;
+          read[i] = 1'h0;
+          /* TODO set flag that waits until not empty to send renamed value*/
         end
       end
 
@@ -101,14 +102,14 @@ module register_file #(
 
   always_ff @(posedge global_bus.clock) begin : delete_tagged
     if (global_bus.delete_tag)
-      for (logic [5:0] i = 0; i < 32; i++) begin
+      for (int i = 0; i < 32; i++) begin
         if (registers[i].tag) begin
           registers[i].tag <= 1'h0;
           registers[i].rrn <= 1'h0;
         end
       end
 
-    for (logic [5:0] i = 32; i < 64; i++) begin
+    for (int i = 32; i < 64; i++) begin
       if (registers[i].tag) begin
         registers[i] <= '{0, 0, 0, 0};
         ren_queue[write_index] <= i;
@@ -122,12 +123,12 @@ module register_file #(
   always_comb begin
     if (global_bus.reset) begin
       for (int i = 32; i < 64; i++) ren_queue[i-32] = i;
-      read_index  = 8'h00;
-      write_index = 8'h00;
+      read_index  = 5'h00;
+      write_index = 5'h1f;
     end
   end
 
-  always_ff @(posedge global_bus.clock) begin
+always_ff @(posedge global_bus.clock) begin
     if ((read[0] || read[1]) && !empty) begin
       read_index <= read_index + 1;
     end

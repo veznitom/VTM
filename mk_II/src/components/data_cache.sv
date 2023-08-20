@@ -96,22 +96,21 @@ module data_cache #(
   end
 
   always_ff @(posedge global_bus.clock) begin
-    if (!empty && !memory_bus.read) begin
+    /*if (!empty && !memory_bus.read) begin
       memory_bus.write <= 1'h1;
       memory_bus.address <= write_buffer[0].address;
       memory_bus.data <= write_buffer[0].words;
-    end
-    if (memory_bus.write && memory_bus.done) begin
+    end else if (memory_bus.write && memory_bus.done) begin
       memory_bus.write <= 1'h0;
       read <= 1'h1;
-    end else read <= 1'h0;
+    end else read <= 1'h0;*/
   end
 
   // Queue control -------------------------------------------------------------------------------
 
   always_comb begin
     if (global_bus.reset) begin
-      foreach (write_buffer[i]) write_buffer[i] = '{{XLEN{1'h0}}, {XLEN * WORDS{1'h0}}};
+      foreach (write_buffer[i]) write_buffer[i] = '{{XLEN{1'hz}}, {XLEN * WORDS{1'h0}}};
       read_index  = 8'h00;
       write_index = 8'h00;
     end

@@ -1,3 +1,5 @@
+import structures::*;
+
 interface common_data_bus_if #(
     parameter int XLEN = 32
 ) ();
@@ -13,12 +15,12 @@ interface common_data_bus_if #(
   modport cmp(input result, arn, rrn);
 
   task automatic clear();
-    result = {XLEN{1'h0}};
-    address = {XLEN{1'h0}};
-    jmp_address = {XLEN{1'h0}};
-    arn = 6'h0;
-    rrn = 6'h0;
-    reg_write = 1'h0;
-    cache_write = 1'h0;
+    result <= {XLEN{1'h0}};
+    address <= {XLEN{1'h0}};
+    jmp_address <= {XLEN{1'h0}};
+    arn <= 6'h0;
+    rrn <= 6'h0;
+    reg_write <= 1'h0;
+    cache_write <= 1'h0;
   endtask  //automatic
 endinterface

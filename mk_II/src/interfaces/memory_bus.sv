@@ -1,3 +1,5 @@
+import structures::*;
+
 interface memory_bus_if #(
     parameter int BUS_WIDTH_BYTES = 4,
     parameter int BUS_WIDTH_BITS = BUS_WIDTH_BYTES * 8,
@@ -17,8 +19,8 @@ interface memory_bus_if #(
   modport cpu(input ready, done, inout data, output address, read, write);
 
   task automatic clear();
-    data = {XLEN{1'h0}};
-    address = {XLEN{1'h0}};
-    {read, write, ready, done} = {1'h0, 1'h0, 1'h0, 1'h0};
+    data <= {XLEN{1'h0}};
+    address <= {XLEN{1'h0}};
+    {read, write, ready, done} <= {1'h0, 1'h0, 1'h0, 1'h0};
   endtask  // clear all wires
 endinterface

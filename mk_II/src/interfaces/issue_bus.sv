@@ -21,14 +21,14 @@ interface issue_bus_if #(
   );
 
   task automatic clear();
-    address = {XLEN{1'h0}};
-    immediate = {XLEN{1'h0}};
-    data_1 = {XLEN{1'h0}};
-    data_2 = {XLEN{1'h0}};
-    {valid_1, valid_2} = {1'h0, 1'h0};
-    instr_name = UNKNOWN;
-    instr_type = XX;
-    regs = '{6'h00, 6'h00, 6'h00, 6'h00};
-    flags = {1'h0, 1'h0, 1'h0, 1'h0, 1'h0};
+    address <= {XLEN{1'h0}};
+    immediate <= {XLEN{1'h0}};
+    data_1 <= {XLEN{1'h0}};
+    data_2 <= {XLEN{1'h0}};
+    {valid_1, valid_2} <= {1'h0, 1'h0};
+    instr_name <= UNKNOWN;
+    instr_type <= XX;
+    regs <= '{6'h00, 6'h00, 6'h00, 6'h00};
+    flags <= {1'h0, 1'h0, 1'h0, 1'h0, 1'h0};
   endtask
 endinterface
