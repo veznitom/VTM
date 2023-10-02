@@ -22,5 +22,5 @@ interface memory_bus_if #(
     data <= {XLEN{1'h0}};
     address <= {XLEN{1'h0}};
     {read, write, ready, done} <= {1'h0, 1'h0, 1'h0, 1'h0};
-  endtask  // clear all wires
+  endtask
 endinterface

@@ -1,7 +1,7 @@
+import global_variables::XLEN;
 import structures::*;
 
 module reservation_station #(
-    parameter int XLEN = 32,
     parameter int SIZE = 16,
     parameter instr_type_e INSTR_TYPE = XX
 ) (
@@ -17,13 +17,6 @@ module reservation_station #(
                                         input logic [5:0] arn, input logic [5:0] rrn);
     return (arn == src || rrn == src) && !valid;
   endfunction
-
-  typedef struct packed {
-    logic [31:0] data_1, data_2, address, immediate;
-    logic [5:0] src_1, src_2, rrn;
-    logic valid_1, valid_2, tag, skip;
-    instr_name_e instr_name;
-  } station_record_t;
 
   station_record_t records[SIZE];
 

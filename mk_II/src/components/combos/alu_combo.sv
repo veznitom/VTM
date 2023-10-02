@@ -1,7 +1,6 @@
-import structures::*;
+import global_variables::XLEN;
 
 module alu_combo #(
-    parameter int XLEN = 32,
     parameter logic [7:0] ARBITER_ADDRESS = 8'h00
 ) (
     global_bus_if.rest global_bus,
@@ -10,13 +9,14 @@ module alu_combo #(
 
     output logic full
 );
-  feed_bus_if #(.XLEN(XLEN)) alu_feed ();
+  feed_bus_if alu_feed ();
 
   logic [XLEN-1:0] alu_result;
-  logic get_bus, bus_granted, bus_selected;
+  logic get_bus;
+  logic bus_granted;
+  logic bus_selected;
 
   reservation_station #(
-      .XLEN(XLEN),
       .SIZE(16),
       .INSTR_TYPE(AL)
   ) alu_station (
@@ -28,9 +28,7 @@ module alu_combo #(
       .full(full)
   );
 
-  alu #(
-      .XLEN(XLEN)
-  ) alu (
+  alu alu (
       .feed_bus(alu_feed),
       .result  (alu_result)
   );

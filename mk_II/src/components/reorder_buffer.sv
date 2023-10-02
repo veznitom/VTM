@@ -1,7 +1,7 @@
+import global_variables::XLEN;
 import structures::*;
 
 module reorder_buffer #(
-    parameter int XLEN = 32,
     parameter logic [7:0] ARBITER_ADDRESS = 8'h00,
     parameter int SIZE = 32
 ) (
@@ -18,12 +18,9 @@ module reorder_buffer #(
   logic [3:0] write_index;
   logic read;
   logic empty;
-
   logic get_bus;
   logic bus_granted;
   logic bus_selected;
-
-
 
   arbiter #(
       .ADDRESS(ARBITER_ADDRESS)

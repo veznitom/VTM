@@ -1,11 +1,10 @@
 /*  Resolver checks for dependencies between loaded instructions and requests register renaming if instructions writes,
 if there is no free register for rename then it stalls the loader and decoder
 */
+import global_variables::XLEN;
 import structures::*;
 
-module resolver #(
-    parameter int XLEN = 32
-) (
+module resolver (
     global_bus_if.rest global_bus,
     reg_query_bus_if.resolver query_bus[2],
     instr_info_bus_if.in instr_info_in[2],
@@ -38,7 +37,10 @@ module resolver #(
   end
 
   always_ff @(posedge global_bus.clock) begin : fetch
-    if (!stop_in && instr_info_in[0].instr_name != UNKNOWN && instr_info_in[1].instr_name != UNKNOWN)
+    if (
+      !stop_in &&
+      instr_info_in[0].instr_name != UNKNOWN &&
+      instr_info_in[1].instr_name != UNKNOWN)
     begin
       instr_info_out[0].address <= instr_info_in[0].address;
       instr_info_out[0].immediate <= instr_info_in[0].immediate;

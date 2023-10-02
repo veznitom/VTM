@@ -5,10 +5,9 @@
 // => bus_select selects which common data bus is to be selected
 
 module arbiter #(
-    parameter logic [7:0] ADDRESS = 8'h00,
-    parameter int CDB_COUNT = 2
+    parameter logic [7:0] ADDRESS = 8'h00
 ) (
-    input logic [(4*CDB_COUNT)-1:0] select,
+    input logic [15:0] select,
     input logic get_bus,
     output logic bus_granted,
     output logic bus_selected

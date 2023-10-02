@@ -1,8 +1,7 @@
-import structures::*;
+import global_variables::XLEN;
+import structures::instr_name_e;
 
-module load_store #(
-    parameter int XLEN = 32
-) (
+module load_store (
     feed_bus_if.exec feed_bus,
     data_cache_bus_if.load_store cache_bus,
 

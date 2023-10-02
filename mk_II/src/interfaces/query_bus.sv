@@ -1,9 +1,10 @@
-import structures::*;
+import structures::registers_t;
 
 interface reg_query_bus_if;
   registers_t inputs;
   registers_t outputs;
-  logic rename, tag;
+  logic rename;
+  logic tag;
 
   modport resolver(input outputs, output inputs, rename, tag, import clear);
   modport reg_file(input inputs, rename, tag, output outputs);

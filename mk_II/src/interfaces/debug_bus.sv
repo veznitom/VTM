@@ -1,6 +1,8 @@
+import global_variables::XLEN;
+
 interface cpu_debug_if;
-  logic [31:0] reg_11_value;
-  logic [ 6:0] ren_queue_size;
+  logic [XLEN-1:0] reg_11_value;
+  logic [6:0] ren_queue_size;
 endinterface
 
 interface memory_debug_if #(

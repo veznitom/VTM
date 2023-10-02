@@ -1,6 +1,6 @@
-interface instr_cache_bus_if #(
-    parameter int XLEN = 32
-);
+import global_variables::XLEN;
+
+interface instr_cache_bus_if;
   logic [XLEN-1:0] address;
   logic [31:0] instr;
   logic hit;
@@ -10,9 +10,7 @@ interface instr_cache_bus_if #(
   modport cache(input address, read, output instr, hit);
 endinterface
 
-interface data_cache_bus_if #(
-    parameter int XLEN = 32
-);
+interface data_cache_bus_if;
   logic [XLEN-1:0] address;
   logic [XLEN-1:0] data;
   logic read;

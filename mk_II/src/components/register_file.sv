@@ -1,26 +1,17 @@
+import global_variables::XLEN;
 import structures::*;
 
-module register_file #(
-    parameter int XLEN = 32
-) (
+module register_file (
     global_bus_if.rest global_bus,
     reg_query_bus_if.reg_file query_bus[2],
     reg_val_bus_if.reg_file reg_val_bus[2],
     common_data_bus_if.reg_file data_bus[2],
     cpu_debug_if debug
 );
-  typedef struct packed {
-    logic [XLEN-1:0] value;
-    logic [5:0] rrn;
-    logic valid, tag;
-  } register_t;
-
   register_t registers[64];
   logic [5:0] ren_queue[32];
-
   logic [4:0] read_index;
   logic [4:0] write_index;
-
   logic read[2];
   logic empty;
 
@@ -128,7 +119,7 @@ module register_file #(
     end
   end
 
-always_ff @(posedge global_bus.clock) begin
+  always_ff @(posedge global_bus.clock) begin
     if ((read[0] || read[1]) && !empty) begin
       read_index <= read_index + 1;
     end

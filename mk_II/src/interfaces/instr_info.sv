@@ -1,12 +1,12 @@
+import global_variables::XLEN;
 import structures::*;
 
-interface instr_info_bus_if #(
-    parameter int XLEN = 32
-);
-  logic [XLEN-1:0] address, immediate;
-  instr_name_e  instr_name;
-  registers_t   regs;
-  instr_type_e  instr_type;
+interface instr_info_bus_if;
+  logic [XLEN-1:0] address;
+  logic [XLEN-1:0] immediate;
+  instr_name_e instr_name;
+  registers_t regs;
+  instr_type_e instr_type;
   flag_vector_t flags;
 
   modport in(input address, immediate, instr_name, regs, instr_type, flags, import clear);

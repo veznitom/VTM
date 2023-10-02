@@ -1,10 +1,9 @@
 /*  Instruction processer combines loader, decoder, resolver, and issue_busr into one block to ease the cpu module complexity
 */
+import global_variables::XLEN;
 import structures::*;
 
-module instr_processer #(
-    parameter int XLEN = 32
-) (
+module instr_processer (
     global_bus_if.rest global_bus,
     pc_bus_if.loader pc_bus,
     instr_cache_bus_if.loader cache_bus[2],
@@ -25,9 +24,7 @@ module instr_processer #(
   logic [31:0] load_instr_out[2];
   logic stop_res, stop_iss, stop;
 
-  loader #(
-      .XLEN(XLEN)
-  ) loader (
+  loader loader (
       .global_bus(global_bus),
       .pc_bus(pc_bus),
       .cache_bus(cache_bus),
@@ -36,9 +33,7 @@ module instr_processer #(
       .instr(load_instr_out)
   );
 
-  decoder #(
-      .XLEN(XLEN)
-  ) decoder_0 (
+  decoder decoder_0 (
       .global_bus(global_bus),
       .instr_info(dec_to_ren[0]),
       .address(load_address_out[0]),
@@ -46,9 +41,7 @@ module instr_processer #(
       .stop(stop)
   );
 
-  decoder #(
-      .XLEN(XLEN)
-  ) decoder_1 (
+  decoder decoder_1 (
       .global_bus(global_bus),
       .instr_info(dec_to_ren[1]),
       .address(load_address_out[1]),
@@ -56,9 +49,7 @@ module instr_processer #(
       .stop(stop)
   );
 
-  renamer #(
-      .XLEN(XLEN)
-  ) renamer (
+  renamer renamer (
       .global_bus(global_bus),
       .query_bus(query_bus),
       .instr_info_in(dec_to_ren),
@@ -67,9 +58,7 @@ module instr_processer #(
       .stop(stop)
   );
 
-  resolver #(
-      .XLEN(XLEN)
-  ) resolver (
+  resolver resolver (
       .global_bus(global_bus),
       .query_bus(query_bus),
       .instr_info_in(ren_to_res),
@@ -79,9 +68,7 @@ module instr_processer #(
       .stop_out(stop_res)
   );
 
-  issuer #(
-      .XLEN(XLEN)
-  ) issuer (
+  issuer issuer (
       .global_bus(global_bus),
       .instr_info_in(res_to_issue),
       .instr_info_out(issue_to_cmp),

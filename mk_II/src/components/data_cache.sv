@@ -1,7 +1,7 @@
+import global_variables::XLEN;
 import structures::*;
 
 module data_cache #(
-    parameter int XLEN  = 32,
     parameter int SETS  = 8,
     parameter int WORDS = 4
 ) (

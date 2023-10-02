@@ -1,13 +1,10 @@
-import structures::*;
+import global_variables::XLEN;
 
-module alu #(
-    parameter int XLEN = 32
-) (
+module alu (
     feed_bus_if.exec feed_bus,
 
     output logic [XLEN-1:0] result
 );
-
   logic [XLEN-1:0] dump;
 
   always_comb begin

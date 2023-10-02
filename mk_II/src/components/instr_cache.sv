@@ -1,21 +1,20 @@
+import global_variables::XLEN;
 import structures::*;
 
 module instr_cache #(
-    parameter int XLEN  = 32,
     parameter int SETS  = 8,
-    parameter int WORDS = 4,
-    parameter int PORTS = 2
+    parameter int WORDS = 4
 ) (
     global_bus_if.rest global_bus,
     memory_bus_if.cache memory_bus,
-    instr_cache_bus_if.cache cache_bus[PORTS]
+    instr_cache_bus_if.cache cache_bus[2]
 );
   localparam int SetBits = $clog2(SETS);
   localparam int WordBits = $clog2(WORDS);
 
-  logic [SetBits-1:0] set_select[PORTS];
-  logic [WordBits-1:0] word_select[PORTS];
-  logic [1:0] byte_select[PORTS];
+  logic [SetBits-1:0] set_select[2];
+  logic [WordBits-1:0] word_select[2];
+  logic [1:0] byte_select[2];
 
   typedef struct packed {
     logic [XLEN-(SetBits+WordBits+2)-1:0] tag;
@@ -37,7 +36,7 @@ module instr_cache #(
 
   genvar i;
   generate
-    for (i = 0; i < PORTS; i++) begin : gen_selects
+    for (i = 0; i < 2; i++) begin : gen_selects
       assign byte_select[i] = cache_bus[i].address[1:0];
       assign word_select[i] = WORDS - 1 - cache_bus[i].address[WordBits+1:2];
       assign set_select[i]  = cache_bus[i].address[SetBits+WordBits+1:WordBits+2];

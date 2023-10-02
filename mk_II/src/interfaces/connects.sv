@@ -1,4 +1,4 @@
-import structures::*;
+import global_variables::XLEN;
 
 interface global_bus_if (
     input logic clock,
@@ -10,9 +10,7 @@ interface global_bus_if (
   modport rest(input clock, reset, delete_tag, clear_tag);
 endinterface
 
-interface pc_bus_if #(
-    parameter int XLEN = 32
-) ();
+interface pc_bus_if;
   logic [31:0] jmp_address, address;
   logic plus_4, plus_8, write;
 
@@ -21,9 +19,7 @@ interface pc_bus_if #(
   modport rob(output jmp_address, write);
 endinterface
 
-interface reg_val_bus_if #(
-    parameter int XLEN = 32
-) ();
+interface reg_val_bus_if;
   logic [XLEN-1:0] data_1, data_2;
   logic [5:0] src_1, src_2;
   logic valid_1, valid_2;
@@ -34,5 +30,6 @@ endinterface
 
 interface fullness_bus_if;
   logic alu, branch, load_store, rob, mult_div;
+
   modport issuer(input alu, branch, load_store, rob, mult_div);
 endinterface

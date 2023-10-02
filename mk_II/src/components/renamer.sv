@@ -1,8 +1,7 @@
+import global_variables::XLEN;
 import structures::*;
 
-module renamer #(
-    parameter int XLEN = 32
-) (
+module renamer (
     global_bus_if.rest global_bus,
     reg_query_bus_if.resolver query_bus[2],
     instr_info_bus_if.in instr_info_in[2],
@@ -11,7 +10,6 @@ module renamer #(
     input logic stop,
     output jmp_relation_e jmp_relation
 );
-
   logic tag_active;
 
   always_comb begin : reset
@@ -48,10 +46,10 @@ module renamer #(
         case ({
           instr_info_in[0].flags.jumps, instr_info_in[1].flags.jumps
         })
-          2'b00:   jmp_relation <= NJ1NJ2;
-          2'b01:   jmp_relation <= NJ1J2;
-          2'b10:   jmp_relation <= J1NJ2;
-          2'b11:   jmp_relation <= J1J2;
+          2'b00:   jmp_relation <= NN;
+          2'b01:   jmp_relation <= NJ;
+          2'b10:   jmp_relation <= JN;
+          2'b11:   jmp_relation <= JJ;
           default: jmp_relation <= ERROR;
         endcase
 

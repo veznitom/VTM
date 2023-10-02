@@ -3,9 +3,7 @@
 */
 import structures::*;
 
-module issuer #(
-    parameter int XLEN = 32
-) (
+module issuer (
     global_bus_if.rest global_bus,
     instr_info_bus_if.in instr_info_in[2],
     instr_info_bus_if.out instr_info_out[2],

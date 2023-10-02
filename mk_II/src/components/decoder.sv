@@ -1,9 +1,8 @@
 // Translates instructions based on RISC-V instruction encoding
+import global_variables::XLEN;
 import structures::*;
 
-module decoder #(
-    parameter int XLEN = 32
-) (
+module decoder (
     global_bus_if.rest global_bus,
     instr_info_bus_if.out instr_info,
 

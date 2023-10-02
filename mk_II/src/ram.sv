@@ -1,7 +1,7 @@
+import global_variables::XLEN;
 import structures::*;
 
 module ram #(
-    parameter int XLEN = 32,
     parameter int MEM_SIZE_BYTES = 8192,
     parameter int ADDRESS_WIDTH = $clog2(MEM_SIZE_BYTES),
     parameter int ADDRESS_MASK_BITS = 8,

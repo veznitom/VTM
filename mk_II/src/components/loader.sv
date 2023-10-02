@@ -1,9 +1,7 @@
 // Manages loading instructions from instr cache, if there is cache miss padds output instructions with zeroes
-import structures::*;
+import global_variables::XLEN;
 
-module loader #(
-    parameter int XLEN = 32
-) (
+module loader (
     global_bus_if.rest global_bus,
     pc_bus_if.loader pc_bus,
     instr_cache_bus_if.loader cache_bus[2],

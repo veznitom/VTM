@@ -1,7 +1,6 @@
-import structures::*;
+import global_variables::XLEN;
 
 module load_store_combo #(
-    parameter int XLEN = 32,
     parameter logic [7:0] ARBITER_ADDRESS = 8'h00
 ) (
     global_bus_if.rest global_bus,
@@ -11,15 +10,14 @@ module load_store_combo #(
 
     output logic full
 );
-
-  feed_bus_if #(.XLEN(XLEN)) load_store_feed ();
+  feed_bus_if oad_store_feed ();
 
   logic [XLEN-1:0] load_store_result;
-  logic get_bus, bus_granted, bus_selected;
-
+  logic get_bus;
+  logic bus_granted;
+  logic bus_selected;
 
   reservation_station #(
-      .XLEN(XLEN),
       .SIZE(16),
       .INSTR_TYPE(LS)
   ) load_store_station (
@@ -31,9 +29,7 @@ module load_store_combo #(
       .full(full)
   );
 
-  load_store #(
-      .XLEN(XLEN)
-  ) load_store (
+  load_store load_store (
       .feed_bus(load_store_feed),
       .cache_bus(cache_bus),
       .result(load_store_result)

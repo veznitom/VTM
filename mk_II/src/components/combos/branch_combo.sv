@@ -1,7 +1,6 @@
-import structures::*;
+import global_variables::XLEN;
 
 module branch_combo #(
-    parameter int XLEN = 32,
     parameter logic [7:0] ARBITER_ADDRESS = 8'h00
 ) (
     global_bus_if.rest global_bus,
@@ -10,15 +9,14 @@ module branch_combo #(
 
     output logic full
 );
-
-  feed_bus_if #(.XLEN(XLEN)) branch_feed ();
+  feed_bus_if branch_feed ();
 
   logic [XLEN-1:0] store_result, jump_result;
-  logic get_bus, bus_granted, bus_selected;
-
+  logic get_bus;
+  logic bus_granted;
+  logic bus_selected;
 
   reservation_station #(
-      .XLEN(XLEN),
       .SIZE(16),
       .INSTR_TYPE(BR)
   ) branch_station (
@@ -30,9 +28,7 @@ module branch_combo #(
       .full(full)
   );
 
-  branch #(
-      .XLEN(XLEN)
-  ) branch (
+  branch branch (
       .feed_bus(branch_feed),
       .store_result(store_result),
       .jump_result(jump_result)

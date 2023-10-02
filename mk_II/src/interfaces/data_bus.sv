@@ -1,8 +1,6 @@
-import structures::*;
+import global_variables::XLEN;
 
-interface common_data_bus_if #(
-    parameter int XLEN = 32
-) ();
+interface common_data_bus_if;
   logic [XLEN-1:0] result, address, jmp_address;
   logic [5:0] arn, rrn;
   logic [3:0] select;

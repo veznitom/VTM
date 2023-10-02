@@ -1,8 +1,6 @@
-import structures::*;
+import global_variables::XLEN;
 
-module branch #(
-    parameter int XLEN = 32
-) (
+module branch (
     feed_bus_if.exec feed_bus,
 
     output logic [XLEN-1:0] store_result,
@@ -47,8 +45,7 @@ module branch #(
         else jump_result = feed_bus.address + 4;
       end
       BLTU: begin
-        if (feed_bus.data_1 < feed_bus.data_2)
-          jump_result = feed_bus.address + feed_bus.immediate;
+        if (feed_bus.data_1 < feed_bus.data_2) jump_result = feed_bus.address + feed_bus.immediate;
         else jump_result = feed_bus.address + 4;
       end
       BGEU: begin

@@ -1,8 +1,6 @@
-import structures::*;
+import global_variables::XLEN;
 
-module program_counter #(
-    parameter int XLEN = 32
-) (
+module program_counter (
     global_bus_if.rest global_bus,
     pc_bus_if.pc pc_bus
 );

@@ -1,7 +1,6 @@
-import structures::*;
+import global_variables::XLEN;
 
 module mult_div_combo #(
-    parameter int XLEN = 32,
     parameter logic [7:0] ARBITER_ADDRESS = 8'h00
 ) (
     global_bus_if.rest global_bus,
@@ -10,15 +9,14 @@ module mult_div_combo #(
 
     output logic full
 );
-
-  feed_bus_if #(.XLEN(XLEN)) mult_div_feed ();
+  feed_bus_if mult_div_feed ();
 
   logic [XLEN-1:0] mult_div_result;
-  logic get_bus, bus_granted, bus_selected;
-
+  logic get_bus;
+  logic bus_granted;
+  logic bus_selected;
 
   reservation_station #(
-      .XLEN(XLEN),
       .SIZE(16),
       .INSTR_TYPE(MD)
   ) mult_div_station (
@@ -30,9 +28,7 @@ module mult_div_combo #(
       .full(full)
   );
 
-  mult_div #(
-      .XLEN(XLEN)
-  ) mult_div (
+  mult_div mult_div (
       .feed_bus(mult_div_feed),
       .result  (mult_div_result)
   );

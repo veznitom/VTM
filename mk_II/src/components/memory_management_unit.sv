@@ -1,4 +1,4 @@
-import structures::*;
+import structures::mmu_state_e;
 
 module memory_management_unit (
     global_bus_if.rest global_bus,
@@ -6,12 +6,6 @@ module memory_management_unit (
     memory_bus_if.mmu  instr_bus,
     memory_bus_if.cpu  memory_bus
 );
-  typedef enum logic [1:0] {
-    FREE,
-    INSTR,
-    DATA
-  } mmu_state_e;
-
   mmu_state_e lock;
 
   always_comb begin : access_management
