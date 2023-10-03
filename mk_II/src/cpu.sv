@@ -17,9 +17,11 @@ module cpu #(
       .clock(clock),
       .reset(reset)
   );
+  //cpu_debug_if debug ();
+
   memory_bus_if #(.BUS_WIDTH_BYTES(MEMORY_BUS_WIDTH_BYTES)) data_memory_bus ();
   memory_bus_if #(.BUS_WIDTH_BYTES(MEMORY_BUS_WIDTH_BYTES)) instr_memory_bus ();
-  instr_cache_bus_if instr_cache_bus ();
+  instr_cache_bus_if instr_cache_bus[2] ();
   data_cache_bus_if data_cache_bus ();
 
   common_data_bus_if data_bus[2] ();

@@ -13,17 +13,29 @@ module reservation_station #(
     input  logic next,
     output logic full
 );
+  // ------------------------------- Functions -------------------------------
   function automatic bit match_data_bus(input logic [5:0] src, input logic valid,
                                         input logic [5:0] arn, input logic [5:0] rrn);
     return (arn == src || rrn == src) && !valid;
   endfunction
 
+  // ------------------------------- Structures -------------------------------
+  typedef struct packed {
+    bit [XLEN-1:0] data_1, data_2;
+    bit [XLEN-1:0] address, immediate;
+    bit [5:0] src_1, src_2, rrn;
+    instr_name_e instr_name;
+    bit valid_1, valid_2, tag, skip;
+  } station_record_t;
+
+  // ------------------------------- Wires -------------------------------
   station_record_t records[SIZE];
 
   logic [3:0] read_index;
   logic [3:0] write_index;
   logic empty;
 
+  // ------------------------------- Behaviour -------------------------------
   always_comb begin : reset
     if (global_bus.reset) begin
       feed_bus.instr_name = UNKNOWN;
@@ -43,11 +55,11 @@ module reservation_station #(
               issue_bus[i].regs.rs_1,
               issue_bus[i].regs.rs_2,
               issue_bus[i].regs.rn,
+              issue_bus[i].instr_name,
               issue_bus[i].valid_1,
               issue_bus[i].valid_2,
               issue_bus[i].flags.tag,
-              1'h0,
-              issue_bus[i].instr_name
+              1'h0
           };
         end
       end
@@ -93,7 +105,7 @@ module reservation_station #(
     if (global_bus.delete_tag) foreach (records[i]) records[i].skip = records[i].tag;
   end
 
-  // Queue control -------------------------------------------------------------------------------
+  // ------------------------------- Queue -------------------------------
 
   always_comb begin
     if (global_bus.reset) begin
@@ -106,11 +118,11 @@ module reservation_station #(
             6'h00,
             6'h00,
             6'h00,
+            UNKNOWN,
             1'h0,
             1'h0,
             1'h0,
-            1'h0,
-            UNKNOWN
+            1'h0
         };
       end
       read_index  = 8'h00;

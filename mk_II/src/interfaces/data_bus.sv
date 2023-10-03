@@ -3,7 +3,7 @@ import global_variables::XLEN;
 interface common_data_bus_if;
   logic [XLEN-1:0] result, address, jmp_address;
   logic [5:0] arn, rrn;
-  logic [3:0] select;
+  logic [7:0] select;
   logic reg_write, cache_write;
 
   modport combo(input arn, inout result, address, jmp_address, select, output rrn, reg_write);

@@ -10,8 +10,10 @@ module renamer (
     input logic stop,
     output jmp_relation_e jmp_relation
 );
+  // ------------------------------- Wires -------------------------------
   logic tag_active;
 
+  // ------------------------------- Behaviour -------------------------------
   always_comb begin : reset
     if (global_bus.reset) begin
       tag_active = 1'h0;

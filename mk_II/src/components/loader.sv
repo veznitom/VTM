@@ -10,6 +10,7 @@ module loader (
     output logic [31:0] instr[2],
     input logic stop
 );
+  // ------------------------------- Behaviour -------------------------------
   always_comb begin : pc_bus_reset
     if (global_bus.reset) begin
       pc_bus.plus_4 = 1'h0;
@@ -20,11 +21,13 @@ module loader (
   genvar i;
   generate
     for (i = 0; i < 2; i++) begin : gen_var_reset
+
+      assign cache_bus[i].read = stop ? 1'b0 : 1'b1;
+
       always_comb begin
         if (global_bus.reset) begin
           address[i] = {XLEN{1'h0}};
-          instr[i] = {32{1'h0}};
-          cache_bus[i].read = 1'h1;
+          instr[i]   = {32{1'h0}};
         end
       end
     end

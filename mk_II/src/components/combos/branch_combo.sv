@@ -9,6 +9,7 @@ module branch_combo #(
 
     output logic full
 );
+  // ------------------------------- Wires -------------------------------
   feed_bus_if branch_feed ();
 
   logic [XLEN-1:0] store_result, jump_result;
@@ -16,6 +17,7 @@ module branch_combo #(
   logic bus_granted;
   logic bus_selected;
 
+  // ------------------------------- Modules -------------------------------
   reservation_station #(
       .SIZE(16),
       .INSTR_TYPE(BR)

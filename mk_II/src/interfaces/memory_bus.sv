@@ -8,10 +8,7 @@ interface memory_bus_if #(
 ) ();
   logic [(BUS_WIDTH_BYTES*8)-1:0] data;
   logic [XLEN-1:0] address;
-  logic read;
-  logic write;
-  logic ready;
-  logic done;
+  logic read, write, ready, done;
 
   modport cache(input ready, done, inout data, output address, read, write);
   modport mmu(input read, write, inout data, address, output ready, done);

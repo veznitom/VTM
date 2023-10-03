@@ -1,12 +1,15 @@
 import global_variables::XLEN;
+import structures::*;
 
 module alu (
     feed_bus_if.exec feed_bus,
 
     output logic [XLEN-1:0] result
 );
+  // ------------------------------- Wires -------------------------------
   logic [XLEN-1:0] dump;
 
+  // ------------------------------- Behaviour -------------------------------
   always_comb begin
     case (feed_bus.instr_name)
       // Register-feed_bus.immediate operations

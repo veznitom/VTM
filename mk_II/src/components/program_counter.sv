@@ -4,8 +4,10 @@ module program_counter (
     global_bus_if.rest global_bus,
     pc_bus_if.pc pc_bus
 );
+  // ------------------------------- Wires -------------------------------
   logic [XLEN-1:0] address;
 
+  // ------------------------------- Behaviour -------------------------------
   assign pc_bus.address = address;
 
   always_comb begin : control

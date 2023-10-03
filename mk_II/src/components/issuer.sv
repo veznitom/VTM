@@ -11,9 +11,11 @@ module issuer (
 
     output logic stop
 );
+  // ------------------------------- Wires -------------------------------
   logic stops[2];
   logic fullness_split[5];
 
+  // ------------------------------- Behaviour -------------------------------
   assign fullness_split[AL] = fullness.alu;
   assign fullness_split[BR] = fullness.branch;
   assign fullness_split[LS] = fullness.load_store;
@@ -46,5 +48,4 @@ module issuer (
       end
     end
   endgenerate
-
 endmodule

@@ -8,6 +8,14 @@ module register_file (
     common_data_bus_if.reg_file data_bus[2],
     cpu_debug_if debug
 );
+  // ------------------------------- Structures -------------------------------
+  typedef struct packed {
+    logic [XLEN-1:0] value;
+    bit [5:0] rrn;
+    bit valid, tag;
+  } register_t;
+
+  // ------------------------------- Wires -------------------------------
   register_t registers[64];
   logic [5:0] ren_queue[32];
   logic [4:0] read_index;
@@ -15,6 +23,7 @@ module register_file (
   logic read[2];
   logic empty;
 
+  // ------------------------------- Behaviour -------------------------------
   always_comb begin : reset
     if (global_bus.reset) begin
       foreach (registers[j]) begin

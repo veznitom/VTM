@@ -13,6 +13,7 @@ module instr_processer (
     reg_val_bus_if.cmp reg_val_bus[2],
     common_data_bus_if.cmp data_bus[2]
 );
+  // ------------------------------- Wires -------------------------------
   instr_info_bus_if dec_to_ren[2] ();
   instr_info_bus_if ren_to_res[2] ();
   instr_info_bus_if res_to_issue[2] ();
@@ -24,6 +25,7 @@ module instr_processer (
   logic [31:0] load_instr_out[2];
   logic stop_res, stop_iss, stop;
 
+  // ------------------------------- Modules -------------------------------
   loader loader (
       .global_bus(global_bus),
       .pc_bus(pc_bus),
@@ -90,6 +92,7 @@ module instr_processer (
       .data_bus(data_bus)
   );
 
+  // ------------------------------- Behaviour -------------------------------
   assign stop = stop_res | stop_iss | 1'h0;
 
   genvar i;

@@ -9,6 +9,7 @@ module alu_combo #(
 
     output logic full
 );
+  // ------------------------------- Wires -------------------------------
   feed_bus_if alu_feed ();
 
   logic [XLEN-1:0] alu_result;
@@ -16,6 +17,7 @@ module alu_combo #(
   logic bus_granted;
   logic bus_selected;
 
+  // ------------------------------- Modules -------------------------------
   reservation_station #(
       .SIZE(16),
       .INSTR_TYPE(AL)

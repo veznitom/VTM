@@ -10,13 +10,16 @@ module data_cache #(
     data_cache_bus_if.cache cache_bus,
     common_data_bus_if.cache data_bus[2]
 );
+  // ------------------------------- Parameters -------------------------------
   localparam int SetBits = $clog2(SETS);
   localparam int WordBits = $clog2(WORDS);
 
+  // ------------------------------- Wires -------------------------------
   logic [SetBits-1:0] set_select;
   logic [WordBits-1:0] word_select;
   logic [1:0] byte_select;
 
+  // ------------------------------- Structures -------------------------------
   typedef struct packed {
     logic [XLEN-(SetBits+WordBits+2)-1:0] tag;
     logic [WORDS-1:0][XLEN-1:0] words;
@@ -28,6 +31,7 @@ module data_cache #(
     logic [WORDS-1:0][XLEN-1:0] words;
   } wb_record_t;
 
+  // ------------------------------- Wires -------------------------------
   cache_set_t data[SETS];
   wb_record_t write_buffer[SETS];
 
@@ -36,6 +40,7 @@ module data_cache #(
   logic read;
   logic empty;
 
+  // ------------------------------- Behaviour -------------------------------
   assign byte_select = cache_bus.address[1:0];
   assign word_select = WORDS - 1 - cache_bus.address[WordBits+1:2];
   assign set_select  = cache_bus.address[SetBits+WordBits+1:WordBits+2];

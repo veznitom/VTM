@@ -6,6 +6,7 @@ module branch (
     output logic [XLEN-1:0] store_result,
     output logic [XLEN-1:0] jump_result
 );
+  // ------------------------------- Behaviour -------------------------------
   always_comb begin
     case (feed_bus.instr_name)
       JAL: begin

@@ -5,17 +5,12 @@ module mult_div (
 
     output logic [XLEN-1:0] result
 );
-  logic [XLEN-1:0] upper_u;
-  logic [XLEN-1:0] upper_s;
-  logic [XLEN-1:0] upper_su;
-  logic [XLEN-1:0] lower_u;
-  logic [XLEN-1:0] lower_s;
-  logic [XLEN-1:0] lower_su;
-  logic [XLEN-1:0] divident_u;
-  logic [XLEN-1:0] divident_s;
-  logic [XLEN-1:0] remainder_u;
-  logic [XLEN-1:0] remainder_s;
-
+  // ------------------------------- Wires -------------------------------
+  logic [XLEN-1:0] upper_u, upper_s, upper_su;
+  logic [XLEN-1:0] lower_u, lower_s, lower_su;
+  logic [XLEN-1:0] divident_u, divident_s;
+  logic [XLEN-1:0] remainder_u, remainder_s;
+  // ------------------------------- Behaviour -------------------------------
   always_comb begin
     {upper_u, lower_u} = feed_bus.data_1 * feed_bus.data_2;
     {upper_s, lower_s} = $signed(feed_bus.data_1) * $signed(feed_bus.data_2);

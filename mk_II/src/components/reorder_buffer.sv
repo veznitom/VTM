@@ -12,6 +12,21 @@ module reorder_buffer #(
 
     output logic full
 );
+  // ------------------------------- Structs -------------------------------
+  typedef enum bit [1:0] {
+    WAITING,
+    COMPLETED,
+    IGNORE
+  } record_status_e;
+
+  typedef struct packed {
+    bit [XLEN-1:0] result, address, jmp_address;
+    record_status_e status;
+    registers_t regs;
+    flag_vector_t flags;
+  } rob_record_t;
+
+  // ------------------------------- Wires -------------------------------
   rob_record_t records[SIZE];
 
   logic [3:0] read_index;
@@ -22,6 +37,7 @@ module reorder_buffer #(
   logic bus_granted;
   logic bus_selected;
 
+  // ------------------------------- Modules -------------------------------
   arbiter #(
       .ADDRESS(ARBITER_ADDRESS)
   ) mult_div_arbiter (
@@ -31,6 +47,7 @@ module reorder_buffer #(
       .bus_selected(bus_selected)
   );
 
+  // ------------------------------- Behaviour -------------------------------
   always_ff @(posedge global_bus.clock) begin : jmp_resolve
     if (records[read_index].status == COMPLETED && records[0].flags.jumps) begin
       if (records[read_index].address + 4 == records[read_index].jmp_address) begin
@@ -116,8 +133,7 @@ module reorder_buffer #(
       foreach (records[i]) if (records[i].flags.tag) records[i].flags.tag = 1'h0;
   end
 
-  // Queue control -------------------------------------------------------------------------------
-
+  // ------------------------------- Queue -------------------------------
   always_comb begin
     if (global_bus.reset) begin
       foreach (records[i]) begin

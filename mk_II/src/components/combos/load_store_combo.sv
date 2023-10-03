@@ -10,13 +10,14 @@ module load_store_combo #(
 
     output logic full
 );
-  feed_bus_if oad_store_feed ();
+  // ------------------------------- Wires -------------------------------
+  feed_bus_if load_store_feed ();
 
   logic [XLEN-1:0] load_store_result;
   logic get_bus;
   logic bus_granted;
   logic bus_selected;
-
+  // ------------------------------- Modules -------------------------------
   reservation_station #(
       .SIZE(16),
       .INSTR_TYPE(LS)

@@ -9,21 +9,24 @@ module instr_cache #(
     memory_bus_if.cache memory_bus,
     instr_cache_bus_if.cache cache_bus[2]
 );
+  // ------------------------------- Parameters -------------------------------
   localparam int SetBits = $clog2(SETS);
   localparam int WordBits = $clog2(WORDS);
 
-  logic [SetBits-1:0] set_select[2];
-  logic [WordBits-1:0] word_select[2];
-  logic [1:0] byte_select[2];
-
+  // ------------------------------- Structures -------------------------------
   typedef struct packed {
     logic [XLEN-(SetBits+WordBits+2)-1:0] tag;
     logic [WORDS-1:0][XLEN-1:0] words;
     cache_state_e state;
   } cache_set_t;
 
+  // ------------------------------- Wires -------------------------------
+  logic [SetBits-1:0] set_select[2];
+  logic [WordBits-1:0] word_select[2];
+  logic [1:0] byte_select[2];
   cache_set_t data[SETS];
 
+  // ------------------------------- Behaviour -------------------------------
   always_comb begin : data_reset
     if (global_bus.reset) begin
       foreach (data[j]) begin
@@ -48,7 +51,7 @@ module instr_cache #(
       always_comb  /*always_ff @(posedge global_bus.clock)*/ begin
         if (cache_bus[i].read) begin
           if (cache_bus[i].address[XLEN-1:(SetBits+WordBits+2)] == data[set_select[i]].tag) begin
-            cache_bus[i].hit  = 1'h1;
+            cache_bus[i].hit   = 1'h1;
             cache_bus[i].instr = data[set_select[i]].words[word_select[i]];
           end else if (!(memory_bus.read || memory_bus.write)) begin
             memory_bus.read = 1'h1;

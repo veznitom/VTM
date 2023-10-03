@@ -1,15 +1,11 @@
 import structures::*;
 
 interface issue_bus_if;
-  logic [XLEN-1:0] address;
-  logic [XLEN-1:0] immediate;
-  logic [XLEN-1:0] data_1;
-  logic [XLEN-1:0] data_2;
-  logic valid_1;
-  logic valid_2;
-  instr_name_e instr_name;
-  registers_t regs;
-  instr_type_e instr_type;
+  logic [XLEN-1:0] address, immediate, data_1, data_2;
+  logic valid_1, valid_2;
+  instr_name_e  instr_name;
+  instr_type_e  instr_type;
+  registers_t   regs;
   flag_vector_t flags;
 
   modport combo(

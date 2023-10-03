@@ -7,8 +7,10 @@ module load_store (
 
     output logic [XLEN-1:0] result
 );
+  // ------------------------------- Wires -------------------------------
   logic load;
 
+  // ------------------------------- Functions -------------------------------
   function automatic logic [1:0] is_load_store(input instr_name_e instr_name);
     case (instr_name)
       LB: return 2'h1;
@@ -23,6 +25,7 @@ module load_store (
     endcase
   endfunction
 
+  // ------------------------------- Behaviour -------------------------------
   always_comb begin
     case (is_load_store(
         feed_bus.instr_name

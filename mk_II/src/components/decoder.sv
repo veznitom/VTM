@@ -10,11 +10,13 @@ module decoder (
     input logic [31:0] instr,
     input logic stop
 );
+  // ------------------------------- Wires -------------------------------
   logic [11:0] system;
   logic [ 6:0] opcode;
   logic [ 6:0] funct7;
   logic [ 2:0] funct3;
 
+  // ------------------------------- Behaviour -------------------------------
   assign system = instr[31:20];
   assign opcode = instr[6:0];
   assign funct7 = instr[31:25];

@@ -9,6 +9,7 @@ module mult_div_combo #(
 
     output logic full
 );
+  // ------------------------------- Wires -------------------------------
   feed_bus_if mult_div_feed ();
 
   logic [XLEN-1:0] mult_div_result;
@@ -16,6 +17,7 @@ module mult_div_combo #(
   logic bus_granted;
   logic bus_selected;
 
+  // ------------------------------- Modules -------------------------------
   reservation_station #(
       .SIZE(16),
       .INSTR_TYPE(MD)

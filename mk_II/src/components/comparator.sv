@@ -6,6 +6,7 @@ module comparator (
     reg_val_bus_if.cmp reg_val_bus,
     common_data_bus_if.cmp data_bus[2]
 );
+  // ------------------------------- Behaviour -------------------------------
   always_comb begin
     if (instr_info.regs.rs_1 == data_bus[0].arn || instr_info.regs.rs_1 == data_bus[0].rrn) begin
       issue_bus.data_1  = data_bus[0].result;

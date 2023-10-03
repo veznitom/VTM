@@ -1,13 +1,20 @@
-import structures::mmu_state_e;
-
 module memory_management_unit (
     global_bus_if.rest global_bus,
     memory_bus_if.mmu  data_bus,
     memory_bus_if.mmu  instr_bus,
     memory_bus_if.cpu  memory_bus
 );
+  // ------------------------------- Strucutres -------------------------------
+  typedef enum bit [1:0] {
+    FREE,
+    INSTR,
+    DATA
+  } mmu_state_e;
+
+  // ------------------------------- Wires -------------------------------
   mmu_state_e lock;
 
+  // ------------------------------- Behaviour -------------------------------
   always_comb begin : access_management
     if (global_bus.reset) lock = FREE;
     else if (instr_bus.read && lock != DATA) begin : instructions_read

@@ -21,7 +21,7 @@ module top_test #(
 
   ram #(
       .MEM_SIZE_BYTES(MemorySizeBytes),
-      .MEM_FILE_PATH ("reg_file_clear.mem")
+      .MEM_FILE_PATH ("reg_zero.mem")
   ) ram (
       .memory_bus(memory_bus),
       .clock(clock),
