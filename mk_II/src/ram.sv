@@ -14,14 +14,36 @@ module ram #(
     input logic clock,
     input logic reset
 );
+  // ------------------------------- Structures -------------------------------
   typedef logic [memory_bus.BUS_WIDTH_BITS-1:0] memory_bus_data_t;
-  logic [7:0] data[MEM_SIZE_BYTES];
 
+  // ------------------------------- Wires --------------------------------
+  logic [7:0] data[MEM_SIZE_BYTES];
   logic [XLEN-1:0] start_address, end_address;
 
+  int file, instr_load, index;
+  reg [memory_bus.BUS_WIDTH_BITS-1:0] tmp_data;
+
+  // ------------------------------- Behaviour -------------------------------
   always_comb begin
     if (reset) begin
-      $readmemh(MEM_FILE_PATH, data);
+      // $readmemh(MEM_FILE_PATH, data);
+      file = $fopen(MEM_FILE_PATH, "r");
+      index = 0;
+      tmp_data = 0;
+      foreach (data[i]) data[i] = 0;
+      while ($fscanf(
+          file, "%h", instr_load
+      ) == 1) begin
+        data[index+3] = instr_load[7:0];
+        data[index+2] = instr_load[15:8];
+        data[index+1] = instr_load[23:16];
+        data[index+0] = instr_load[31:24];
+        index += 4;
+      end
+
+      memory_bus.done  = 1'h0;
+      memory_bus.ready = 1'h0;
     end
   end
 

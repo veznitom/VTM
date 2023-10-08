@@ -24,13 +24,13 @@ module instr_cache #(
   logic [SetBits-1:0] set_select[2];
   logic [WordBits-1:0] word_select[2];
   logic [1:0] byte_select[2];
+  bit miss[2];
   cache_set_t data[SETS];
-
   // ------------------------------- Behaviour -------------------------------
   always_comb begin : data_reset
     if (global_bus.reset) begin
       foreach (data[j]) begin
-        data[j] = '{'z, 'z, INVALID};
+        data[j] = '{'0, '0, INVALID};
       end
       memory_bus.read  = 1'h0;
       memory_bus.write = 1'h0;
@@ -45,29 +45,41 @@ module instr_cache #(
       assign set_select[i]  = cache_bus[i].address[SetBits+WordBits+1:WordBits+2];
 
       always_comb begin : port_reset
-        if (global_bus.reset) cache_bus[i].hit = 1'h0;
+        if (global_bus.reset) begin
+          cache_bus[i].instr = '0;
+          cache_bus[i].hit = 1'h0;
+          miss[i] = 1'b0;
+        end
       end
 
-      always_comb  /*always_ff @(posedge global_bus.clock)*/ begin
+      always_ff @(global_bus.clock) begin : cache_read
         if (cache_bus[i].read) begin
-          if (cache_bus[i].address[XLEN-1:(SetBits+WordBits+2)] == data[set_select[i]].tag) begin
-            cache_bus[i].hit   = 1'h1;
-            cache_bus[i].instr = data[set_select[i]].words[word_select[i]];
-          end else if (!(memory_bus.read || memory_bus.write)) begin
-            memory_bus.read = 1'h1;
-            memory_bus.address = cache_bus[i].address;
-            cache_bus[i].hit = 1'h0;
-          end else if (memory_bus.read && !memory_bus.write &&
-          memory_bus.address == cache_bus[i].address)
-            if (memory_bus.ready) begin
-              data[set_select[i]].tag = cache_bus[i].address[XLEN-1:(SetBits+WordBits+2)];
-              data[set_select[i]].words = memory_bus.data;
-              data[set_select[i]].state = VALID;
+          if ((cache_bus[i].address[XLEN-1:(SetBits+WordBits+2)] == data[set_select[i]].tag) &&
+              (data[set_select[i]].state == VALID)) begin
+            miss[i] <= 1'h0;
+            cache_bus[i].hit <= 1'h1;
+            cache_bus[i].instr <= data[set_select[i]].words[word_select[i]];
+          end else begin
+            miss[i] <= 1'h1;
+            cache_bus[i].hit <= 1'h0;
+          end
+        end else cache_bus[i].hit <= 1'h0;
+      end
 
-              memory_bus.read = 1'h0;
-              memory_bus.address = 'z;
-            end else cache_bus[i].hit = 1'h0;
-        end else cache_bus[i].hit = 1'h0;
+      always_ff @(posedge global_bus.clock) begin : miss_mem_fetch
+        if (miss[i] && (!memory_bus.read || memory_bus.address == cache_bus[i].address)) begin
+          if (memory_bus.ready) begin
+            memory_bus.read <= 1'h0;
+            memory_bus.address <= {XLEN{1'h0}};
+
+            data[set_select[i]].tag <= cache_bus[i].address[XLEN-1:(SetBits+WordBits+2)];
+            data[set_select[i]].words <= memory_bus.data;
+            data[set_select[i]].state <= VALID;
+          end else begin
+            memory_bus.read <= 1'h1;
+            memory_bus.address <= cache_bus[i].address;
+          end
+        end
       end
     end
   endgenerate

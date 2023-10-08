@@ -34,11 +34,8 @@ module data_cache #(
   // ------------------------------- Wires -------------------------------
   cache_set_t data[SETS];
   wb_record_t write_buffer[SETS];
-
-  logic [3:0] read_index;
-  logic [3:0] write_index;
-  logic read;
-  logic empty;
+  logic [3:0] read_index, write_index;
+  logic read, empty, miss, write_back;
 
   // ------------------------------- Behaviour -------------------------------
   assign byte_select = cache_bus.address[1:0];
@@ -49,73 +46,99 @@ module data_cache #(
   always_comb begin : data_reset
     if (global_bus.reset) begin
       foreach (data[j]) begin
-        data[j] = '{'z, 'z, INVALID};
+        data[j] = '{'0, '0, INVALID};
       end
+      miss = 1'h0;
+      write_back = 1'h0;
     end
   end
 
   always_comb begin : port_reset
     if (global_bus.reset) begin
       cache_bus.hit = 1'h0;
+      memory_bus.address = '0;
+      memory_bus.data = '0;
       memory_bus.read = 1'h0;
       memory_bus.write = 1'h0;
     end
   end
 
-  always_comb begin
-    if (cache_bus.read) begin
-      if (cache_bus.address[XLEN-1:(SetBits+WordBits+2)] == data[set_select].tag) begin
-        cache_bus.hit  = 1'h1;
-        cache_bus.data = data[set_select].words[word_select];
-      end else if (!(memory_bus.read || memory_bus.write)) begin
-        memory_bus.read = 1'h1;
-        memory_bus.address = cache_bus.address;
-        cache_bus.hit = 1'h0;
-      end else if (memory_bus.read && !memory_bus.write && memory_bus.address == cache_bus.address)
-        if (memory_bus.ready) begin
-          data[set_select].tag = cache_bus.address[XLEN-1:(SetBits+WordBits+2)];
-          data[set_select].words = memory_bus.data;
-          data[set_select].state = VALID;
-
-          memory_bus.read = 1'h0;
-          memory_bus.address = 'z;
-        end else cache_bus.hit = 1'h0;
-    end else cache_bus.hit = 1'h0;
+  always_ff @(posedge global_bus.clock) begin : cache_read
+    if (cache_bus.read && !write_back) begin
+      if ((cache_bus.address[XLEN-1:(SetBits+WordBits+2)] == data[set_select].tag) &&
+          (data[set_select].state == VALID)) begin
+        miss <= 1'h0;
+        cache_bus.hit <= 1'h1;
+        cache_bus.data <= data[set_select].words[word_select];
+      end else begin
+        miss <= 1'h1;
+        cache_bus.hit <= 1'h0;
+      end
+    end else cache_bus.hit <= 1'h0;
   end
 
-  always_ff @(posedge global_bus.clock) begin
-    if (cache_bus.write) begin
-      if (cache_bus.address[XLEN-1:(SetBits+WordBits+2)] == data[set_select].tag
-          && data[set_select].state == MODIFIED) begin
-        write_buffer[write_index] <= '{
-            {data[set_select].tag, set_select, {WordBits + 2{1'h0}}},
-            data[set_select].words
-        };
-        write_index <= write_index + 1;
-      end else begin
+  always_ff @(posedge global_bus.clock) begin : miss_mem_fetch
+    if (miss && !write_back) begin
+      if (memory_bus.ready) begin
+        memory_bus.read <= 1'h0;
+        memory_bus.address <= {XLEN{1'h0}};
+
         data[set_select].tag <= cache_bus.address[XLEN-1:(SetBits+WordBits+2)];
-        data[set_select].words[word_select] <= cache_bus.data;
-        data[set_select].state <= MODIFIED;
+        data[set_select].words <= memory_bus.data;
+        data[set_select].state <= VALID;
+      end else begin
+        memory_bus.read <= 1'h1;
+        memory_bus.address <= cache_bus.address;
       end
     end
   end
 
   always_ff @(posedge global_bus.clock) begin
-    /*if (!empty && !memory_bus.read) begin
-      memory_bus.write <= 1'h1;
-      memory_bus.address <= write_buffer[0].address;
-      memory_bus.data <= write_buffer[0].words;
-    end else if (memory_bus.write && memory_bus.done) begin
-      memory_bus.write <= 1'h0;
-      read <= 1'h1;
-    end else read <= 1'h0;*/
+    if (cache_bus.write && !write_back) begin
+      if (cache_bus.address[XLEN-1:(SetBits+WordBits+2)] == data[set_select].tag &&
+          data[set_select].state == MODIFIED) begin
+        write_buffer[write_index] <= '{
+            {data[set_select].tag, set_select, {WordBits + 2{1'h0}}},
+            data[set_select].words
+        };
+        write_index <= write_index + 1;
+      end
+      data[set_select].tag <= cache_bus.address[XLEN-1:(SetBits+WordBits+2)];
+      data[set_select].words[word_select] <= cache_bus.data;
+      data[set_select].state <= MODIFIED;
+    end
+  end
+
+  always_ff @(posedge global_bus.clock) begin
+    if (write_back) begin
+      if (memory_bus.done) begin
+        memory_bus.write <= 1'h0;
+        memory_bus.address <= '0;
+        memory_bus.data <= '0;
+
+        write_back <= 1'h0;
+        read <= 1'h1;
+      end else begin
+        memory_bus.write <= 1'h1;
+        memory_bus.address <= write_buffer[0].address;
+        memory_bus.data <= write_buffer[0].words;
+
+        read <= 1'h0;
+      end
+    end else if (empty) begin
+      write_back <= 1'h0;
+      read <= 1'h0;
+    end else if (!empty && !memory_bus.read && memory_bus.write) begin
+      write_back <= 1'h1;
+      read <= 1'h0;
+    end else read <= 1'h0;
   end
 
   // Queue control -------------------------------------------------------------------------------
 
   always_comb begin
     if (global_bus.reset) begin
-      foreach (write_buffer[i]) write_buffer[i] = '{{XLEN{1'hz}}, {XLEN * WORDS{1'h0}}};
+      foreach (write_buffer[i]) write_buffer[i] = '{{XLEN{1'h0}}, {XLEN * WORDS{1'h0}}};
       read_index  = 8'h00;
       write_index = 8'h00;
     end

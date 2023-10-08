@@ -20,7 +20,7 @@ module memory_management_unit (
     else if (instr_bus.read && lock != DATA) begin : instructions_read
       lock = INSTR;
       if (memory_bus.ready) begin
-        instr_bus.data = memory_bus.data;
+        instr_bus.data = memory_bus.data[instr_bus.BUS_WIDTH_BITS-1:0];
         instr_bus.ready = 1'h1;
         lock = FREE;
       end else begin
@@ -31,7 +31,7 @@ module memory_management_unit (
     end else if (data_bus.read && lock != INSTR) begin : data_read
       lock = DATA;
       if (memory_bus.ready) begin
-        data_bus.data = memory_bus.data;
+        data_bus.data = memory_bus.data[data_bus.BUS_WIDTH_BITS-1:0];
         data_bus.ready = 1'h1;
         lock = FREE;
       end else begin
@@ -42,7 +42,7 @@ module memory_management_unit (
     end else if (data_bus.write && lock != INSTR) begin
       lock = DATA;
       if (memory_bus.done) begin
-        data_bus.data = memory_bus.data;
+        data_bus.data = memory_bus.data[data_bus.BUS_WIDTH_BITS-1:0];
         memory_bus.write = 1'b0;
         data_bus.done = 1'b1;
         lock = FREE;

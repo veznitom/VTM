@@ -2,6 +2,8 @@ package structures;
   import global_variables::XLEN;
 
   typedef enum bit [7:0] {
+    // Custom value
+    UNKNOWN,
     // Memory instructions
     LB,
     LH,
@@ -61,9 +63,7 @@ package structures;
     // System instructions
     ECALL,
     EBREAK,
-    FENCE,
-    // Custom value
-    UNKNOWN
+    FENCE
   } instr_name_e;
 
   typedef enum bit [2:0] {

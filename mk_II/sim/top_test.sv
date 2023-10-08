@@ -1,5 +1,4 @@
 module top_test #(
-    parameter int XLEN  = 32,
     parameter int WORDS = 4
 ) ();
   logic clock, reset;
@@ -10,9 +9,7 @@ module top_test #(
 
   localparam int MemorySizeBytes = 256;
 
-  cpu #(
-      .XLEN(XLEN)
-  ) cpu (
+  cpu cpu (
       .memory_bus(memory_bus),
       .debug(cpu_debug),
       .clock(clock),

@@ -19,8 +19,8 @@ module cpu #(
   );
   //cpu_debug_if debug ();
 
-  memory_bus_if #(.BUS_WIDTH_BYTES(MEMORY_BUS_WIDTH_BYTES)) data_memory_bus ();
-  memory_bus_if #(.BUS_WIDTH_BYTES(MEMORY_BUS_WIDTH_BYTES)) instr_memory_bus ();
+  memory_bus_if #(.BUS_WIDTH_BYTES(DATA_CACHE_WORDS * 4)) data_memory_bus ();
+  memory_bus_if #(.BUS_WIDTH_BYTES(INSTR_CACHE_WORDS * 4)) instr_memory_bus ();
   instr_cache_bus_if instr_cache_bus[2] ();
   data_cache_bus_if data_cache_bus ();
 
