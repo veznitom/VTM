@@ -1,15 +1,21 @@
-module top_test #(
-    parameter int WORDS = 4
-) ();
+module top_test ();
   logic clock, reset;
 
-  memory_bus_if #(.BUS_WIDTH_BYTES((XLEN / 8) * WORDS)) memory_bus ();
+localparam int InstrCacheWords = 4;
+  localparam int MemorySizeBytes = 256;
+  localparam int MemoryBusWidthBytes = (XLEN / 8) * InstrCacheWords;
+
+  memory_bus_if #(.BUS_WIDTH_BYTES(MemoryBusWidthBytes)) memory_bus ();
   memory_debug_if memory_debug ();
   cpu_debug_if cpu_debug ();
 
-  localparam int MemorySizeBytes = 256;
-
-  cpu cpu (
+  cpu #(
+      .MEMORY_BUS_WIDTH_BYTES(256),
+      .INSTR_CACHE_WORDS(InstrCacheWords),
+      .INSTR_CACHE_SETS(16),
+      .DATA_CACHE_WORDS(2),
+      .DATA_CACHE_SETS(16)
+  ) cpu (
       .memory_bus(memory_bus),
       .debug(cpu_debug),
       .clock(clock),
@@ -18,6 +24,7 @@ module top_test #(
 
   ram #(
       .MEM_SIZE_BYTES(MemorySizeBytes),
+      .MEMORY_BUS_WIDTH_BYTES(MemoryBusWidthBytes),
       .MEM_FILE_PATH ("reg_zero.mem")
   ) ram (
       .memory_bus(memory_bus),

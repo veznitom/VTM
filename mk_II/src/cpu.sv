@@ -127,8 +127,8 @@ module cpu #(
       .full(fullness.mult_div)
   );
 
-  assign instr_cache_bus[0].address = pc_bus.address;
-  assign instr_cache_bus[1].address = pc_bus.address + 4;
+  assign instr_cache_bus[0].address_in = pc_bus.address;
+  assign instr_cache_bus[1].address_in = pc_bus.address + 4;
 
   always_comb begin : clear_wires
     if (reset) begin

@@ -1,4 +1,4 @@
-import global_variables::XLEN;
+import global_variables::*;
 import structures::*;
 
 module instr_cache #(
@@ -40,45 +40,61 @@ module instr_cache #(
   genvar i;
   generate
     for (i = 0; i < 2; i++) begin : gen_selects
-      assign byte_select[i] = cache_bus[i].address[1:0];
-      assign word_select[i] = WORDS - 1 - cache_bus[i].address[WordBits+1:2];
-      assign set_select[i]  = cache_bus[i].address[SetBits+WordBits+1:WordBits+2];
+      assign byte_select[i] = cache_bus[i].address_in[1:0];
+      assign word_select[i] = WORDS - 1 - cache_bus[i].address_in[WordBits+1:2];
+      assign set_select[i]  = cache_bus[i].address_in[SetBits+WordBits+1:WordBits+2];
 
       always_comb begin : port_reset
         if (global_bus.reset) begin
-          cache_bus[i].instr = '0;
+          cache_bus[i].instr = {32{1'h0}};
+          cache_bus[i].address_out = {XLEN{1'h0}};
           cache_bus[i].hit = 1'h0;
           miss[i] = 1'b0;
         end
       end
 
-      always_ff @(global_bus.clock) begin : cache_read
+      always_ff @(posedge global_bus.clock) begin : cache_read
         if (cache_bus[i].read) begin
-          if ((cache_bus[i].address[XLEN-1:(SetBits+WordBits+2)] == data[set_select[i]].tag) &&
+          if ((cache_bus[i].address_in[XLEN-1:(SetBits+WordBits+2)] == data[set_select[i]].tag) &&
               (data[set_select[i]].state == VALID)) begin
             miss[i] <= 1'h0;
             cache_bus[i].hit <= 1'h1;
             cache_bus[i].instr <= data[set_select[i]].words[word_select[i]];
+            cache_bus[i].address_out <= cache_bus[i].address_in;
           end else begin
             miss[i] <= 1'h1;
+            cache_bus[i].instr <= {32{1'h0}};
+            cache_bus[i].address_out <= {XLEN{1'h0}};
             cache_bus[i].hit <= 1'h0;
           end
-        end else cache_bus[i].hit <= 1'h0;
+        end else begin
+          cache_bus[i].instr <= {32{1'h0}};
+          cache_bus[i].address_out <= {XLEN{1'h0}};
+          cache_bus[i].hit <= 1'h0;
+          cache_bus[i].hit <= 1'h0;
+        end
       end
 
       always_ff @(posedge global_bus.clock) begin : miss_mem_fetch
-        if (miss[i] && (!memory_bus.read || memory_bus.address == cache_bus[i].address)) begin
+        if (miss[i] && (!memory_bus.read || memory_bus.address == cache_bus[i].address_in)) begin
           if (memory_bus.ready) begin
             memory_bus.read <= 1'h0;
             memory_bus.address <= {XLEN{1'h0}};
 
-            data[set_select[i]].tag <= cache_bus[i].address[XLEN-1:(SetBits+WordBits+2)];
+            data[set_select[i]].tag <= cache_bus[i].address_in[XLEN-1:(SetBits+WordBits+2)];
             data[set_select[i]].words <= memory_bus.data;
             data[set_select[i]].state <= VALID;
+
+            /*cache_bus[i].hit <= 1'h1;
+            cache_bus[i].instr <= memory_bus.data[((word_select[i]*32)+31)-:32];
+            cache_bus[i].address_out <= cache_bus[i].address_in;*/
           end else begin
             memory_bus.read <= 1'h1;
-            memory_bus.address <= cache_bus[i].address;
+            memory_bus.address <= cache_bus[i].address_in;
           end
+        end else begin
+          memory_bus.read <= 1'h0;
+          memory_bus.address <= {XLEN{1'h0}};
         end
       end
     end

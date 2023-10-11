@@ -16,8 +16,10 @@ module memory_management_unit (
 
   // ------------------------------- Behaviour -------------------------------
   always_comb begin : access_management
-    if (global_bus.reset) lock = FREE;
-    else if (instr_bus.read && lock != DATA) begin : instructions_read
+    if (global_bus.reset) begin
+      lock = FREE;
+      instr_bus.done = 1'h0;
+    end else if (instr_bus.read && lock != DATA) begin : instructions_read
       lock = INSTR;
       if (memory_bus.ready) begin
         instr_bus.data = memory_bus.data[instr_bus.BUS_WIDTH_BITS-1:0];
