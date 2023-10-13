@@ -3,37 +3,46 @@
    <wave_state>
    </wave_state>
    <db_ref_list>
-      <db_ref path="top_test_behav.wdb" id="1">
+      <db_ref path="top_behav.wdb" id="1">
          <top_modules>
             <top_module name="glbl" />
             <top_module name="global_variables" />
             <top_module name="structures" />
-            <top_module name="top_test" />
+            <top_module name="top" />
          </top_modules>
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
-      <ZoomEndTime time="935.710 ns"></ZoomEndTime>
-      <Cursor1Time time="110.000 ns"></Cursor1Time>
+      <ZoomStartTime time="85.308 ns"></ZoomStartTime>
+      <ZoomEndTime time="903.318 ns"></ZoomEndTime>
+      <Cursor1Time time="1,000.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="314"></NameColumnWidth>
-      <ValueColumnWidth column_width="125"></ValueColumnWidth>
+      <ValueColumnWidth column_width="121"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="5" />
    <wvobject type="group" fp_name="group6">
       <obj_property name="label">Top</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <wvobject type="logic" fp_name="/top_test/clock">
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject type="logic" fp_name="/top/clock">
          <obj_property name="ElementShortName">clock</obj_property>
          <obj_property name="ObjectShortName">clock</obj_property>
       </wvobject>
-      <wvobject type="logic" fp_name="/top_test/reset">
+      <wvobject type="logic" fp_name="/top/reset">
          <obj_property name="ElementShortName">reset</obj_property>
          <obj_property name="ObjectShortName">reset</obj_property>
       </wvobject>
-      <wvobject type="array" fp_name="/top_test/MemorySizeBytes">
+      <wvobject type="array" fp_name="/top/XLEN">
+         <obj_property name="ElementShortName">XLEN[31:0]</obj_property>
+         <obj_property name="ObjectShortName">XLEN[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/top/WORDS">
+         <obj_property name="ElementShortName">WORDS[31:0]</obj_property>
+         <obj_property name="ObjectShortName">WORDS[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/top/MemorySizeBytes">
          <obj_property name="ElementShortName">MemorySizeBytes[31:0]</obj_property>
          <obj_property name="ObjectShortName">MemorySizeBytes[31:0]</obj_property>
       </wvobject>
@@ -41,38 +50,40 @@
    <wvobject type="group" fp_name="group7">
       <obj_property name="label">CPU</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <wvobject type="logic" fp_name="/top_test/cpu/clock">
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject type="logic" fp_name="/top/cpu/clock">
          <obj_property name="ElementShortName">clock</obj_property>
          <obj_property name="ObjectShortName">clock</obj_property>
       </wvobject>
-      <wvobject type="logic" fp_name="/top_test/cpu/reset">
+      <wvobject type="logic" fp_name="/top/cpu/reset">
          <obj_property name="ElementShortName">reset</obj_property>
          <obj_property name="ObjectShortName">reset</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/top/cpu/MEMORY_BUS_WIDTH_BYTES">
+         <obj_property name="ElementShortName">MEMORY_BUS_WIDTH_BYTES[31:0]</obj_property>
+         <obj_property name="ObjectShortName">MEMORY_BUS_WIDTH_BYTES[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/top/cpu/INSTR_CACHE_WORDS">
+         <obj_property name="ElementShortName">INSTR_CACHE_WORDS[31:0]</obj_property>
+         <obj_property name="ObjectShortName">INSTR_CACHE_WORDS[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/top/cpu/INSTR_CACHE_SETS">
+         <obj_property name="ElementShortName">INSTR_CACHE_SETS[31:0]</obj_property>
+         <obj_property name="ObjectShortName">INSTR_CACHE_SETS[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/top/cpu/DATA_CACHE_WORDS">
+         <obj_property name="ElementShortName">DATA_CACHE_WORDS[31:0]</obj_property>
+         <obj_property name="ObjectShortName">DATA_CACHE_WORDS[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/top/cpu/DATA_CACHE_SETS">
+         <obj_property name="ElementShortName">DATA_CACHE_SETS[31:0]</obj_property>
+         <obj_property name="ObjectShortName">DATA_CACHE_SETS[31:0]</obj_property>
       </wvobject>
    </wvobject>
    <wvobject type="group" fp_name="group15">
       <obj_property name="label">RAM</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <wvobject type="logic" fp_name="/top_test/ram/clock">
-         <obj_property name="ElementShortName">clock</obj_property>
-         <obj_property name="ObjectShortName">clock</obj_property>
-      </wvobject>
-      <wvobject type="logic" fp_name="/top_test/ram/reset">
-         <obj_property name="ElementShortName">reset</obj_property>
-         <obj_property name="ObjectShortName">reset</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/top_test/ram/data">
-         <obj_property name="ElementShortName">data[0:255][7:0]</obj_property>
-         <obj_property name="ObjectShortName">data[0:255][7:0]</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/top_test/ram/start_address">
-         <obj_property name="ElementShortName">start_address[31:0]</obj_property>
-         <obj_property name="ObjectShortName">start_address[31:0]</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/top_test/ram/end_address">
-         <obj_property name="ElementShortName">end_address[31:0]</obj_property>
-         <obj_property name="ObjectShortName">end_address[31:0]</obj_property>
-      </wvobject>
+      <obj_property name="isExpanded"></obj_property>
    </wvobject>
    <wvobject type="group" fp_name="group26">
       <obj_property name="label">Buses</obj_property>
@@ -81,19 +92,20 @@
       <wvobject type="group" fp_name="group27">
          <obj_property name="label">global_bus</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject type="logic" fp_name="/top_test/cpu/global_bus/clock">
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject type="logic" fp_name="/top/cpu/global_bus/clock">
             <obj_property name="ElementShortName">clock</obj_property>
             <obj_property name="ObjectShortName">clock</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/global_bus/reset">
+         <wvobject type="logic" fp_name="/top/cpu/global_bus/reset">
             <obj_property name="ElementShortName">reset</obj_property>
             <obj_property name="ObjectShortName">reset</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/global_bus/delete_tag">
+         <wvobject type="logic" fp_name="/top/cpu/global_bus/delete_tag">
             <obj_property name="ElementShortName">delete_tag</obj_property>
             <obj_property name="ObjectShortName">delete_tag</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/global_bus/clear_tag">
+         <wvobject type="logic" fp_name="/top/cpu/global_bus/clear_tag">
             <obj_property name="ElementShortName">clear_tag</obj_property>
             <obj_property name="ObjectShortName">clear_tag</obj_property>
          </wvobject>
@@ -101,83 +113,118 @@
       <wvobject type="group" fp_name="group28">
          <obj_property name="label">data_memory_bus</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject type="array" fp_name="/top_test/cpu/data_memory_bus/data">
-            <obj_property name="ElementShortName">data[63:0]</obj_property>
-            <obj_property name="ObjectShortName">data[63:0]</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject type="array" fp_name="/top/cpu/data_memory_bus/data">
+            <obj_property name="ElementShortName">data[127:0]</obj_property>
+            <obj_property name="ObjectShortName">data[127:0]</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/data_memory_bus/address">
+         <wvobject type="array" fp_name="/top/cpu/data_memory_bus/address">
             <obj_property name="ElementShortName">address[31:0]</obj_property>
             <obj_property name="ObjectShortName">address[31:0]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/data_memory_bus/read">
+         <wvobject type="logic" fp_name="/top/cpu/data_memory_bus/read">
             <obj_property name="ElementShortName">read</obj_property>
             <obj_property name="ObjectShortName">read</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/data_memory_bus/write">
+         <wvobject type="logic" fp_name="/top/cpu/data_memory_bus/write">
             <obj_property name="ElementShortName">write</obj_property>
             <obj_property name="ObjectShortName">write</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/data_memory_bus/ready">
+         <wvobject type="logic" fp_name="/top/cpu/data_memory_bus/ready">
             <obj_property name="ElementShortName">ready</obj_property>
             <obj_property name="ObjectShortName">ready</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/data_memory_bus/done">
+         <wvobject type="logic" fp_name="/top/cpu/data_memory_bus/done">
             <obj_property name="ElementShortName">done</obj_property>
             <obj_property name="ObjectShortName">done</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/top/cpu/data_memory_bus/BUS_WIDTH_BYTES">
+            <obj_property name="ElementShortName">BUS_WIDTH_BYTES[31:0]</obj_property>
+            <obj_property name="ObjectShortName">BUS_WIDTH_BYTES[31:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/top/cpu/data_memory_bus/BUS_WIDTH_BITS">
+            <obj_property name="ElementShortName">BUS_WIDTH_BITS[31:0]</obj_property>
+            <obj_property name="ObjectShortName">BUS_WIDTH_BITS[31:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/top/cpu/data_memory_bus/BUS_BIT_LOG">
+            <obj_property name="ElementShortName">BUS_BIT_LOG[31:0]</obj_property>
+            <obj_property name="ObjectShortName">BUS_BIT_LOG[31:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/top/cpu/data_memory_bus/XLEN">
+            <obj_property name="ElementShortName">XLEN[31:0]</obj_property>
+            <obj_property name="ObjectShortName">XLEN[31:0]</obj_property>
          </wvobject>
       </wvobject>
       <wvobject type="group" fp_name="group43">
          <obj_property name="label">instr_memory_bus</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject type="array" fp_name="/top_test/cpu/instr_memory_bus/data">
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject type="array" fp_name="/top/cpu/instr_memory_bus/data">
             <obj_property name="ElementShortName">data[127:0]</obj_property>
             <obj_property name="ObjectShortName">data[127:0]</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/instr_memory_bus/address">
+         <wvobject type="array" fp_name="/top/cpu/instr_memory_bus/address">
             <obj_property name="ElementShortName">address[31:0]</obj_property>
             <obj_property name="ObjectShortName">address[31:0]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/instr_memory_bus/read">
+         <wvobject type="logic" fp_name="/top/cpu/instr_memory_bus/read">
             <obj_property name="ElementShortName">read</obj_property>
             <obj_property name="ObjectShortName">read</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/instr_memory_bus/write">
+         <wvobject type="logic" fp_name="/top/cpu/instr_memory_bus/write">
             <obj_property name="ElementShortName">write</obj_property>
             <obj_property name="ObjectShortName">write</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/instr_memory_bus/ready">
+         <wvobject type="logic" fp_name="/top/cpu/instr_memory_bus/ready">
             <obj_property name="ElementShortName">ready</obj_property>
             <obj_property name="ObjectShortName">ready</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/instr_memory_bus/done">
+         <wvobject type="logic" fp_name="/top/cpu/instr_memory_bus/done">
             <obj_property name="ElementShortName">done</obj_property>
             <obj_property name="ObjectShortName">done</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/top/cpu/instr_memory_bus/BUS_WIDTH_BYTES">
+            <obj_property name="ElementShortName">BUS_WIDTH_BYTES[31:0]</obj_property>
+            <obj_property name="ObjectShortName">BUS_WIDTH_BYTES[31:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/top/cpu/instr_memory_bus/BUS_WIDTH_BITS">
+            <obj_property name="ElementShortName">BUS_WIDTH_BITS[31:0]</obj_property>
+            <obj_property name="ObjectShortName">BUS_WIDTH_BITS[31:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/top/cpu/instr_memory_bus/BUS_BIT_LOG">
+            <obj_property name="ElementShortName">BUS_BIT_LOG[31:0]</obj_property>
+            <obj_property name="ObjectShortName">BUS_BIT_LOG[31:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/top/cpu/instr_memory_bus/XLEN">
+            <obj_property name="ElementShortName">XLEN[31:0]</obj_property>
+            <obj_property name="ObjectShortName">XLEN[31:0]</obj_property>
          </wvobject>
       </wvobject>
       <wvobject type="group" fp_name="group2108">
          <obj_property name="label">instr_cache_buses</obj_property>
          <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
          <wvobject type="group" fp_name="group2109">
             <obj_property name="label">0</obj_property>
             <obj_property name="DisplayName">label</obj_property>
             <obj_property name="isExpanded"></obj_property>
-            <wvobject type="array" fp_name="/top_test/cpu/\instr_cache_bus[0] /address_in">
+            <wvobject type="array" fp_name="/top/cpu/\instr_cache_bus[0] /address_in">
                <obj_property name="ElementShortName">address_in[31:0]</obj_property>
                <obj_property name="ObjectShortName">address_in[31:0]</obj_property>
             </wvobject>
-            <wvobject type="array" fp_name="/top_test/cpu/\instr_cache_bus[0] /address_out">
+            <wvobject type="array" fp_name="/top/cpu/\instr_cache_bus[0] /address_out">
                <obj_property name="ElementShortName">address_out[31:0]</obj_property>
                <obj_property name="ObjectShortName">address_out[31:0]</obj_property>
             </wvobject>
-            <wvobject type="array" fp_name="/top_test/cpu/\instr_cache_bus[0] /instr">
+            <wvobject type="array" fp_name="/top/cpu/\instr_cache_bus[0] /instr">
                <obj_property name="ElementShortName">instr[31:0]</obj_property>
                <obj_property name="ObjectShortName">instr[31:0]</obj_property>
             </wvobject>
-            <wvobject type="logic" fp_name="/top_test/cpu/\instr_cache_bus[0] /hit">
+            <wvobject type="logic" fp_name="/top/cpu/\instr_cache_bus[0] /hit">
                <obj_property name="ElementShortName">hit</obj_property>
                <obj_property name="ObjectShortName">hit</obj_property>
             </wvobject>
-            <wvobject type="logic" fp_name="/top_test/cpu/\instr_cache_bus[0] /read">
+            <wvobject type="logic" fp_name="/top/cpu/\instr_cache_bus[0] /read">
                <obj_property name="ElementShortName">read</obj_property>
                <obj_property name="ObjectShortName">read</obj_property>
             </wvobject>
@@ -186,23 +233,23 @@
             <obj_property name="label">1</obj_property>
             <obj_property name="DisplayName">label</obj_property>
             <obj_property name="isExpanded"></obj_property>
-            <wvobject type="array" fp_name="/top_test/cpu/\instr_cache_bus[1] /address_in">
+            <wvobject type="array" fp_name="/top/cpu/\instr_cache_bus[1] /address_in">
                <obj_property name="ElementShortName">address_in[31:0]</obj_property>
                <obj_property name="ObjectShortName">address_in[31:0]</obj_property>
             </wvobject>
-            <wvobject type="array" fp_name="/top_test/cpu/\instr_cache_bus[1] /address_out">
+            <wvobject type="array" fp_name="/top/cpu/\instr_cache_bus[1] /address_out">
                <obj_property name="ElementShortName">address_out[31:0]</obj_property>
                <obj_property name="ObjectShortName">address_out[31:0]</obj_property>
             </wvobject>
-            <wvobject type="array" fp_name="/top_test/cpu/\instr_cache_bus[1] /instr">
+            <wvobject type="array" fp_name="/top/cpu/\instr_cache_bus[1] /instr">
                <obj_property name="ElementShortName">instr[31:0]</obj_property>
                <obj_property name="ObjectShortName">instr[31:0]</obj_property>
             </wvobject>
-            <wvobject type="logic" fp_name="/top_test/cpu/\instr_cache_bus[1] /hit">
+            <wvobject type="logic" fp_name="/top/cpu/\instr_cache_bus[1] /hit">
                <obj_property name="ElementShortName">hit</obj_property>
                <obj_property name="ObjectShortName">hit</obj_property>
             </wvobject>
-            <wvobject type="logic" fp_name="/top_test/cpu/\instr_cache_bus[1] /read">
+            <wvobject type="logic" fp_name="/top/cpu/\instr_cache_bus[1] /read">
                <obj_property name="ElementShortName">read</obj_property>
                <obj_property name="ObjectShortName">read</obj_property>
             </wvobject>
@@ -211,27 +258,28 @@
       <wvobject type="group" fp_name="group42">
          <obj_property name="label">data_cache_bus</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject type="array" fp_name="/top_test/cpu/data_cache_bus/data">
-            <obj_property name="ElementShortName">data[31:0]</obj_property>
-            <obj_property name="ObjectShortName">data[31:0]</obj_property>
-         </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/data_cache_bus/address">
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject type="array" fp_name="/top/cpu/data_cache_bus/address">
             <obj_property name="ElementShortName">address[31:0]</obj_property>
             <obj_property name="ObjectShortName">address[31:0]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/data_cache_bus/read">
+         <wvobject type="array" fp_name="/top/cpu/data_cache_bus/data">
+            <obj_property name="ElementShortName">data[31:0]</obj_property>
+            <obj_property name="ObjectShortName">data[31:0]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/top/cpu/data_cache_bus/read">
             <obj_property name="ElementShortName">read</obj_property>
             <obj_property name="ObjectShortName">read</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/data_cache_bus/write">
+         <wvobject type="logic" fp_name="/top/cpu/data_cache_bus/write">
             <obj_property name="ElementShortName">write</obj_property>
             <obj_property name="ObjectShortName">write</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/data_cache_bus/hit">
+         <wvobject type="logic" fp_name="/top/cpu/data_cache_bus/hit">
             <obj_property name="ElementShortName">hit</obj_property>
             <obj_property name="ObjectShortName">hit</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/data_cache_bus/tag">
+         <wvobject type="logic" fp_name="/top/cpu/data_cache_bus/tag">
             <obj_property name="ElementShortName">tag</obj_property>
             <obj_property name="ObjectShortName">tag</obj_property>
          </wvobject>
@@ -239,38 +287,40 @@
       <wvobject type="group" fp_name="group266">
          <obj_property name="label">data_buses</obj_property>
          <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
          <wvobject type="group" fp_name="group267">
             <obj_property name="label">0</obj_property>
             <obj_property name="DisplayName">label</obj_property>
-            <wvobject type="array" fp_name="/top_test/cpu/\data_bus[0] /result">
+            <obj_property name="isExpanded"></obj_property>
+            <wvobject type="array" fp_name="/top/cpu/\data_bus[0] /result">
                <obj_property name="ElementShortName">result[31:0]</obj_property>
                <obj_property name="ObjectShortName">result[31:0]</obj_property>
             </wvobject>
-            <wvobject type="array" fp_name="/top_test/cpu/\data_bus[0] /address">
+            <wvobject type="array" fp_name="/top/cpu/\data_bus[0] /address">
                <obj_property name="ElementShortName">address[31:0]</obj_property>
                <obj_property name="ObjectShortName">address[31:0]</obj_property>
             </wvobject>
-            <wvobject type="array" fp_name="/top_test/cpu/\data_bus[0] /jmp_address">
+            <wvobject type="array" fp_name="/top/cpu/\data_bus[0] /jmp_address">
                <obj_property name="ElementShortName">jmp_address[31:0]</obj_property>
                <obj_property name="ObjectShortName">jmp_address[31:0]</obj_property>
             </wvobject>
-            <wvobject type="array" fp_name="/top_test/cpu/\data_bus[0] /arn">
+            <wvobject type="array" fp_name="/top/cpu/\data_bus[0] /arn">
                <obj_property name="ElementShortName">arn[5:0]</obj_property>
                <obj_property name="ObjectShortName">arn[5:0]</obj_property>
             </wvobject>
-            <wvobject type="array" fp_name="/top_test/cpu/\data_bus[0] /rrn">
+            <wvobject type="array" fp_name="/top/cpu/\data_bus[0] /rrn">
                <obj_property name="ElementShortName">rrn[5:0]</obj_property>
                <obj_property name="ObjectShortName">rrn[5:0]</obj_property>
             </wvobject>
-            <wvobject type="array" fp_name="/top_test/cpu/\data_bus[0] /select">
+            <wvobject type="array" fp_name="/top/cpu/\data_bus[0] /select">
                <obj_property name="ElementShortName">select[7:0]</obj_property>
                <obj_property name="ObjectShortName">select[7:0]</obj_property>
             </wvobject>
-            <wvobject type="logic" fp_name="/top_test/cpu/\data_bus[0] /reg_write">
+            <wvobject type="logic" fp_name="/top/cpu/\data_bus[0] /reg_write">
                <obj_property name="ElementShortName">reg_write</obj_property>
                <obj_property name="ObjectShortName">reg_write</obj_property>
             </wvobject>
-            <wvobject type="logic" fp_name="/top_test/cpu/\data_bus[0] /cache_write">
+            <wvobject type="logic" fp_name="/top/cpu/\data_bus[0] /cache_write">
                <obj_property name="ElementShortName">cache_write</obj_property>
                <obj_property name="ObjectShortName">cache_write</obj_property>
             </wvobject>
@@ -278,35 +328,36 @@
          <wvobject type="group" fp_name="group267">
             <obj_property name="label">1</obj_property>
             <obj_property name="DisplayName">label</obj_property>
-            <wvobject type="array" fp_name="/top_test/cpu/\data_bus[1] /result">
+            <obj_property name="isExpanded"></obj_property>
+            <wvobject type="array" fp_name="/top/cpu/\data_bus[1] /result">
                <obj_property name="ElementShortName">result[31:0]</obj_property>
                <obj_property name="ObjectShortName">result[31:0]</obj_property>
             </wvobject>
-            <wvobject type="array" fp_name="/top_test/cpu/\data_bus[1] /address">
+            <wvobject type="array" fp_name="/top/cpu/\data_bus[1] /address">
                <obj_property name="ElementShortName">address[31:0]</obj_property>
                <obj_property name="ObjectShortName">address[31:0]</obj_property>
             </wvobject>
-            <wvobject type="array" fp_name="/top_test/cpu/\data_bus[1] /jmp_address">
+            <wvobject type="array" fp_name="/top/cpu/\data_bus[1] /jmp_address">
                <obj_property name="ElementShortName">jmp_address[31:0]</obj_property>
                <obj_property name="ObjectShortName">jmp_address[31:0]</obj_property>
             </wvobject>
-            <wvobject type="array" fp_name="/top_test/cpu/\data_bus[1] /arn">
+            <wvobject type="array" fp_name="/top/cpu/\data_bus[1] /arn">
                <obj_property name="ElementShortName">arn[5:0]</obj_property>
                <obj_property name="ObjectShortName">arn[5:0]</obj_property>
             </wvobject>
-            <wvobject type="array" fp_name="/top_test/cpu/\data_bus[1] /rrn">
+            <wvobject type="array" fp_name="/top/cpu/\data_bus[1] /rrn">
                <obj_property name="ElementShortName">rrn[5:0]</obj_property>
                <obj_property name="ObjectShortName">rrn[5:0]</obj_property>
             </wvobject>
-            <wvobject type="array" fp_name="/top_test/cpu/\data_bus[1] /select">
+            <wvobject type="array" fp_name="/top/cpu/\data_bus[1] /select">
                <obj_property name="ElementShortName">select[7:0]</obj_property>
                <obj_property name="ObjectShortName">select[7:0]</obj_property>
             </wvobject>
-            <wvobject type="logic" fp_name="/top_test/cpu/\data_bus[1] /reg_write">
+            <wvobject type="logic" fp_name="/top/cpu/\data_bus[1] /reg_write">
                <obj_property name="ElementShortName">reg_write</obj_property>
                <obj_property name="ObjectShortName">reg_write</obj_property>
             </wvobject>
-            <wvobject type="logic" fp_name="/top_test/cpu/\data_bus[1] /cache_write">
+            <wvobject type="logic" fp_name="/top/cpu/\data_bus[1] /cache_write">
                <obj_property name="ElementShortName">cache_write</obj_property>
                <obj_property name="ObjectShortName">cache_write</obj_property>
             </wvobject>
@@ -315,23 +366,24 @@
       <wvobject type="group" fp_name="group2091">
          <obj_property name="label">pc_bus</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject type="array" fp_name="/top_test/cpu/pc_bus/jmp_address">
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject type="array" fp_name="/top/cpu/pc_bus/jmp_address">
             <obj_property name="ElementShortName">jmp_address[31:0]</obj_property>
             <obj_property name="ObjectShortName">jmp_address[31:0]</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/pc_bus/address">
+         <wvobject type="array" fp_name="/top/cpu/pc_bus/address">
             <obj_property name="ElementShortName">address[31:0]</obj_property>
             <obj_property name="ObjectShortName">address[31:0]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/pc_bus/plus_4">
+         <wvobject type="logic" fp_name="/top/cpu/pc_bus/plus_4">
             <obj_property name="ElementShortName">plus_4</obj_property>
             <obj_property name="ObjectShortName">plus_4</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/pc_bus/plus_8">
+         <wvobject type="logic" fp_name="/top/cpu/pc_bus/plus_8">
             <obj_property name="ElementShortName">plus_8</obj_property>
             <obj_property name="ObjectShortName">plus_8</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/pc_bus/write">
+         <wvobject type="logic" fp_name="/top/cpu/pc_bus/write">
             <obj_property name="ElementShortName">write</obj_property>
             <obj_property name="ObjectShortName">write</obj_property>
          </wvobject>
@@ -339,46 +391,48 @@
       <wvobject type="group" fp_name="group286">
          <obj_property name="label">issue_buses</obj_property>
          <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
          <wvobject type="group" fp_name="group287">
             <obj_property name="label">0</obj_property>
             <obj_property name="DisplayName">label</obj_property>
-            <wvobject type="array" fp_name="/top_test/cpu/\issue_bus[0] /address">
+            <obj_property name="isExpanded"></obj_property>
+            <wvobject type="array" fp_name="/top/cpu/\issue_bus[0] /address">
                <obj_property name="ElementShortName">address[31:0]</obj_property>
                <obj_property name="ObjectShortName">address[31:0]</obj_property>
             </wvobject>
-            <wvobject type="array" fp_name="/top_test/cpu/\issue_bus[0] /immediate">
+            <wvobject type="array" fp_name="/top/cpu/\issue_bus[0] /immediate">
                <obj_property name="ElementShortName">immediate[31:0]</obj_property>
                <obj_property name="ObjectShortName">immediate[31:0]</obj_property>
             </wvobject>
-            <wvobject type="array" fp_name="/top_test/cpu/\issue_bus[0] /data_1">
+            <wvobject type="array" fp_name="/top/cpu/\issue_bus[0] /data_1">
                <obj_property name="ElementShortName">data_1[31:0]</obj_property>
                <obj_property name="ObjectShortName">data_1[31:0]</obj_property>
             </wvobject>
-            <wvobject type="array" fp_name="/top_test/cpu/\issue_bus[0] /data_2">
+            <wvobject type="array" fp_name="/top/cpu/\issue_bus[0] /data_2">
                <obj_property name="ElementShortName">data_2[31:0]</obj_property>
                <obj_property name="ObjectShortName">data_2[31:0]</obj_property>
             </wvobject>
-            <wvobject type="logic" fp_name="/top_test/cpu/\issue_bus[0] /valid_1">
+            <wvobject type="logic" fp_name="/top/cpu/\issue_bus[0] /valid_1">
                <obj_property name="ElementShortName">valid_1</obj_property>
                <obj_property name="ObjectShortName">valid_1</obj_property>
             </wvobject>
-            <wvobject type="logic" fp_name="/top_test/cpu/\issue_bus[0] /valid_2">
+            <wvobject type="logic" fp_name="/top/cpu/\issue_bus[0] /valid_2">
                <obj_property name="ElementShortName">valid_2</obj_property>
                <obj_property name="ObjectShortName">valid_2</obj_property>
             </wvobject>
-            <wvobject type="array" fp_name="/top_test/cpu/\issue_bus[0] /instr_name">
+            <wvobject type="array" fp_name="/top/cpu/\issue_bus[0] /instr_name">
                <obj_property name="ElementShortName">instr_name[7:0]</obj_property>
                <obj_property name="ObjectShortName">instr_name[7:0]</obj_property>
             </wvobject>
-            <wvobject type="array" fp_name="/top_test/cpu/\issue_bus[0] /instr_type">
+            <wvobject type="array" fp_name="/top/cpu/\issue_bus[0] /instr_type">
                <obj_property name="ElementShortName">instr_type[2:0]</obj_property>
                <obj_property name="ObjectShortName">instr_type[2:0]</obj_property>
             </wvobject>
-            <wvobject type="array" fp_name="/top_test/cpu/\issue_bus[0] /regs">
+            <wvobject type="array" fp_name="/top/cpu/\issue_bus[0] /regs">
                <obj_property name="ElementShortName">regs</obj_property>
                <obj_property name="ObjectShortName">regs</obj_property>
             </wvobject>
-            <wvobject type="array" fp_name="/top_test/cpu/\issue_bus[0] /flags">
+            <wvobject type="array" fp_name="/top/cpu/\issue_bus[0] /flags">
                <obj_property name="ElementShortName">flags</obj_property>
                <obj_property name="ObjectShortName">flags</obj_property>
             </wvobject>
@@ -386,43 +440,44 @@
          <wvobject type="group" fp_name="group287">
             <obj_property name="label">1</obj_property>
             <obj_property name="DisplayName">label</obj_property>
-            <wvobject type="array" fp_name="/top_test/cpu/\issue_bus[1] /address">
+            <obj_property name="isExpanded"></obj_property>
+            <wvobject type="array" fp_name="/top/cpu/\issue_bus[1] /address">
                <obj_property name="ElementShortName">address[31:0]</obj_property>
                <obj_property name="ObjectShortName">address[31:0]</obj_property>
             </wvobject>
-            <wvobject type="array" fp_name="/top_test/cpu/\issue_bus[1] /immediate">
+            <wvobject type="array" fp_name="/top/cpu/\issue_bus[1] /immediate">
                <obj_property name="ElementShortName">immediate[31:0]</obj_property>
                <obj_property name="ObjectShortName">immediate[31:0]</obj_property>
             </wvobject>
-            <wvobject type="array" fp_name="/top_test/cpu/\issue_bus[1] /data_1">
+            <wvobject type="array" fp_name="/top/cpu/\issue_bus[1] /data_1">
                <obj_property name="ElementShortName">data_1[31:0]</obj_property>
                <obj_property name="ObjectShortName">data_1[31:0]</obj_property>
             </wvobject>
-            <wvobject type="array" fp_name="/top_test/cpu/\issue_bus[1] /data_2">
+            <wvobject type="array" fp_name="/top/cpu/\issue_bus[1] /data_2">
                <obj_property name="ElementShortName">data_2[31:0]</obj_property>
                <obj_property name="ObjectShortName">data_2[31:0]</obj_property>
             </wvobject>
-            <wvobject type="logic" fp_name="/top_test/cpu/\issue_bus[1] /valid_1">
+            <wvobject type="logic" fp_name="/top/cpu/\issue_bus[1] /valid_1">
                <obj_property name="ElementShortName">valid_1</obj_property>
                <obj_property name="ObjectShortName">valid_1</obj_property>
             </wvobject>
-            <wvobject type="logic" fp_name="/top_test/cpu/\issue_bus[1] /valid_2">
+            <wvobject type="logic" fp_name="/top/cpu/\issue_bus[1] /valid_2">
                <obj_property name="ElementShortName">valid_2</obj_property>
                <obj_property name="ObjectShortName">valid_2</obj_property>
             </wvobject>
-            <wvobject type="array" fp_name="/top_test/cpu/\issue_bus[1] /instr_name">
+            <wvobject type="array" fp_name="/top/cpu/\issue_bus[1] /instr_name">
                <obj_property name="ElementShortName">instr_name[7:0]</obj_property>
                <obj_property name="ObjectShortName">instr_name[7:0]</obj_property>
             </wvobject>
-            <wvobject type="array" fp_name="/top_test/cpu/\issue_bus[1] /instr_type">
+            <wvobject type="array" fp_name="/top/cpu/\issue_bus[1] /instr_type">
                <obj_property name="ElementShortName">instr_type[2:0]</obj_property>
                <obj_property name="ObjectShortName">instr_type[2:0]</obj_property>
             </wvobject>
-            <wvobject type="array" fp_name="/top_test/cpu/\issue_bus[1] /regs">
+            <wvobject type="array" fp_name="/top/cpu/\issue_bus[1] /regs">
                <obj_property name="ElementShortName">regs</obj_property>
                <obj_property name="ObjectShortName">regs</obj_property>
             </wvobject>
-            <wvobject type="array" fp_name="/top_test/cpu/\issue_bus[1] /flags">
+            <wvobject type="array" fp_name="/top/cpu/\issue_bus[1] /flags">
                <obj_property name="ElementShortName">flags</obj_property>
                <obj_property name="ObjectShortName">flags</obj_property>
             </wvobject>
@@ -431,22 +486,24 @@
       <wvobject type="group" fp_name="group310">
          <obj_property name="label">query_buses</obj_property>
          <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
          <wvobject type="group" fp_name="group311">
             <obj_property name="label">0</obj_property>
             <obj_property name="DisplayName">label</obj_property>
-            <wvobject type="array" fp_name="/top_test/cpu/\query_bus[0] /inputs">
+            <obj_property name="isExpanded"></obj_property>
+            <wvobject type="array" fp_name="/top/cpu/\query_bus[0] /inputs">
                <obj_property name="ElementShortName">inputs</obj_property>
                <obj_property name="ObjectShortName">inputs</obj_property>
             </wvobject>
-            <wvobject type="array" fp_name="/top_test/cpu/\query_bus[0] /outputs">
+            <wvobject type="array" fp_name="/top/cpu/\query_bus[0] /outputs">
                <obj_property name="ElementShortName">outputs</obj_property>
                <obj_property name="ObjectShortName">outputs</obj_property>
             </wvobject>
-            <wvobject type="logic" fp_name="/top_test/cpu/\query_bus[0] /rename">
+            <wvobject type="logic" fp_name="/top/cpu/\query_bus[0] /rename">
                <obj_property name="ElementShortName">rename</obj_property>
                <obj_property name="ObjectShortName">rename</obj_property>
             </wvobject>
-            <wvobject type="logic" fp_name="/top_test/cpu/\query_bus[0] /tag">
+            <wvobject type="logic" fp_name="/top/cpu/\query_bus[0] /tag">
                <obj_property name="ElementShortName">tag</obj_property>
                <obj_property name="ObjectShortName">tag</obj_property>
             </wvobject>
@@ -454,19 +511,20 @@
          <wvobject type="group" fp_name="group311">
             <obj_property name="label">1</obj_property>
             <obj_property name="DisplayName">label</obj_property>
-            <wvobject type="array" fp_name="/top_test/cpu/\query_bus[1] /inputs">
+            <obj_property name="isExpanded"></obj_property>
+            <wvobject type="array" fp_name="/top/cpu/\query_bus[1] /inputs">
                <obj_property name="ElementShortName">inputs</obj_property>
                <obj_property name="ObjectShortName">inputs</obj_property>
             </wvobject>
-            <wvobject type="array" fp_name="/top_test/cpu/\query_bus[1] /outputs">
+            <wvobject type="array" fp_name="/top/cpu/\query_bus[1] /outputs">
                <obj_property name="ElementShortName">outputs</obj_property>
                <obj_property name="ObjectShortName">outputs</obj_property>
             </wvobject>
-            <wvobject type="logic" fp_name="/top_test/cpu/\query_bus[1] /rename">
+            <wvobject type="logic" fp_name="/top/cpu/\query_bus[1] /rename">
                <obj_property name="ElementShortName">rename</obj_property>
                <obj_property name="ObjectShortName">rename</obj_property>
             </wvobject>
-            <wvobject type="logic" fp_name="/top_test/cpu/\query_bus[1] /tag">
+            <wvobject type="logic" fp_name="/top/cpu/\query_bus[1] /tag">
                <obj_property name="ElementShortName">tag</obj_property>
                <obj_property name="ObjectShortName">tag</obj_property>
             </wvobject>
@@ -475,30 +533,32 @@
       <wvobject type="group" fp_name="group322">
          <obj_property name="label">reg_val_buses</obj_property>
          <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
          <wvobject type="group" fp_name="group323">
             <obj_property name="label">0</obj_property>
             <obj_property name="DisplayName">label</obj_property>
-            <wvobject type="array" fp_name="/top_test/cpu/\reg_val_bus[0] /data_1">
+            <obj_property name="isExpanded"></obj_property>
+            <wvobject type="array" fp_name="/top/cpu/\reg_val_bus[0] /data_1">
                <obj_property name="ElementShortName">data_1[31:0]</obj_property>
                <obj_property name="ObjectShortName">data_1[31:0]</obj_property>
             </wvobject>
-            <wvobject type="array" fp_name="/top_test/cpu/\reg_val_bus[0] /data_2">
+            <wvobject type="array" fp_name="/top/cpu/\reg_val_bus[0] /data_2">
                <obj_property name="ElementShortName">data_2[31:0]</obj_property>
                <obj_property name="ObjectShortName">data_2[31:0]</obj_property>
             </wvobject>
-            <wvobject type="array" fp_name="/top_test/cpu/\reg_val_bus[0] /src_1">
+            <wvobject type="array" fp_name="/top/cpu/\reg_val_bus[0] /src_1">
                <obj_property name="ElementShortName">src_1[5:0]</obj_property>
                <obj_property name="ObjectShortName">src_1[5:0]</obj_property>
             </wvobject>
-            <wvobject type="array" fp_name="/top_test/cpu/\reg_val_bus[0] /src_2">
+            <wvobject type="array" fp_name="/top/cpu/\reg_val_bus[0] /src_2">
                <obj_property name="ElementShortName">src_2[5:0]</obj_property>
                <obj_property name="ObjectShortName">src_2[5:0]</obj_property>
             </wvobject>
-            <wvobject type="logic" fp_name="/top_test/cpu/\reg_val_bus[0] /valid_1">
+            <wvobject type="logic" fp_name="/top/cpu/\reg_val_bus[0] /valid_1">
                <obj_property name="ElementShortName">valid_1</obj_property>
                <obj_property name="ObjectShortName">valid_1</obj_property>
             </wvobject>
-            <wvobject type="logic" fp_name="/top_test/cpu/\reg_val_bus[0] /valid_2">
+            <wvobject type="logic" fp_name="/top/cpu/\reg_val_bus[0] /valid_2">
                <obj_property name="ElementShortName">valid_2</obj_property>
                <obj_property name="ObjectShortName">valid_2</obj_property>
             </wvobject>
@@ -506,27 +566,28 @@
          <wvobject type="group" fp_name="group324">
             <obj_property name="label">1</obj_property>
             <obj_property name="DisplayName">label</obj_property>
-            <wvobject type="array" fp_name="/top_test/cpu/\reg_val_bus[1] /data_1">
+            <obj_property name="isExpanded"></obj_property>
+            <wvobject type="array" fp_name="/top/cpu/\reg_val_bus[1] /data_1">
                <obj_property name="ElementShortName">data_1[31:0]</obj_property>
                <obj_property name="ObjectShortName">data_1[31:0]</obj_property>
             </wvobject>
-            <wvobject type="array" fp_name="/top_test/cpu/\reg_val_bus[1] /data_2">
+            <wvobject type="array" fp_name="/top/cpu/\reg_val_bus[1] /data_2">
                <obj_property name="ElementShortName">data_2[31:0]</obj_property>
                <obj_property name="ObjectShortName">data_2[31:0]</obj_property>
             </wvobject>
-            <wvobject type="array" fp_name="/top_test/cpu/\reg_val_bus[1] /src_1">
+            <wvobject type="array" fp_name="/top/cpu/\reg_val_bus[1] /src_1">
                <obj_property name="ElementShortName">src_1[5:0]</obj_property>
                <obj_property name="ObjectShortName">src_1[5:0]</obj_property>
             </wvobject>
-            <wvobject type="array" fp_name="/top_test/cpu/\reg_val_bus[1] /src_2">
+            <wvobject type="array" fp_name="/top/cpu/\reg_val_bus[1] /src_2">
                <obj_property name="ElementShortName">src_2[5:0]</obj_property>
                <obj_property name="ObjectShortName">src_2[5:0]</obj_property>
             </wvobject>
-            <wvobject type="logic" fp_name="/top_test/cpu/\reg_val_bus[1] /valid_1">
+            <wvobject type="logic" fp_name="/top/cpu/\reg_val_bus[1] /valid_1">
                <obj_property name="ElementShortName">valid_1</obj_property>
                <obj_property name="ObjectShortName">valid_1</obj_property>
             </wvobject>
-            <wvobject type="logic" fp_name="/top_test/cpu/\reg_val_bus[1] /valid_2">
+            <wvobject type="logic" fp_name="/top/cpu/\reg_val_bus[1] /valid_2">
                <obj_property name="ElementShortName">valid_2</obj_property>
                <obj_property name="ObjectShortName">valid_2</obj_property>
             </wvobject>
@@ -535,26 +596,7 @@
       <wvobject type="group" fp_name="group337">
          <obj_property name="label">fullnes</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject type="logic" fp_name="/top_test/cpu/fullness/alu">
-            <obj_property name="ElementShortName">alu</obj_property>
-            <obj_property name="ObjectShortName">alu</obj_property>
-         </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/fullness/branch">
-            <obj_property name="ElementShortName">branch</obj_property>
-            <obj_property name="ObjectShortName">branch</obj_property>
-         </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/fullness/load_store">
-            <obj_property name="ElementShortName">load_store</obj_property>
-            <obj_property name="ObjectShortName">load_store</obj_property>
-         </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/fullness/rob">
-            <obj_property name="ElementShortName">rob</obj_property>
-            <obj_property name="ObjectShortName">rob</obj_property>
-         </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/fullness/mult_div">
-            <obj_property name="ElementShortName">mult_div</obj_property>
-            <obj_property name="ObjectShortName">mult_div</obj_property>
-         </wvobject>
+         <obj_property name="isExpanded"></obj_property>
       </wvobject>
    </wvobject>
    <wvobject type="group" fp_name="group93">
@@ -564,7 +606,8 @@
       <wvobject type="group" fp_name="group102">
          <obj_property name="label">mmu</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject type="array" fp_name="/top_test/cpu/mmu/lock">
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject type="array" fp_name="/top/cpu/mmu/lock">
             <obj_property name="ElementShortName">lock[1:0]</obj_property>
             <obj_property name="ObjectShortName">lock[1:0]</obj_property>
          </wvobject>
@@ -572,73 +615,107 @@
       <wvobject type="group" fp_name="group144">
          <obj_property name="label">instr_cache</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject type="array" fp_name="/top_test/cpu/instr_cache/set_select">
-            <obj_property name="ElementShortName">set_select[0:1][3:0]</obj_property>
-            <obj_property name="ObjectShortName">set_select[0:1][3:0]</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject type="array" fp_name="/top/cpu/instr_cache/set_select">
+            <obj_property name="ElementShortName">set_select[0:1][2:0]</obj_property>
+            <obj_property name="ObjectShortName">set_select[0:1][2:0]</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/instr_cache/word_select">
+         <wvobject type="array" fp_name="/top/cpu/instr_cache/word_select">
             <obj_property name="ElementShortName">word_select[0:1][1:0]</obj_property>
             <obj_property name="ObjectShortName">word_select[0:1][1:0]</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/instr_cache/byte_select">
+         <wvobject type="array" fp_name="/top/cpu/instr_cache/byte_select">
             <obj_property name="ElementShortName">byte_select[0:1][1:0]</obj_property>
             <obj_property name="ObjectShortName">byte_select[0:1][1:0]</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/instr_cache/miss">
+         <wvobject type="array" fp_name="/top/cpu/instr_cache/miss">
             <obj_property name="ElementShortName">miss[0:1]</obj_property>
             <obj_property name="ObjectShortName">miss[0:1]</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/instr_cache/data">
-            <obj_property name="ElementShortName">data[0:15]</obj_property>
-            <obj_property name="ObjectShortName">data[0:15]</obj_property>
+         <wvobject type="array" fp_name="/top/cpu/instr_cache/data">
+            <obj_property name="ElementShortName">data[0:7]</obj_property>
+            <obj_property name="ObjectShortName">data[0:7]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/top/cpu/instr_cache/SETS">
+            <obj_property name="ElementShortName">SETS[31:0]</obj_property>
+            <obj_property name="ObjectShortName">SETS[31:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/top/cpu/instr_cache/WORDS">
+            <obj_property name="ElementShortName">WORDS[31:0]</obj_property>
+            <obj_property name="ObjectShortName">WORDS[31:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/top/cpu/instr_cache/SetBits">
+            <obj_property name="ElementShortName">SetBits[31:0]</obj_property>
+            <obj_property name="ObjectShortName">SetBits[31:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/top/cpu/instr_cache/WordBits">
+            <obj_property name="ElementShortName">WordBits[31:0]</obj_property>
+            <obj_property name="ObjectShortName">WordBits[31:0]</obj_property>
          </wvobject>
       </wvobject>
       <wvobject type="group" fp_name="group109">
          <obj_property name="label">data_cache</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject type="array" fp_name="/top_test/cpu/data_cache/set_select">
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject type="array" fp_name="/top/cpu/data_cache/set_select">
             <obj_property name="ElementShortName">set_select[3:0]</obj_property>
             <obj_property name="ObjectShortName">set_select[3:0]</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/data_cache/word_select">
-            <obj_property name="ElementShortName">word_select[0:0]</obj_property>
-            <obj_property name="ObjectShortName">word_select[0:0]</obj_property>
+         <wvobject type="array" fp_name="/top/cpu/data_cache/word_select">
+            <obj_property name="ElementShortName">word_select[1:0]</obj_property>
+            <obj_property name="ObjectShortName">word_select[1:0]</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/data_cache/byte_select">
+         <wvobject type="array" fp_name="/top/cpu/data_cache/byte_select">
             <obj_property name="ElementShortName">byte_select[1:0]</obj_property>
             <obj_property name="ObjectShortName">byte_select[1:0]</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/data_cache/data">
-            <obj_property name="ElementShortName">data[0:15]</obj_property>
-            <obj_property name="ObjectShortName">data[0:15]</obj_property>
+         <wvobject type="array" fp_name="/top/cpu/data_cache/data">
+            <obj_property name="ElementShortName">data[0:9]</obj_property>
+            <obj_property name="ObjectShortName">data[0:9]</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/data_cache/write_buffer">
-            <obj_property name="ElementShortName">write_buffer[0:15]</obj_property>
-            <obj_property name="ObjectShortName">write_buffer[0:15]</obj_property>
+         <wvobject type="array" fp_name="/top/cpu/data_cache/write_buffer">
+            <obj_property name="ElementShortName">write_buffer[0:9]</obj_property>
+            <obj_property name="ObjectShortName">write_buffer[0:9]</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/data_cache/read_index">
+         <wvobject type="array" fp_name="/top/cpu/data_cache/read_index">
             <obj_property name="ElementShortName">read_index[3:0]</obj_property>
             <obj_property name="ObjectShortName">read_index[3:0]</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/data_cache/write_index">
+         <wvobject type="array" fp_name="/top/cpu/data_cache/write_index">
             <obj_property name="ElementShortName">write_index[3:0]</obj_property>
             <obj_property name="ObjectShortName">write_index[3:0]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/data_cache/read">
+         <wvobject type="logic" fp_name="/top/cpu/data_cache/read">
             <obj_property name="ElementShortName">read</obj_property>
             <obj_property name="ObjectShortName">read</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/data_cache/empty">
+         <wvobject type="logic" fp_name="/top/cpu/data_cache/empty">
             <obj_property name="ElementShortName">empty</obj_property>
             <obj_property name="ObjectShortName">empty</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/data_cache/miss">
+         <wvobject type="logic" fp_name="/top/cpu/data_cache/miss">
             <obj_property name="ElementShortName">miss</obj_property>
             <obj_property name="ObjectShortName">miss</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/data_cache/write_back">
+         <wvobject type="logic" fp_name="/top/cpu/data_cache/write_back">
             <obj_property name="ElementShortName">write_back</obj_property>
             <obj_property name="ObjectShortName">write_back</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/top/cpu/data_cache/SETS">
+            <obj_property name="ElementShortName">SETS[31:0]</obj_property>
+            <obj_property name="ObjectShortName">SETS[31:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/top/cpu/data_cache/WORDS">
+            <obj_property name="ElementShortName">WORDS[31:0]</obj_property>
+            <obj_property name="ObjectShortName">WORDS[31:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/top/cpu/data_cache/SetBits">
+            <obj_property name="ElementShortName">SetBits[31:0]</obj_property>
+            <obj_property name="ObjectShortName">SetBits[31:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/top/cpu/data_cache/WordBits">
+            <obj_property name="ElementShortName">WordBits[31:0]</obj_property>
+            <obj_property name="ObjectShortName">WordBits[31:0]</obj_property>
          </wvobject>
       </wvobject>
       <wvobject type="group" fp_name="group2097">
@@ -648,27 +725,28 @@
          <wvobject type="group" fp_name="group344">
             <obj_property name="label">ip</obj_property>
             <obj_property name="DisplayName">label</obj_property>
-            <wvobject type="array" fp_name="/top_test/cpu/instr_processer/jmp_relation">
+            <obj_property name="isExpanded"></obj_property>
+            <wvobject type="array" fp_name="/top/cpu/instr_processer/jmp_relation">
                <obj_property name="ElementShortName">jmp_relation[2:0]</obj_property>
                <obj_property name="ObjectShortName">jmp_relation[2:0]</obj_property>
             </wvobject>
-            <wvobject type="array" fp_name="/top_test/cpu/instr_processer/load_address_out">
+            <wvobject type="array" fp_name="/top/cpu/instr_processer/load_address_out">
                <obj_property name="ElementShortName">load_address_out[0:1][31:0]</obj_property>
                <obj_property name="ObjectShortName">load_address_out[0:1][31:0]</obj_property>
             </wvobject>
-            <wvobject type="array" fp_name="/top_test/cpu/instr_processer/load_instr_out">
+            <wvobject type="array" fp_name="/top/cpu/instr_processer/load_instr_out">
                <obj_property name="ElementShortName">load_instr_out[0:1][31:0]</obj_property>
                <obj_property name="ObjectShortName">load_instr_out[0:1][31:0]</obj_property>
             </wvobject>
-            <wvobject type="logic" fp_name="/top_test/cpu/instr_processer/stop_res">
+            <wvobject type="logic" fp_name="/top/cpu/instr_processer/stop_res">
                <obj_property name="ElementShortName">stop_res</obj_property>
                <obj_property name="ObjectShortName">stop_res</obj_property>
             </wvobject>
-            <wvobject type="logic" fp_name="/top_test/cpu/instr_processer/stop_iss">
+            <wvobject type="logic" fp_name="/top/cpu/instr_processer/stop_iss">
                <obj_property name="ElementShortName">stop_iss</obj_property>
                <obj_property name="ObjectShortName">stop_iss</obj_property>
             </wvobject>
-            <wvobject type="logic" fp_name="/top_test/cpu/instr_processer/stop">
+            <wvobject type="logic" fp_name="/top/cpu/instr_processer/stop">
                <obj_property name="ElementShortName">stop</obj_property>
                <obj_property name="ObjectShortName">stop</obj_property>
             </wvobject>
@@ -684,27 +762,28 @@
                <wvobject type="group" fp_name="group349">
                   <obj_property name="label">0</obj_property>
                   <obj_property name="DisplayName">label</obj_property>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\dec_to_ren[0] /address">
+                  <obj_property name="isExpanded"></obj_property>
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\dec_to_ren[0] /address">
                      <obj_property name="ElementShortName">address[31:0]</obj_property>
                      <obj_property name="ObjectShortName">address[31:0]</obj_property>
                   </wvobject>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\dec_to_ren[0] /immediate">
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\dec_to_ren[0] /immediate">
                      <obj_property name="ElementShortName">immediate[31:0]</obj_property>
                      <obj_property name="ObjectShortName">immediate[31:0]</obj_property>
                   </wvobject>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\dec_to_ren[0] /instr_name">
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\dec_to_ren[0] /instr_name">
                      <obj_property name="ElementShortName">instr_name[7:0]</obj_property>
                      <obj_property name="ObjectShortName">instr_name[7:0]</obj_property>
                   </wvobject>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\dec_to_ren[0] /instr_type">
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\dec_to_ren[0] /instr_type">
                      <obj_property name="ElementShortName">instr_type[2:0]</obj_property>
                      <obj_property name="ObjectShortName">instr_type[2:0]</obj_property>
                   </wvobject>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\dec_to_ren[0] /regs">
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\dec_to_ren[0] /regs">
                      <obj_property name="ElementShortName">regs</obj_property>
                      <obj_property name="ObjectShortName">regs</obj_property>
                   </wvobject>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\dec_to_ren[0] /flags">
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\dec_to_ren[0] /flags">
                      <obj_property name="ElementShortName">flags</obj_property>
                      <obj_property name="ObjectShortName">flags</obj_property>
                   </wvobject>
@@ -712,27 +791,28 @@
                <wvobject type="group" fp_name="group350">
                   <obj_property name="label">1</obj_property>
                   <obj_property name="DisplayName">label</obj_property>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\dec_to_ren[1] /address">
+                  <obj_property name="isExpanded"></obj_property>
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\dec_to_ren[1] /address">
                      <obj_property name="ElementShortName">address[31:0]</obj_property>
                      <obj_property name="ObjectShortName">address[31:0]</obj_property>
                   </wvobject>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\dec_to_ren[1] /immediate">
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\dec_to_ren[1] /immediate">
                      <obj_property name="ElementShortName">immediate[31:0]</obj_property>
                      <obj_property name="ObjectShortName">immediate[31:0]</obj_property>
                   </wvobject>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\dec_to_ren[1] /instr_name">
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\dec_to_ren[1] /instr_name">
                      <obj_property name="ElementShortName">instr_name[7:0]</obj_property>
                      <obj_property name="ObjectShortName">instr_name[7:0]</obj_property>
                   </wvobject>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\dec_to_ren[1] /instr_type">
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\dec_to_ren[1] /instr_type">
                      <obj_property name="ElementShortName">instr_type[2:0]</obj_property>
                      <obj_property name="ObjectShortName">instr_type[2:0]</obj_property>
                   </wvobject>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\dec_to_ren[1] /regs">
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\dec_to_ren[1] /regs">
                      <obj_property name="ElementShortName">regs</obj_property>
                      <obj_property name="ObjectShortName">regs</obj_property>
                   </wvobject>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\dec_to_ren[1] /flags">
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\dec_to_ren[1] /flags">
                      <obj_property name="ElementShortName">flags</obj_property>
                      <obj_property name="ObjectShortName">flags</obj_property>
                   </wvobject>
@@ -745,27 +825,28 @@
                <wvobject type="group" fp_name="group349">
                   <obj_property name="label">0</obj_property>
                   <obj_property name="DisplayName">label</obj_property>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\ren_to_res[0] /address">
+                  <obj_property name="isExpanded"></obj_property>
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\ren_to_res[0] /address">
                      <obj_property name="ElementShortName">address[31:0]</obj_property>
                      <obj_property name="ObjectShortName">address[31:0]</obj_property>
                   </wvobject>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\ren_to_res[0] /immediate">
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\ren_to_res[0] /immediate">
                      <obj_property name="ElementShortName">immediate[31:0]</obj_property>
                      <obj_property name="ObjectShortName">immediate[31:0]</obj_property>
                   </wvobject>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\ren_to_res[0] /instr_name">
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\ren_to_res[0] /instr_name">
                      <obj_property name="ElementShortName">instr_name[7:0]</obj_property>
                      <obj_property name="ObjectShortName">instr_name[7:0]</obj_property>
                   </wvobject>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\ren_to_res[0] /instr_type">
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\ren_to_res[0] /instr_type">
                      <obj_property name="ElementShortName">instr_type[2:0]</obj_property>
                      <obj_property name="ObjectShortName">instr_type[2:0]</obj_property>
                   </wvobject>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\ren_to_res[0] /regs">
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\ren_to_res[0] /regs">
                      <obj_property name="ElementShortName">regs</obj_property>
                      <obj_property name="ObjectShortName">regs</obj_property>
                   </wvobject>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\ren_to_res[0] /flags">
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\ren_to_res[0] /flags">
                      <obj_property name="ElementShortName">flags</obj_property>
                      <obj_property name="ObjectShortName">flags</obj_property>
                   </wvobject>
@@ -773,27 +854,28 @@
                <wvobject type="group" fp_name="group350">
                   <obj_property name="label">1</obj_property>
                   <obj_property name="DisplayName">label</obj_property>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\ren_to_res[1] /address">
+                  <obj_property name="isExpanded"></obj_property>
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\ren_to_res[1] /address">
                      <obj_property name="ElementShortName">address[31:0]</obj_property>
                      <obj_property name="ObjectShortName">address[31:0]</obj_property>
                   </wvobject>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\ren_to_res[1] /immediate">
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\ren_to_res[1] /immediate">
                      <obj_property name="ElementShortName">immediate[31:0]</obj_property>
                      <obj_property name="ObjectShortName">immediate[31:0]</obj_property>
                   </wvobject>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\ren_to_res[1] /instr_name">
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\ren_to_res[1] /instr_name">
                      <obj_property name="ElementShortName">instr_name[7:0]</obj_property>
                      <obj_property name="ObjectShortName">instr_name[7:0]</obj_property>
                   </wvobject>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\ren_to_res[1] /instr_type">
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\ren_to_res[1] /instr_type">
                      <obj_property name="ElementShortName">instr_type[2:0]</obj_property>
                      <obj_property name="ObjectShortName">instr_type[2:0]</obj_property>
                   </wvobject>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\ren_to_res[1] /regs">
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\ren_to_res[1] /regs">
                      <obj_property name="ElementShortName">regs</obj_property>
                      <obj_property name="ObjectShortName">regs</obj_property>
                   </wvobject>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\ren_to_res[1] /flags">
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\ren_to_res[1] /flags">
                      <obj_property name="ElementShortName">flags</obj_property>
                      <obj_property name="ObjectShortName">flags</obj_property>
                   </wvobject>
@@ -806,27 +888,28 @@
                <wvobject type="group" fp_name="group349">
                   <obj_property name="label">0</obj_property>
                   <obj_property name="DisplayName">label</obj_property>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\res_to_issue[0] /address">
+                  <obj_property name="isExpanded"></obj_property>
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\res_to_issue[0] /address">
                      <obj_property name="ElementShortName">address[31:0]</obj_property>
                      <obj_property name="ObjectShortName">address[31:0]</obj_property>
                   </wvobject>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\res_to_issue[0] /immediate">
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\res_to_issue[0] /immediate">
                      <obj_property name="ElementShortName">immediate[31:0]</obj_property>
                      <obj_property name="ObjectShortName">immediate[31:0]</obj_property>
                   </wvobject>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\res_to_issue[0] /instr_name">
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\res_to_issue[0] /instr_name">
                      <obj_property name="ElementShortName">instr_name[7:0]</obj_property>
                      <obj_property name="ObjectShortName">instr_name[7:0]</obj_property>
                   </wvobject>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\res_to_issue[0] /instr_type">
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\res_to_issue[0] /instr_type">
                      <obj_property name="ElementShortName">instr_type[2:0]</obj_property>
                      <obj_property name="ObjectShortName">instr_type[2:0]</obj_property>
                   </wvobject>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\res_to_issue[0] /regs">
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\res_to_issue[0] /regs">
                      <obj_property name="ElementShortName">regs</obj_property>
                      <obj_property name="ObjectShortName">regs</obj_property>
                   </wvobject>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\res_to_issue[0] /flags">
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\res_to_issue[0] /flags">
                      <obj_property name="ElementShortName">flags</obj_property>
                      <obj_property name="ObjectShortName">flags</obj_property>
                   </wvobject>
@@ -834,27 +917,28 @@
                <wvobject type="group" fp_name="group350">
                   <obj_property name="label">1</obj_property>
                   <obj_property name="DisplayName">label</obj_property>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\res_to_issue[1] /address">
+                  <obj_property name="isExpanded"></obj_property>
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\res_to_issue[1] /address">
                      <obj_property name="ElementShortName">address[31:0]</obj_property>
                      <obj_property name="ObjectShortName">address[31:0]</obj_property>
                   </wvobject>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\res_to_issue[1] /immediate">
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\res_to_issue[1] /immediate">
                      <obj_property name="ElementShortName">immediate[31:0]</obj_property>
                      <obj_property name="ObjectShortName">immediate[31:0]</obj_property>
                   </wvobject>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\res_to_issue[1] /instr_name">
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\res_to_issue[1] /instr_name">
                      <obj_property name="ElementShortName">instr_name[7:0]</obj_property>
                      <obj_property name="ObjectShortName">instr_name[7:0]</obj_property>
                   </wvobject>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\res_to_issue[1] /instr_type">
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\res_to_issue[1] /instr_type">
                      <obj_property name="ElementShortName">instr_type[2:0]</obj_property>
                      <obj_property name="ObjectShortName">instr_type[2:0]</obj_property>
                   </wvobject>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\res_to_issue[1] /regs">
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\res_to_issue[1] /regs">
                      <obj_property name="ElementShortName">regs</obj_property>
                      <obj_property name="ObjectShortName">regs</obj_property>
                   </wvobject>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\res_to_issue[1] /flags">
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\res_to_issue[1] /flags">
                      <obj_property name="ElementShortName">flags</obj_property>
                      <obj_property name="ObjectShortName">flags</obj_property>
                   </wvobject>
@@ -867,27 +951,28 @@
                <wvobject type="group" fp_name="group349">
                   <obj_property name="label">0</obj_property>
                   <obj_property name="DisplayName">label</obj_property>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\issue_to_cmp[0] /address">
+                  <obj_property name="isExpanded"></obj_property>
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\issue_to_cmp[0] /address">
                      <obj_property name="ElementShortName">address[31:0]</obj_property>
                      <obj_property name="ObjectShortName">address[31:0]</obj_property>
                   </wvobject>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\issue_to_cmp[0] /immediate">
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\issue_to_cmp[0] /immediate">
                      <obj_property name="ElementShortName">immediate[31:0]</obj_property>
                      <obj_property name="ObjectShortName">immediate[31:0]</obj_property>
                   </wvobject>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\issue_to_cmp[0] /instr_name">
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\issue_to_cmp[0] /instr_name">
                      <obj_property name="ElementShortName">instr_name[7:0]</obj_property>
                      <obj_property name="ObjectShortName">instr_name[7:0]</obj_property>
                   </wvobject>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\issue_to_cmp[0] /instr_type">
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\issue_to_cmp[0] /instr_type">
                      <obj_property name="ElementShortName">instr_type[2:0]</obj_property>
                      <obj_property name="ObjectShortName">instr_type[2:0]</obj_property>
                   </wvobject>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\issue_to_cmp[0] /regs">
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\issue_to_cmp[0] /regs">
                      <obj_property name="ElementShortName">regs</obj_property>
                      <obj_property name="ObjectShortName">regs</obj_property>
                   </wvobject>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\issue_to_cmp[0] /flags">
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\issue_to_cmp[0] /flags">
                      <obj_property name="ElementShortName">flags</obj_property>
                      <obj_property name="ObjectShortName">flags</obj_property>
                   </wvobject>
@@ -895,27 +980,28 @@
                <wvobject type="group" fp_name="group350">
                   <obj_property name="label">1</obj_property>
                   <obj_property name="DisplayName">label</obj_property>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\issue_to_cmp[1] /address">
+                  <obj_property name="isExpanded"></obj_property>
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\issue_to_cmp[1] /address">
                      <obj_property name="ElementShortName">address[31:0]</obj_property>
                      <obj_property name="ObjectShortName">address[31:0]</obj_property>
                   </wvobject>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\issue_to_cmp[1] /immediate">
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\issue_to_cmp[1] /immediate">
                      <obj_property name="ElementShortName">immediate[31:0]</obj_property>
                      <obj_property name="ObjectShortName">immediate[31:0]</obj_property>
                   </wvobject>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\issue_to_cmp[1] /instr_name">
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\issue_to_cmp[1] /instr_name">
                      <obj_property name="ElementShortName">instr_name[7:0]</obj_property>
                      <obj_property name="ObjectShortName">instr_name[7:0]</obj_property>
                   </wvobject>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\issue_to_cmp[1] /instr_type">
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\issue_to_cmp[1] /instr_type">
                      <obj_property name="ElementShortName">instr_type[2:0]</obj_property>
                      <obj_property name="ObjectShortName">instr_type[2:0]</obj_property>
                   </wvobject>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\issue_to_cmp[1] /regs">
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\issue_to_cmp[1] /regs">
                      <obj_property name="ElementShortName">regs</obj_property>
                      <obj_property name="ObjectShortName">regs</obj_property>
                   </wvobject>
-                  <wvobject type="array" fp_name="/top_test/cpu/instr_processer/\issue_to_cmp[1] /flags">
+                  <wvobject type="array" fp_name="/top/cpu/instr_processer/\issue_to_cmp[1] /flags">
                      <obj_property name="ElementShortName">flags</obj_property>
                      <obj_property name="ObjectShortName">flags</obj_property>
                   </wvobject>
@@ -925,46 +1011,53 @@
          <wvobject type="group" fp_name="group2098">
             <obj_property name="label">loader</obj_property>
             <obj_property name="DisplayName">label</obj_property>
-            <wvobject type="array" fp_name="/top_test/cpu/instr_processer/loader/address">
+            <obj_property name="isExpanded"></obj_property>
+            <wvobject type="array" fp_name="/top/cpu/instr_processer/loader/address">
                <obj_property name="ElementShortName">address[0:1][31:0]</obj_property>
                <obj_property name="ObjectShortName">address[0:1][31:0]</obj_property>
             </wvobject>
-            <wvobject type="array" fp_name="/top_test/cpu/instr_processer/loader/instr">
+            <wvobject type="array" fp_name="/top/cpu/instr_processer/loader/instr">
                <obj_property name="ElementShortName">instr[0:1][31:0]</obj_property>
                <obj_property name="ObjectShortName">instr[0:1][31:0]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/top/cpu/instr_processer/loader/stop">
+               <obj_property name="ElementShortName">stop</obj_property>
+               <obj_property name="ObjectShortName">stop</obj_property>
             </wvobject>
          </wvobject>
          <wvobject type="group" fp_name="group217">
             <obj_property name="label">decoders</obj_property>
             <obj_property name="DisplayName">label</obj_property>
+            <obj_property name="isExpanded"></obj_property>
             <wvobject type="group" fp_name="group218">
                <obj_property name="label">0</obj_property>
                <obj_property name="DisplayName">label</obj_property>
-               <wvobject type="array" fp_name="/top_test/cpu/instr_processer/decoder_0/address">
+               <obj_property name="isExpanded"></obj_property>
+               <wvobject type="array" fp_name="/top/cpu/instr_processer/decoder_0/address">
                   <obj_property name="ElementShortName">address[31:0]</obj_property>
                   <obj_property name="ObjectShortName">address[31:0]</obj_property>
                </wvobject>
-               <wvobject type="array" fp_name="/top_test/cpu/instr_processer/decoder_0/instr">
+               <wvobject type="array" fp_name="/top/cpu/instr_processer/decoder_0/instr">
                   <obj_property name="ElementShortName">instr[31:0]</obj_property>
                   <obj_property name="ObjectShortName">instr[31:0]</obj_property>
                </wvobject>
-               <wvobject type="logic" fp_name="/top_test/cpu/instr_processer/decoder_0/stop">
+               <wvobject type="logic" fp_name="/top/cpu/instr_processer/decoder_0/stop">
                   <obj_property name="ElementShortName">stop</obj_property>
                   <obj_property name="ObjectShortName">stop</obj_property>
                </wvobject>
-               <wvobject type="array" fp_name="/top_test/cpu/instr_processer/decoder_0/system">
+               <wvobject type="array" fp_name="/top/cpu/instr_processer/decoder_0/system">
                   <obj_property name="ElementShortName">system[11:0]</obj_property>
                   <obj_property name="ObjectShortName">system[11:0]</obj_property>
                </wvobject>
-               <wvobject type="array" fp_name="/top_test/cpu/instr_processer/decoder_0/opcode">
+               <wvobject type="array" fp_name="/top/cpu/instr_processer/decoder_0/opcode">
                   <obj_property name="ElementShortName">opcode[6:0]</obj_property>
                   <obj_property name="ObjectShortName">opcode[6:0]</obj_property>
                </wvobject>
-               <wvobject type="array" fp_name="/top_test/cpu/instr_processer/decoder_0/funct7">
+               <wvobject type="array" fp_name="/top/cpu/instr_processer/decoder_0/funct7">
                   <obj_property name="ElementShortName">funct7[6:0]</obj_property>
                   <obj_property name="ObjectShortName">funct7[6:0]</obj_property>
                </wvobject>
-               <wvobject type="array" fp_name="/top_test/cpu/instr_processer/decoder_0/funct3">
+               <wvobject type="array" fp_name="/top/cpu/instr_processer/decoder_0/funct3">
                   <obj_property name="ElementShortName">funct3[2:0]</obj_property>
                   <obj_property name="ObjectShortName">funct3[2:0]</obj_property>
                </wvobject>
@@ -972,31 +1065,32 @@
             <wvobject type="group" fp_name="group219">
                <obj_property name="label">1</obj_property>
                <obj_property name="DisplayName">label</obj_property>
-               <wvobject type="array" fp_name="/top_test/cpu/instr_processer/decoder_1/address">
+               <obj_property name="isExpanded"></obj_property>
+               <wvobject type="array" fp_name="/top/cpu/instr_processer/decoder_1/address">
                   <obj_property name="ElementShortName">address[31:0]</obj_property>
                   <obj_property name="ObjectShortName">address[31:0]</obj_property>
                </wvobject>
-               <wvobject type="array" fp_name="/top_test/cpu/instr_processer/decoder_1/instr">
+               <wvobject type="array" fp_name="/top/cpu/instr_processer/decoder_1/instr">
                   <obj_property name="ElementShortName">instr[31:0]</obj_property>
                   <obj_property name="ObjectShortName">instr[31:0]</obj_property>
                </wvobject>
-               <wvobject type="logic" fp_name="/top_test/cpu/instr_processer/decoder_1/stop">
+               <wvobject type="logic" fp_name="/top/cpu/instr_processer/decoder_1/stop">
                   <obj_property name="ElementShortName">stop</obj_property>
                   <obj_property name="ObjectShortName">stop</obj_property>
                </wvobject>
-               <wvobject type="array" fp_name="/top_test/cpu/instr_processer/decoder_1/system">
+               <wvobject type="array" fp_name="/top/cpu/instr_processer/decoder_1/system">
                   <obj_property name="ElementShortName">system[11:0]</obj_property>
                   <obj_property name="ObjectShortName">system[11:0]</obj_property>
                </wvobject>
-               <wvobject type="array" fp_name="/top_test/cpu/instr_processer/decoder_1/opcode">
+               <wvobject type="array" fp_name="/top/cpu/instr_processer/decoder_1/opcode">
                   <obj_property name="ElementShortName">opcode[6:0]</obj_property>
                   <obj_property name="ObjectShortName">opcode[6:0]</obj_property>
                </wvobject>
-               <wvobject type="array" fp_name="/top_test/cpu/instr_processer/decoder_1/funct7">
+               <wvobject type="array" fp_name="/top/cpu/instr_processer/decoder_1/funct7">
                   <obj_property name="ElementShortName">funct7[6:0]</obj_property>
                   <obj_property name="ObjectShortName">funct7[6:0]</obj_property>
                </wvobject>
-               <wvobject type="array" fp_name="/top_test/cpu/instr_processer/decoder_1/funct3">
+               <wvobject type="array" fp_name="/top/cpu/instr_processer/decoder_1/funct3">
                   <obj_property name="ElementShortName">funct3[2:0]</obj_property>
                   <obj_property name="ObjectShortName">funct3[2:0]</obj_property>
                </wvobject>
@@ -1005,15 +1099,16 @@
          <wvobject type="group" fp_name="group234">
             <obj_property name="label">renamer</obj_property>
             <obj_property name="DisplayName">label</obj_property>
-            <wvobject type="logic" fp_name="/top_test/cpu/instr_processer/renamer/stop">
+            <obj_property name="isExpanded"></obj_property>
+            <wvobject type="logic" fp_name="/top/cpu/instr_processer/renamer/stop">
                <obj_property name="ElementShortName">stop</obj_property>
                <obj_property name="ObjectShortName">stop</obj_property>
             </wvobject>
-            <wvobject type="array" fp_name="/top_test/cpu/instr_processer/renamer/jmp_relation">
+            <wvobject type="array" fp_name="/top/cpu/instr_processer/renamer/jmp_relation">
                <obj_property name="ElementShortName">jmp_relation[2:0]</obj_property>
                <obj_property name="ObjectShortName">jmp_relation[2:0]</obj_property>
             </wvobject>
-            <wvobject type="logic" fp_name="/top_test/cpu/instr_processer/renamer/tag_active">
+            <wvobject type="logic" fp_name="/top/cpu/instr_processer/renamer/tag_active">
                <obj_property name="ElementShortName">tag_active</obj_property>
                <obj_property name="ObjectShortName">tag_active</obj_property>
             </wvobject>
@@ -1021,19 +1116,20 @@
          <wvobject type="group" fp_name="group235">
             <obj_property name="label">resolver</obj_property>
             <obj_property name="DisplayName">label</obj_property>
-            <wvobject type="array" fp_name="/top_test/cpu/instr_processer/resolver/jmp_relation">
+            <obj_property name="isExpanded"></obj_property>
+            <wvobject type="array" fp_name="/top/cpu/instr_processer/resolver/jmp_relation">
                <obj_property name="ElementShortName">jmp_relation[2:0]</obj_property>
                <obj_property name="ObjectShortName">jmp_relation[2:0]</obj_property>
             </wvobject>
-            <wvobject type="logic" fp_name="/top_test/cpu/instr_processer/resolver/stop_in">
+            <wvobject type="logic" fp_name="/top/cpu/instr_processer/resolver/stop_in">
                <obj_property name="ElementShortName">stop_in</obj_property>
                <obj_property name="ObjectShortName">stop_in</obj_property>
             </wvobject>
-            <wvobject type="logic" fp_name="/top_test/cpu/instr_processer/resolver/stop_out">
+            <wvobject type="logic" fp_name="/top/cpu/instr_processer/resolver/stop_out">
                <obj_property name="ElementShortName">stop_out</obj_property>
                <obj_property name="ObjectShortName">stop_out</obj_property>
             </wvobject>
-            <wvobject type="logic" fp_name="/top_test/cpu/instr_processer/resolver/tag_active">
+            <wvobject type="logic" fp_name="/top/cpu/instr_processer/resolver/tag_active">
                <obj_property name="ElementShortName">tag_active</obj_property>
                <obj_property name="ObjectShortName">tag_active</obj_property>
             </wvobject>
@@ -1041,15 +1137,16 @@
          <wvobject type="group" fp_name="group236">
             <obj_property name="label">issuer</obj_property>
             <obj_property name="DisplayName">label</obj_property>
-            <wvobject type="logic" fp_name="/top_test/cpu/instr_processer/issuer/stop">
+            <obj_property name="isExpanded"></obj_property>
+            <wvobject type="logic" fp_name="/top/cpu/instr_processer/issuer/stop">
                <obj_property name="ElementShortName">stop</obj_property>
                <obj_property name="ObjectShortName">stop</obj_property>
             </wvobject>
-            <wvobject type="array" fp_name="/top_test/cpu/instr_processer/issuer/stops">
+            <wvobject type="array" fp_name="/top/cpu/instr_processer/issuer/stops">
                <obj_property name="ElementShortName">stops[0:1]</obj_property>
                <obj_property name="ObjectShortName">stops[0:1]</obj_property>
             </wvobject>
-            <wvobject type="array" fp_name="/top_test/cpu/instr_processer/issuer/fullness_split">
+            <wvobject type="array" fp_name="/top/cpu/instr_processer/issuer/fullness_split">
                <obj_property name="ElementShortName">fullness_split[0:4]</obj_property>
                <obj_property name="ObjectShortName">fullness_split[0:4]</obj_property>
             </wvobject>
@@ -1058,27 +1155,28 @@
       <wvobject type="group" fp_name="group97">
          <obj_property name="label">reg_file</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject type="array" fp_name="/top_test/cpu/reg_file/registers">
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject type="array" fp_name="/top/cpu/reg_file/registers">
             <obj_property name="ElementShortName">registers[0:63]</obj_property>
             <obj_property name="ObjectShortName">registers[0:63]</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/reg_file/ren_queue">
+         <wvobject type="array" fp_name="/top/cpu/reg_file/ren_queue">
             <obj_property name="ElementShortName">ren_queue[0:31][5:0]</obj_property>
             <obj_property name="ObjectShortName">ren_queue[0:31][5:0]</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/reg_file/read_index">
+         <wvobject type="array" fp_name="/top/cpu/reg_file/read_index">
             <obj_property name="ElementShortName">read_index[4:0]</obj_property>
             <obj_property name="ObjectShortName">read_index[4:0]</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/reg_file/write_index">
+         <wvobject type="array" fp_name="/top/cpu/reg_file/write_index">
             <obj_property name="ElementShortName">write_index[4:0]</obj_property>
             <obj_property name="ObjectShortName">write_index[4:0]</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/reg_file/read">
+         <wvobject type="array" fp_name="/top/cpu/reg_file/read">
             <obj_property name="ElementShortName">read[0:1]</obj_property>
             <obj_property name="ObjectShortName">read[0:1]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/reg_file/empty">
+         <wvobject type="logic" fp_name="/top/cpu/reg_file/empty">
             <obj_property name="ElementShortName">empty</obj_property>
             <obj_property name="ObjectShortName">empty</obj_property>
          </wvobject>
@@ -1086,47 +1184,48 @@
       <wvobject type="group" fp_name="group110">
          <obj_property name="label">reorder_buffer</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject type="logic" fp_name="/top_test/cpu/reorder_buffer/full">
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject type="logic" fp_name="/top/cpu/reorder_buffer/full">
             <obj_property name="ElementShortName">full</obj_property>
             <obj_property name="ObjectShortName">full</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/reorder_buffer/records">
+         <wvobject type="array" fp_name="/top/cpu/reorder_buffer/records">
             <obj_property name="ElementShortName">records[0:31]</obj_property>
             <obj_property name="ObjectShortName">records[0:31]</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/reorder_buffer/read_index">
+         <wvobject type="array" fp_name="/top/cpu/reorder_buffer/read_index">
             <obj_property name="ElementShortName">read_index[3:0]</obj_property>
             <obj_property name="ObjectShortName">read_index[3:0]</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/reorder_buffer/write_index">
+         <wvobject type="array" fp_name="/top/cpu/reorder_buffer/write_index">
             <obj_property name="ElementShortName">write_index[3:0]</obj_property>
             <obj_property name="ObjectShortName">write_index[3:0]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/reorder_buffer/read">
+         <wvobject type="logic" fp_name="/top/cpu/reorder_buffer/read">
             <obj_property name="ElementShortName">read</obj_property>
             <obj_property name="ObjectShortName">read</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/reorder_buffer/empty">
+         <wvobject type="logic" fp_name="/top/cpu/reorder_buffer/empty">
             <obj_property name="ElementShortName">empty</obj_property>
             <obj_property name="ObjectShortName">empty</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/reorder_buffer/get_bus">
+         <wvobject type="logic" fp_name="/top/cpu/reorder_buffer/get_bus">
             <obj_property name="ElementShortName">get_bus</obj_property>
             <obj_property name="ObjectShortName">get_bus</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/reorder_buffer/bus_granted">
+         <wvobject type="logic" fp_name="/top/cpu/reorder_buffer/bus_granted">
             <obj_property name="ElementShortName">bus_granted</obj_property>
             <obj_property name="ObjectShortName">bus_granted</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/reorder_buffer/bus_selected">
+         <wvobject type="logic" fp_name="/top/cpu/reorder_buffer/bus_selected">
             <obj_property name="ElementShortName">bus_selected</obj_property>
             <obj_property name="ObjectShortName">bus_selected</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/reorder_buffer/ARBITER_ADDRESS">
+         <wvobject type="array" fp_name="/top/cpu/reorder_buffer/ARBITER_ADDRESS">
             <obj_property name="ElementShortName">ARBITER_ADDRESS[7:0]</obj_property>
             <obj_property name="ObjectShortName">ARBITER_ADDRESS[7:0]</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/reorder_buffer/SIZE">
+         <wvobject type="array" fp_name="/top/cpu/reorder_buffer/SIZE">
             <obj_property name="ElementShortName">SIZE[31:0]</obj_property>
             <obj_property name="ObjectShortName">SIZE[31:0]</obj_property>
          </wvobject>
@@ -1134,11 +1233,12 @@
       <wvobject type="group" fp_name="group115">
          <obj_property name="label">alu</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject type="array" fp_name="/top_test/cpu/alu_combo/alu/result">
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject type="array" fp_name="/top/cpu/alu_combo/alu/result">
             <obj_property name="ElementShortName">result[31:0]</obj_property>
             <obj_property name="ObjectShortName">result[31:0]</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/alu_combo/alu/dump">
+         <wvobject type="array" fp_name="/top/cpu/alu_combo/alu/dump">
             <obj_property name="ElementShortName">dump[31:0]</obj_property>
             <obj_property name="ObjectShortName">dump[31:0]</obj_property>
          </wvobject>
@@ -1146,35 +1246,36 @@
       <wvobject type="group" fp_name="group114">
          <obj_property name="label">alu_station</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject type="logic" fp_name="/top_test/cpu/alu_combo/alu_station/next">
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject type="logic" fp_name="/top/cpu/alu_combo/alu_station/next">
             <obj_property name="ElementShortName">next</obj_property>
             <obj_property name="ObjectShortName">next</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/alu_combo/alu_station/full">
+         <wvobject type="logic" fp_name="/top/cpu/alu_combo/alu_station/full">
             <obj_property name="ElementShortName">full</obj_property>
             <obj_property name="ObjectShortName">full</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/alu_combo/alu_station/records">
+         <wvobject type="array" fp_name="/top/cpu/alu_combo/alu_station/records">
             <obj_property name="ElementShortName">records[0:15]</obj_property>
             <obj_property name="ObjectShortName">records[0:15]</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/alu_combo/alu_station/read_index">
+         <wvobject type="array" fp_name="/top/cpu/alu_combo/alu_station/read_index">
             <obj_property name="ElementShortName">read_index[3:0]</obj_property>
             <obj_property name="ObjectShortName">read_index[3:0]</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/alu_combo/alu_station/write_index">
+         <wvobject type="array" fp_name="/top/cpu/alu_combo/alu_station/write_index">
             <obj_property name="ElementShortName">write_index[3:0]</obj_property>
             <obj_property name="ObjectShortName">write_index[3:0]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/alu_combo/alu_station/empty">
+         <wvobject type="logic" fp_name="/top/cpu/alu_combo/alu_station/empty">
             <obj_property name="ElementShortName">empty</obj_property>
             <obj_property name="ObjectShortName">empty</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/alu_combo/alu_station/SIZE">
+         <wvobject type="array" fp_name="/top/cpu/alu_combo/alu_station/SIZE">
             <obj_property name="ElementShortName">SIZE[31:0]</obj_property>
             <obj_property name="ObjectShortName">SIZE[31:0]</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/alu_combo/alu_station/INSTR_TYPE">
+         <wvobject type="array" fp_name="/top/cpu/alu_combo/alu_station/INSTR_TYPE">
             <obj_property name="ElementShortName">INSTR_TYPE[2:0]</obj_property>
             <obj_property name="ObjectShortName">INSTR_TYPE[2:0]</obj_property>
          </wvobject>
@@ -1182,27 +1283,28 @@
       <wvobject type="group" fp_name="group98">
          <obj_property name="label">alu_combo</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject type="logic" fp_name="/top_test/cpu/alu_combo/full">
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject type="logic" fp_name="/top/cpu/alu_combo/full">
             <obj_property name="ElementShortName">full</obj_property>
             <obj_property name="ObjectShortName">full</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/alu_combo/alu_result">
+         <wvobject type="array" fp_name="/top/cpu/alu_combo/alu_result">
             <obj_property name="ElementShortName">alu_result[31:0]</obj_property>
             <obj_property name="ObjectShortName">alu_result[31:0]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/alu_combo/get_bus">
+         <wvobject type="logic" fp_name="/top/cpu/alu_combo/get_bus">
             <obj_property name="ElementShortName">get_bus</obj_property>
             <obj_property name="ObjectShortName">get_bus</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/alu_combo/bus_granted">
+         <wvobject type="logic" fp_name="/top/cpu/alu_combo/bus_granted">
             <obj_property name="ElementShortName">bus_granted</obj_property>
             <obj_property name="ObjectShortName">bus_granted</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/alu_combo/bus_selected">
+         <wvobject type="logic" fp_name="/top/cpu/alu_combo/bus_selected">
             <obj_property name="ElementShortName">bus_selected</obj_property>
             <obj_property name="ObjectShortName">bus_selected</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/alu_combo/ARBITER_ADDRESS">
+         <wvobject type="array" fp_name="/top/cpu/alu_combo/ARBITER_ADDRESS">
             <obj_property name="ElementShortName">ARBITER_ADDRESS[7:0]</obj_property>
             <obj_property name="ObjectShortName">ARBITER_ADDRESS[7:0]</obj_property>
          </wvobject>
@@ -1210,11 +1312,12 @@
       <wvobject type="group" fp_name="group115">
          <obj_property name="label">branch</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject type="array" fp_name="/top_test/cpu/branch_combo/branch/store_result">
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject type="array" fp_name="/top/cpu/branch_combo/branch/store_result">
             <obj_property name="ElementShortName">store_result[31:0]</obj_property>
             <obj_property name="ObjectShortName">store_result[31:0]</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/branch_combo/branch/jump_result">
+         <wvobject type="array" fp_name="/top/cpu/branch_combo/branch/jump_result">
             <obj_property name="ElementShortName">jump_result[31:0]</obj_property>
             <obj_property name="ObjectShortName">jump_result[31:0]</obj_property>
          </wvobject>
@@ -1222,35 +1325,36 @@
       <wvobject type="group" fp_name="group114">
          <obj_property name="label">branch_station</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject type="logic" fp_name="/top_test/cpu/branch_combo/branch_station/next">
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject type="logic" fp_name="/top/cpu/branch_combo/branch_station/next">
             <obj_property name="ElementShortName">next</obj_property>
             <obj_property name="ObjectShortName">next</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/branch_combo/branch_station/full">
+         <wvobject type="logic" fp_name="/top/cpu/branch_combo/branch_station/full">
             <obj_property name="ElementShortName">full</obj_property>
             <obj_property name="ObjectShortName">full</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/branch_combo/branch_station/records">
+         <wvobject type="array" fp_name="/top/cpu/branch_combo/branch_station/records">
             <obj_property name="ElementShortName">records[0:15]</obj_property>
             <obj_property name="ObjectShortName">records[0:15]</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/branch_combo/branch_station/read_index">
+         <wvobject type="array" fp_name="/top/cpu/branch_combo/branch_station/read_index">
             <obj_property name="ElementShortName">read_index[3:0]</obj_property>
             <obj_property name="ObjectShortName">read_index[3:0]</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/branch_combo/branch_station/write_index">
+         <wvobject type="array" fp_name="/top/cpu/branch_combo/branch_station/write_index">
             <obj_property name="ElementShortName">write_index[3:0]</obj_property>
             <obj_property name="ObjectShortName">write_index[3:0]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/branch_combo/branch_station/empty">
+         <wvobject type="logic" fp_name="/top/cpu/branch_combo/branch_station/empty">
             <obj_property name="ElementShortName">empty</obj_property>
             <obj_property name="ObjectShortName">empty</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/branch_combo/branch_station/SIZE">
+         <wvobject type="array" fp_name="/top/cpu/branch_combo/branch_station/SIZE">
             <obj_property name="ElementShortName">SIZE[31:0]</obj_property>
             <obj_property name="ObjectShortName">SIZE[31:0]</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/branch_combo/branch_station/INSTR_TYPE">
+         <wvobject type="array" fp_name="/top/cpu/branch_combo/branch_station/INSTR_TYPE">
             <obj_property name="ElementShortName">INSTR_TYPE[2:0]</obj_property>
             <obj_property name="ObjectShortName">INSTR_TYPE[2:0]</obj_property>
          </wvobject>
@@ -1258,31 +1362,32 @@
       <wvobject type="group" fp_name="group99">
          <obj_property name="label">branch_combo</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject type="logic" fp_name="/top_test/cpu/branch_combo/full">
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject type="logic" fp_name="/top/cpu/branch_combo/full">
             <obj_property name="ElementShortName">full</obj_property>
             <obj_property name="ObjectShortName">full</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/branch_combo/store_result">
+         <wvobject type="array" fp_name="/top/cpu/branch_combo/store_result">
             <obj_property name="ElementShortName">store_result[31:0]</obj_property>
             <obj_property name="ObjectShortName">store_result[31:0]</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/branch_combo/jump_result">
+         <wvobject type="array" fp_name="/top/cpu/branch_combo/jump_result">
             <obj_property name="ElementShortName">jump_result[31:0]</obj_property>
             <obj_property name="ObjectShortName">jump_result[31:0]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/branch_combo/get_bus">
+         <wvobject type="logic" fp_name="/top/cpu/branch_combo/get_bus">
             <obj_property name="ElementShortName">get_bus</obj_property>
             <obj_property name="ObjectShortName">get_bus</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/branch_combo/bus_granted">
+         <wvobject type="logic" fp_name="/top/cpu/branch_combo/bus_granted">
             <obj_property name="ElementShortName">bus_granted</obj_property>
             <obj_property name="ObjectShortName">bus_granted</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/branch_combo/bus_selected">
+         <wvobject type="logic" fp_name="/top/cpu/branch_combo/bus_selected">
             <obj_property name="ElementShortName">bus_selected</obj_property>
             <obj_property name="ObjectShortName">bus_selected</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/branch_combo/ARBITER_ADDRESS">
+         <wvobject type="array" fp_name="/top/cpu/branch_combo/ARBITER_ADDRESS">
             <obj_property name="ElementShortName">ARBITER_ADDRESS[7:0]</obj_property>
             <obj_property name="ObjectShortName">ARBITER_ADDRESS[7:0]</obj_property>
          </wvobject>
@@ -1290,11 +1395,12 @@
       <wvobject type="group" fp_name="group115">
          <obj_property name="label">load_store</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject type="array" fp_name="/top_test/cpu/load_store_combo/load_store/result">
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject type="array" fp_name="/top/cpu/load_store_combo/load_store/result">
             <obj_property name="ElementShortName">result[31:0]</obj_property>
             <obj_property name="ObjectShortName">result[31:0]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/load_store_combo/load_store/load">
+         <wvobject type="logic" fp_name="/top/cpu/load_store_combo/load_store/load">
             <obj_property name="ElementShortName">load</obj_property>
             <obj_property name="ObjectShortName">load</obj_property>
          </wvobject>
@@ -1302,35 +1408,36 @@
       <wvobject type="group" fp_name="group114">
          <obj_property name="label">load_store_station</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject type="logic" fp_name="/top_test/cpu/load_store_combo/load_store_station/next">
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject type="logic" fp_name="/top/cpu/load_store_combo/load_store_station/next">
             <obj_property name="ElementShortName">next</obj_property>
             <obj_property name="ObjectShortName">next</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/load_store_combo/load_store_station/full">
+         <wvobject type="logic" fp_name="/top/cpu/load_store_combo/load_store_station/full">
             <obj_property name="ElementShortName">full</obj_property>
             <obj_property name="ObjectShortName">full</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/load_store_combo/load_store_station/records">
+         <wvobject type="array" fp_name="/top/cpu/load_store_combo/load_store_station/records">
             <obj_property name="ElementShortName">records[0:15]</obj_property>
             <obj_property name="ObjectShortName">records[0:15]</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/load_store_combo/load_store_station/read_index">
+         <wvobject type="array" fp_name="/top/cpu/load_store_combo/load_store_station/read_index">
             <obj_property name="ElementShortName">read_index[3:0]</obj_property>
             <obj_property name="ObjectShortName">read_index[3:0]</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/load_store_combo/load_store_station/write_index">
+         <wvobject type="array" fp_name="/top/cpu/load_store_combo/load_store_station/write_index">
             <obj_property name="ElementShortName">write_index[3:0]</obj_property>
             <obj_property name="ObjectShortName">write_index[3:0]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/load_store_combo/load_store_station/empty">
+         <wvobject type="logic" fp_name="/top/cpu/load_store_combo/load_store_station/empty">
             <obj_property name="ElementShortName">empty</obj_property>
             <obj_property name="ObjectShortName">empty</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/load_store_combo/load_store_station/SIZE">
+         <wvobject type="array" fp_name="/top/cpu/load_store_combo/load_store_station/SIZE">
             <obj_property name="ElementShortName">SIZE[31:0]</obj_property>
             <obj_property name="ObjectShortName">SIZE[31:0]</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/load_store_combo/load_store_station/INSTR_TYPE">
+         <wvobject type="array" fp_name="/top/cpu/load_store_combo/load_store_station/INSTR_TYPE">
             <obj_property name="ElementShortName">INSTR_TYPE[2:0]</obj_property>
             <obj_property name="ObjectShortName">INSTR_TYPE[2:0]</obj_property>
          </wvobject>
@@ -1338,27 +1445,28 @@
       <wvobject type="group" fp_name="group100">
          <obj_property name="label">load_store_combo</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject type="logic" fp_name="/top_test/cpu/load_store_combo/full">
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject type="logic" fp_name="/top/cpu/load_store_combo/full">
             <obj_property name="ElementShortName">full</obj_property>
             <obj_property name="ObjectShortName">full</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/load_store_combo/load_store_result">
+         <wvobject type="array" fp_name="/top/cpu/load_store_combo/load_store_result">
             <obj_property name="ElementShortName">load_store_result[31:0]</obj_property>
             <obj_property name="ObjectShortName">load_store_result[31:0]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/load_store_combo/get_bus">
+         <wvobject type="logic" fp_name="/top/cpu/load_store_combo/get_bus">
             <obj_property name="ElementShortName">get_bus</obj_property>
             <obj_property name="ObjectShortName">get_bus</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/load_store_combo/bus_granted">
+         <wvobject type="logic" fp_name="/top/cpu/load_store_combo/bus_granted">
             <obj_property name="ElementShortName">bus_granted</obj_property>
             <obj_property name="ObjectShortName">bus_granted</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/load_store_combo/bus_selected">
+         <wvobject type="logic" fp_name="/top/cpu/load_store_combo/bus_selected">
             <obj_property name="ElementShortName">bus_selected</obj_property>
             <obj_property name="ObjectShortName">bus_selected</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/load_store_combo/ARBITER_ADDRESS">
+         <wvobject type="array" fp_name="/top/cpu/load_store_combo/ARBITER_ADDRESS">
             <obj_property name="ElementShortName">ARBITER_ADDRESS[7:0]</obj_property>
             <obj_property name="ObjectShortName">ARBITER_ADDRESS[7:0]</obj_property>
          </wvobject>
@@ -1366,47 +1474,48 @@
       <wvobject type="group" fp_name="group115">
          <obj_property name="label">mult_div</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject type="array" fp_name="/top_test/cpu/mult_div_combo/mult_div/result">
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject type="array" fp_name="/top/cpu/mult_div_combo/mult_div/result">
             <obj_property name="ElementShortName">result[31:0]</obj_property>
             <obj_property name="ObjectShortName">result[31:0]</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/mult_div_combo/mult_div/upper_u">
+         <wvobject type="array" fp_name="/top/cpu/mult_div_combo/mult_div/upper_u">
             <obj_property name="ElementShortName">upper_u[31:0]</obj_property>
             <obj_property name="ObjectShortName">upper_u[31:0]</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/mult_div_combo/mult_div/upper_s">
+         <wvobject type="array" fp_name="/top/cpu/mult_div_combo/mult_div/upper_s">
             <obj_property name="ElementShortName">upper_s[31:0]</obj_property>
             <obj_property name="ObjectShortName">upper_s[31:0]</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/mult_div_combo/mult_div/upper_su">
+         <wvobject type="array" fp_name="/top/cpu/mult_div_combo/mult_div/upper_su">
             <obj_property name="ElementShortName">upper_su[31:0]</obj_property>
             <obj_property name="ObjectShortName">upper_su[31:0]</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/mult_div_combo/mult_div/lower_u">
+         <wvobject type="array" fp_name="/top/cpu/mult_div_combo/mult_div/lower_u">
             <obj_property name="ElementShortName">lower_u[31:0]</obj_property>
             <obj_property name="ObjectShortName">lower_u[31:0]</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/mult_div_combo/mult_div/lower_s">
+         <wvobject type="array" fp_name="/top/cpu/mult_div_combo/mult_div/lower_s">
             <obj_property name="ElementShortName">lower_s[31:0]</obj_property>
             <obj_property name="ObjectShortName">lower_s[31:0]</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/mult_div_combo/mult_div/lower_su">
+         <wvobject type="array" fp_name="/top/cpu/mult_div_combo/mult_div/lower_su">
             <obj_property name="ElementShortName">lower_su[31:0]</obj_property>
             <obj_property name="ObjectShortName">lower_su[31:0]</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/mult_div_combo/mult_div/divident_u">
+         <wvobject type="array" fp_name="/top/cpu/mult_div_combo/mult_div/divident_u">
             <obj_property name="ElementShortName">divident_u[31:0]</obj_property>
             <obj_property name="ObjectShortName">divident_u[31:0]</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/mult_div_combo/mult_div/divident_s">
+         <wvobject type="array" fp_name="/top/cpu/mult_div_combo/mult_div/divident_s">
             <obj_property name="ElementShortName">divident_s[31:0]</obj_property>
             <obj_property name="ObjectShortName">divident_s[31:0]</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/mult_div_combo/mult_div/remainder_u">
+         <wvobject type="array" fp_name="/top/cpu/mult_div_combo/mult_div/remainder_u">
             <obj_property name="ElementShortName">remainder_u[31:0]</obj_property>
             <obj_property name="ObjectShortName">remainder_u[31:0]</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/mult_div_combo/mult_div/remainder_s">
+         <wvobject type="array" fp_name="/top/cpu/mult_div_combo/mult_div/remainder_s">
             <obj_property name="ElementShortName">remainder_s[31:0]</obj_property>
             <obj_property name="ObjectShortName">remainder_s[31:0]</obj_property>
          </wvobject>
@@ -1414,63 +1523,57 @@
       <wvobject type="group" fp_name="group114">
          <obj_property name="label">mult_div_station</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject type="logic" fp_name="/top_test/cpu/mult_div_combo/mult_div_station/next">
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject type="logic" fp_name="/top/cpu/mult_div_combo/mult_div_station/next">
             <obj_property name="ElementShortName">next</obj_property>
             <obj_property name="ObjectShortName">next</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/mult_div_combo/mult_div_station/full">
+         <wvobject type="logic" fp_name="/top/cpu/mult_div_combo/mult_div_station/full">
             <obj_property name="ElementShortName">full</obj_property>
             <obj_property name="ObjectShortName">full</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/mult_div_combo/mult_div_station/records">
+         <wvobject type="array" fp_name="/top/cpu/mult_div_combo/mult_div_station/records">
             <obj_property name="ElementShortName">records[0:15]</obj_property>
             <obj_property name="ObjectShortName">records[0:15]</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/mult_div_combo/mult_div_station/read_index">
+         <wvobject type="array" fp_name="/top/cpu/mult_div_combo/mult_div_station/read_index">
             <obj_property name="ElementShortName">read_index[3:0]</obj_property>
             <obj_property name="ObjectShortName">read_index[3:0]</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/mult_div_combo/mult_div_station/write_index">
+         <wvobject type="array" fp_name="/top/cpu/mult_div_combo/mult_div_station/write_index">
             <obj_property name="ElementShortName">write_index[3:0]</obj_property>
             <obj_property name="ObjectShortName">write_index[3:0]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/mult_div_combo/mult_div_station/empty">
+         <wvobject type="logic" fp_name="/top/cpu/mult_div_combo/mult_div_station/empty">
             <obj_property name="ElementShortName">empty</obj_property>
             <obj_property name="ObjectShortName">empty</obj_property>
-         </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/mult_div_combo/mult_div_station/SIZE">
-            <obj_property name="ElementShortName">SIZE[31:0]</obj_property>
-            <obj_property name="ObjectShortName">SIZE[31:0]</obj_property>
-         </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/mult_div_combo/mult_div_station/INSTR_TYPE">
-            <obj_property name="ElementShortName">INSTR_TYPE[2:0]</obj_property>
-            <obj_property name="ObjectShortName">INSTR_TYPE[2:0]</obj_property>
          </wvobject>
       </wvobject>
       <wvobject type="group" fp_name="group101">
          <obj_property name="label">mult_div_combo</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject type="logic" fp_name="/top_test/cpu/mult_div_combo/full">
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject type="logic" fp_name="/top/cpu/mult_div_combo/full">
             <obj_property name="ElementShortName">full</obj_property>
             <obj_property name="ObjectShortName">full</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/mult_div_combo/mult_div_result">
+         <wvobject type="array" fp_name="/top/cpu/mult_div_combo/mult_div_result">
             <obj_property name="ElementShortName">mult_div_result[31:0]</obj_property>
             <obj_property name="ObjectShortName">mult_div_result[31:0]</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/mult_div_combo/get_bus">
+         <wvobject type="logic" fp_name="/top/cpu/mult_div_combo/get_bus">
             <obj_property name="ElementShortName">get_bus</obj_property>
             <obj_property name="ObjectShortName">get_bus</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/mult_div_combo/bus_granted">
+         <wvobject type="logic" fp_name="/top/cpu/mult_div_combo/bus_granted">
             <obj_property name="ElementShortName">bus_granted</obj_property>
             <obj_property name="ObjectShortName">bus_granted</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/top_test/cpu/mult_div_combo/bus_selected">
+         <wvobject type="logic" fp_name="/top/cpu/mult_div_combo/bus_selected">
             <obj_property name="ElementShortName">bus_selected</obj_property>
             <obj_property name="ObjectShortName">bus_selected</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/top_test/cpu/mult_div_combo/ARBITER_ADDRESS">
+         <wvobject type="array" fp_name="/top/cpu/mult_div_combo/ARBITER_ADDRESS">
             <obj_property name="ElementShortName">ARBITER_ADDRESS[7:0]</obj_property>
             <obj_property name="ObjectShortName">ARBITER_ADDRESS[7:0]</obj_property>
          </wvobject>

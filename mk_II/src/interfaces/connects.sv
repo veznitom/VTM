@@ -14,8 +14,8 @@ interface pc_bus_if;
   logic [31:0] jmp_address, address;
   logic plus_4, plus_8, write;
 
-  modport pc(input jmp_address, plus_4, plus_8, write, output address);
-  modport loader(output plus_4, plus_8);
+  //modport pc(input jmp_address, plus_4, plus_8, write, output address);
+  modport loader(input jmp_address, write);
   modport rob(output jmp_address, write);
 endinterface
 

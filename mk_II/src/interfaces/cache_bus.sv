@@ -5,7 +5,7 @@ interface instr_cache_bus_if;
   logic [31:0] instr;
   logic hit, read;
 
-  modport loader(input instr, address_out, hit, output read);
+  modport loader(input instr, address_out, hit, output address_in, read);
   modport cache(input address_in, read, output instr, address_out, hit);
 endinterface
 
@@ -17,4 +17,3 @@ interface data_cache_bus_if;
   modport load_store(input hit, inout data, output address, read, write, tag);
   modport cache(input address, read, write, tag, inout data, output hit);
 endinterface
-

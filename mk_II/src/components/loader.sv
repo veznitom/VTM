@@ -11,12 +11,11 @@ module loader (
     input logic stop
 );
   // ------------------------------- Wires -------------------------------
-
+  logic [XLEN-1:0] pc;
   // ------------------------------- Behaviour -------------------------------
   always_comb begin : pc_bus_reset
     if (global_bus.reset) begin
-      pc_bus.plus_4 = 1'h0;
-      pc_bus.plus_8 = 1'h0;
+      pc = {XLEN{1'h0}};
     end
   end
 
@@ -24,6 +23,7 @@ module loader (
   generate
     for (i = 0; i < 2; i++) begin : gen_var_reset
 
+      assign cache_bus[i].address_in = pc + (i * 4);
       assign cache_bus[i].read = stop ? 1'b0 : 1'b1;
 
       always_comb begin
@@ -35,17 +35,13 @@ module loader (
     end
   endgenerate
 
-  always_comb begin
-    if (!stop && cache_bus[0].hit && cache_bus[1].hit && global_bus.clock) pc_bus.plus_8 = 1'h1;
-    else pc_bus.plus_8 = 1'h0;
-  end
-
   always_ff @(posedge global_bus.clock) begin : instr_load
     if (!stop && cache_bus[0].hit && cache_bus[1].hit) begin
-      address[0] <= cache_bus[0].address_out;
-      address[1] <= cache_bus[1].address_out;
-      instr[0]   <= cache_bus[0].instr;
-      instr[1]   <= cache_bus[1].instr;
+      address[0] <= pc;
+      address[1] <= pc + 4;
+      instr[0] <= cache_bus[0].instr;
+      instr[1] <= cache_bus[1].instr;
+      pc <= pc + 8;
     end else begin
       address[0] <= {XLEN{1'h0}};
       address[1] <= {XLEN{1'h0}};

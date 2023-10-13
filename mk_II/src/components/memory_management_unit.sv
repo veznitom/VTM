@@ -19,6 +19,7 @@ module memory_management_unit (
     if (global_bus.reset) begin
       lock = FREE;
       instr_bus.done = 1'h0;
+      memory_bus.data = '0;
     end else if (instr_bus.read && lock != DATA) begin : instructions_read
       lock = INSTR;
       if (memory_bus.ready) begin

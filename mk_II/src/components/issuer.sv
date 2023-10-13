@@ -42,9 +42,19 @@ module issuer (
             instr_info_out[i].instr_type <= instr_info_in[i].instr_type;
             instr_info_out[i].regs <= instr_info_in[i].regs;
             instr_info_out[i].flags <= instr_info_in[i].flags;
+
             stops[i] <= 1'h0;
           end else stops[i] <= 1'h1;
-        end else stops[i] <= 1'h0;
+        end else begin
+          instr_info_out[i].address <= {XLEN{1'h0}};
+          instr_info_out[i].immediate <= {XLEN{1'h0}};
+          instr_info_out[i].instr_name <= UNKNOWN;
+          instr_info_out[i].instr_type <= XX;
+          instr_info_out[i].regs <= '0;
+          instr_info_out[i].flags <= '0;
+
+          stops[i] <= 1'h0;
+        end
       end
     end
   endgenerate

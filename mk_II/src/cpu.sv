@@ -2,7 +2,6 @@ import global_variables::XLEN;
 import structures::*;
 
 module cpu #(
-    parameter int MEMORY_BUS_WIDTH_BYTES = 256,
     parameter int INSTR_CACHE_WORDS = 4,
     parameter int INSTR_CACHE_SETS = 8,
     parameter int DATA_CACHE_WORDS = 4,
@@ -17,10 +16,8 @@ module cpu #(
       .clock(clock),
       .reset(reset)
   );
-  //cpu_debug_if debug ();
-
-  memory_bus_if #(.BUS_WIDTH_BYTES(DATA_CACHE_WORDS * 4)) data_memory_bus ();
-  memory_bus_if #(.BUS_WIDTH_BYTES(INSTR_CACHE_WORDS * 4)) instr_memory_bus ();
+  memory_bus_if #(.BUS_WIDTH_BYTES(DATA_CACHE_WORDS * (XLEN / 8))) data_memory_bus ();
+  memory_bus_if #(.BUS_WIDTH_BYTES(INSTR_CACHE_WORDS * (XLEN / 8))) instr_memory_bus ();
   instr_cache_bus_if instr_cache_bus[2] ();
   data_cache_bus_if data_cache_bus ();
 
@@ -59,10 +56,10 @@ module cpu #(
       .data_bus  (data_bus)
   );
 
-  program_counter pc (
+  /*program_counter pc (
       .global_bus(global_bus),
       .pc_bus(pc_bus)
-  );
+  );*/
 
   instr_processer instr_processer (
       .global_bus(global_bus),
@@ -127,8 +124,8 @@ module cpu #(
       .full(fullness.mult_div)
   );
 
-  assign instr_cache_bus[0].address_in = pc_bus.address;
-  assign instr_cache_bus[1].address_in = pc_bus.address + 4;
+  /*assign instr_cache_bus[0].address_in = pc_bus.address;
+  assign instr_cache_bus[1].address_in = pc_bus.address + 4;*/
 
   always_comb begin : clear_wires
     if (reset) begin

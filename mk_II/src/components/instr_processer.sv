@@ -107,14 +107,14 @@ module instr_processer (
           issue_bus[i].clear();
         end
       end
-
+/*
       assign reg_val_bus[i].src_1 = issue_to_cmp[i].regs.rs_1;
       assign reg_val_bus[i].src_2 = issue_to_cmp[i].regs.rs_2;
       assign issue_bus[i].address = issue_to_cmp[i].address;
       assign issue_bus[i].immediate = issue_to_cmp[i].immediate;
       assign issue_bus[i].instr_name = issue_to_cmp[i].instr_name;
       assign issue_bus[i].regs = issue_to_cmp[i].regs;
-      assign issue_bus[i].flags = issue_to_cmp[i].flags;
+      assign issue_bus[i].flags = issue_to_cmp[i].flags;*/
     end
   endgenerate
 endmodule

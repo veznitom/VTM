@@ -32,6 +32,7 @@ module instr_cache #(
       foreach (data[j]) begin
         data[j] = '{'0, '0, INVALID};
       end
+      memory_bus.data  = '0;
       memory_bus.read  = 1'h0;
       memory_bus.write = 1'h0;
     end
@@ -53,25 +54,25 @@ module instr_cache #(
         end
       end
 
-      always_ff @(posedge global_bus.clock) begin : cache_read
+      always_comb  /*_ff @(posedge global_bus.clock)*/ begin : cache_read
         if (cache_bus[i].read) begin
           if ((cache_bus[i].address_in[XLEN-1:(SetBits+WordBits+2)] == data[set_select[i]].tag) &&
               (data[set_select[i]].state == VALID)) begin
-            miss[i] <= 1'h0;
-            cache_bus[i].hit <= 1'h1;
-            cache_bus[i].instr <= data[set_select[i]].words[word_select[i]];
-            cache_bus[i].address_out <= cache_bus[i].address_in;
+            miss[i] = 1'h0;
+            cache_bus[i].hit = 1'h1;
+            cache_bus[i].instr = data[set_select[i]].words[word_select[i]];
+            cache_bus[i].address_out = cache_bus[i].address_in;
           end else begin
-            miss[i] <= 1'h1;
-            cache_bus[i].instr <= {32{1'h0}};
-            cache_bus[i].address_out <= {XLEN{1'h0}};
-            cache_bus[i].hit <= 1'h0;
+            miss[i] = 1'h1;
+            cache_bus[i].instr = {32{1'h0}};
+            cache_bus[i].address_out = {XLEN{1'h0}};
+            cache_bus[i].hit = 1'h0;
           end
         end else begin
-          cache_bus[i].instr <= {32{1'h0}};
-          cache_bus[i].address_out <= {XLEN{1'h0}};
-          cache_bus[i].hit <= 1'h0;
-          cache_bus[i].hit <= 1'h0;
+          cache_bus[i].instr = {32{1'h0}};
+          cache_bus[i].address_out = {XLEN{1'h0}};
+          cache_bus[i].hit = 1'h0;
+          cache_bus[i].hit = 1'h0;
         end
       end
 
