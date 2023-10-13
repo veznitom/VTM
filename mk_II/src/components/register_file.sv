@@ -130,7 +130,7 @@ module register_file (
 
   always_ff @(posedge global_bus.clock) begin
     if ((read[0] || read[1]) && !empty) begin
-      read_index <= read_index + 1;
+      read_index <= read_index + 2;
     end
   end
 

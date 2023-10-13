@@ -1,7 +1,7 @@
 module top_test ();
   logic clock, reset;
 
-localparam int InstrCacheWords = 4;
+localparam int InstrCacheWords = 8;
   localparam int MemorySizeBytes = 256;
   localparam int MemoryBusWidthBytes = (XLEN / 8) * InstrCacheWords;
 
@@ -37,7 +37,7 @@ localparam int InstrCacheWords = 4;
     reset = 0;
     #10 reset = 1;
     #10 reset = 0;
-    #300 $finish;
+    #1000 $finish;
   end
 
   always #10 clock = ~clock;

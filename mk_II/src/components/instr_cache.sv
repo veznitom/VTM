@@ -85,6 +85,7 @@ module instr_cache #(
             data[set_select[i]].words <= memory_bus.data;
             data[set_select[i]].state <= VALID;
 
+            // TODO
             /*cache_bus[i].hit <= 1'h1;
             cache_bus[i].instr <= memory_bus.data[((word_select[i]*32)+31)-:32];
             cache_bus[i].address_out <= cache_bus[i].address_in;*/
