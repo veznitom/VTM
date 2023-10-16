@@ -14,12 +14,12 @@
    </db_ref_list>
    <zoom_setting>
       <ZoomStartTime time="0.000 ns"></ZoomStartTime>
-      <ZoomEndTime time="353.406 ns"></ZoomEndTime>
-      <Cursor1Time time="1,000.000 ns"></Cursor1Time>
+      <ZoomEndTime time="949.449 ns"></ZoomEndTime>
+      <Cursor1Time time="310.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="314"></NameColumnWidth>
-      <ValueColumnWidth column_width="117"></ValueColumnWidth>
+      <NameColumnWidth column_width="288"></NameColumnWidth>
+      <ValueColumnWidth column_width="194"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="5" />
    <wvobject type="group" fp_name="group6">
@@ -186,10 +186,47 @@
                <obj_property name="ElementShortName">load_instr_out[0:1][31:0]</obj_property>
                <obj_property name="ObjectShortName">load_instr_out[0:1][31:0]</obj_property>
             </wvobject>
-            <wvobject type="array" fp_name="/top_test/cpu/instr_processer/stop">
-               <obj_property name="ElementShortName">stop[2:0]</obj_property>
-               <obj_property name="ObjectShortName">stop[2:0]</obj_property>
+            <wvobject type="group" fp_name="group584">
+               <obj_property name="label">instr_proc</obj_property>
+               <obj_property name="DisplayName">label</obj_property>
                <obj_property name="isExpanded"></obj_property>
+               <wvobject type="logic" fp_name="/top_test/cpu/instr_processer/instr_proc/issuer_stop">
+                  <obj_property name="ElementShortName">issuer_stop</obj_property>
+                  <obj_property name="ObjectShortName">issuer_stop</obj_property>
+               </wvobject>
+               <wvobject type="logic" fp_name="/top_test/cpu/instr_processer/instr_proc/resolver_stop">
+                  <obj_property name="ElementShortName">resolver_stop</obj_property>
+                  <obj_property name="ObjectShortName">resolver_stop</obj_property>
+               </wvobject>
+               <wvobject type="logic" fp_name="/top_test/cpu/instr_processer/instr_proc/stop">
+                  <obj_property name="ElementShortName">stop</obj_property>
+                  <obj_property name="ObjectShortName">stop</obj_property>
+               </wvobject>
+            </wvobject>
+         </wvobject>
+         <wvobject type="group" fp_name="group588">
+            <obj_property name="label">fullnes</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <obj_property name="isExpanded"></obj_property>
+            <wvobject type="logic" fp_name="/top_test/cpu/instr_processer/fullness/alu">
+               <obj_property name="ElementShortName">alu</obj_property>
+               <obj_property name="ObjectShortName">alu</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/top_test/cpu/instr_processer/fullness/branch">
+               <obj_property name="ElementShortName">branch</obj_property>
+               <obj_property name="ObjectShortName">branch</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/top_test/cpu/instr_processer/fullness/load_store">
+               <obj_property name="ElementShortName">load_store</obj_property>
+               <obj_property name="ObjectShortName">load_store</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/top_test/cpu/instr_processer/fullness/rob">
+               <obj_property name="ElementShortName">rob</obj_property>
+               <obj_property name="ObjectShortName">rob</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/top_test/cpu/instr_processer/fullness/mult_div">
+               <obj_property name="ElementShortName">mult_div</obj_property>
+               <obj_property name="ObjectShortName">mult_div</obj_property>
             </wvobject>
          </wvobject>
          <wvobject type="group" fp_name="group343">
