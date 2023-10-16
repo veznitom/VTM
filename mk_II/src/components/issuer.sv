@@ -32,29 +32,18 @@ module issuer (
   generate
     for (i = 0; i < 2; i++) begin : gen_instr_info
       always_ff @(posedge global_bus.clock) begin : issue
-        if (instr_info_in[0].instr_name != UNKNOWN && instr_info_in[1].instr_name != UNKNOWN) begin
-          if (!fullness_split[instr_info_in[0].instr_type]
-          && !fullness_split[instr_info_in[1].instr_type]
-          && !fullness_split[RB]) begin
-            instr_info_out[i].address <= instr_info_in[i].address;
-            instr_info_out[i].immediate <= instr_info_in[i].immediate;
-            instr_info_out[i].instr_name <= instr_info_in[i].instr_name;
-            instr_info_out[i].instr_type <= instr_info_in[i].instr_type;
-            instr_info_out[i].regs <= instr_info_in[i].regs;
-            instr_info_out[i].flags <= instr_info_in[i].flags;
-
-            stops[i] <= 1'h0;
-          end else stops[i] <= 1'h1;
-        end else begin
-          instr_info_out[i].address <= {XLEN{1'h0}};
-          instr_info_out[i].immediate <= {XLEN{1'h0}};
-          instr_info_out[i].instr_name <= UNKNOWN;
-          instr_info_out[i].instr_type <= XX;
-          instr_info_out[i].regs <= '0;
-          instr_info_out[i].flags <= '0;
+        if (!fullness_split[instr_info_in[0].instr_type] &&
+            !fullness_split[instr_info_in[1].instr_type] &&
+            !fullness_split[RB]) begin
+          instr_info_out[i].address <= instr_info_in[i].address;
+          instr_info_out[i].immediate <= instr_info_in[i].immediate;
+          instr_info_out[i].instr_name <= instr_info_in[i].instr_name;
+          instr_info_out[i].instr_type <= instr_info_in[i].instr_type;
+          instr_info_out[i].regs <= instr_info_in[i].regs;
+          instr_info_out[i].flags <= instr_info_in[i].flags;
 
           stops[i] <= 1'h0;
-        end
+        end else stops[i] <= 1'h0;
       end
     end
   endgenerate

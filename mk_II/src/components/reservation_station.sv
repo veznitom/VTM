@@ -29,10 +29,11 @@ module reservation_station #(
   } station_record_t;
 
   // ------------------------------- Wires -------------------------------
+  localparam int IndexSize = $clog2(SIZE);
+
   station_record_t records[SIZE];
 
-  logic [3:0] read_index;
-  logic [3:0] write_index;
+  logic [IndexSize-1:0] read_index, write_index;
   logic empty;
 
   // ------------------------------- Behaviour -------------------------------
@@ -47,7 +48,7 @@ module reservation_station #(
     for (i = 0; i < 2; i++) begin : gen_issue_bus
       always_ff @(posedge global_bus.clock) begin : receive_instruction
         if (issue_bus[i].instr_type == INSTR_TYPE && !global_bus.delete_tag) begin
-          records[write_index] <= '{
+          records[write_index+i] <= '{
               issue_bus[i].data_1,
               issue_bus[i].data_2,
               issue_bus[i].address,
@@ -61,6 +62,9 @@ module reservation_station #(
               issue_bus[i].flags.tag,
               1'h0
           };
+          write_index <= write_index +
+          (issue_bus[0].instr_type == INSTR_TYPE  ? 1 : 0) +
+          (issue_bus[1].instr_type == INSTR_TYPE  ? 1 : 0);
         end
       end
 
@@ -111,10 +115,10 @@ module reservation_station #(
     if (global_bus.reset) begin
       foreach (records[i]) begin
         records[i] = '{
-            {XLEN{1'hz}},
-            {XLEN{1'hz}},
-            {XLEN{1'hz}},
-            {XLEN{1'hz}},
+            {XLEN{1'h0}},
+            {XLEN{1'h0}},
+            {XLEN{1'h0}},
+            {XLEN{1'h0}},
             6'h00,
             6'h00,
             6'h00,
@@ -125,8 +129,8 @@ module reservation_station #(
             1'h0
         };
       end
-      read_index  = 8'h00;
-      write_index = 8'h00;
+      read_index  = '0;
+      write_index = '0;
     end
   end
 
@@ -137,10 +141,14 @@ module reservation_station #(
   end
 
   always_comb begin
-    if (read_index == write_index + 1) full = 1'h1;
-    else full = 1'h0;
+    if (global_bus.reset) full = 1'h0;
+    else if (!full && (
+      ((write_index + 2) % SIZE == read_index) ||
+      ((write_index + 1) % SIZE == read_index)))
+      full = 1'h1;
+    else if (full && next) full = 1'h0;
 
-    if (read_index == write_index) empty = 1'h1;
+    if (next && (read_index == write_index)) empty = 1'h1;
     else empty = 1'h0;
   end
 endmodule

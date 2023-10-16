@@ -44,4 +44,6 @@ module alu_combo #(
       .bus_selected(bus_selected)
   );
 
+  // ------------------------------- Behaviour -------------------------------
+  assign get_bus = 1'h0;
 endmodule

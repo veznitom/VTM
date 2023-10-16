@@ -11,7 +11,7 @@ module resolver (
     instr_info_bus_if.out instr_info_out[2],
 
     input jmp_relation_e jmp_relation,
-    input logic stop_in,
+    input logic [2:0] stop_in,
     output logic stop_out
 );
   function automatic bit match_regs(input logic [5:0] rd, input logic [5:0] rs);

@@ -23,7 +23,7 @@ module instr_processer (
 
   logic [XLEN-1:0] load_address_out[2];
   logic [31:0] load_instr_out[2];
-  logic stop_res, stop_iss, stop;
+  logic [2:0] stop;
 
   // ------------------------------- Modules -------------------------------
   loader loader (
@@ -57,7 +57,7 @@ module instr_processer (
       .instr_info_in(dec_to_ren),
       .instr_info_out(ren_to_res),
       .jmp_relation(jmp_relation),
-      .stop(stop)
+      .stop(stop[3])
   );
 
   resolver resolver (
@@ -67,7 +67,7 @@ module instr_processer (
       .instr_info_out(res_to_issue),
       .jmp_relation(jmp_relation),
       .stop_in(stop),
-      .stop_out(stop_res)
+      .stop_out(stop[1])
   );
 
   issuer issuer (
@@ -75,7 +75,7 @@ module instr_processer (
       .instr_info_in(res_to_issue),
       .instr_info_out(issue_to_cmp),
       .fullness(fullness),
-      .stop(stop_iss)
+      .stop(stop[0])
   );
 
   comparator comparator_0 (
@@ -93,8 +93,6 @@ module instr_processer (
   );
 
   // ------------------------------- Behaviour -------------------------------
-  assign stop = stop_res | stop_iss | 1'h0;
-
   genvar i;
   generate
     for (i = 0; i < 2; i++) begin : gen_wire_clear
@@ -107,14 +105,6 @@ module instr_processer (
           issue_bus[i].clear();
         end
       end
-/*
-      assign reg_val_bus[i].src_1 = issue_to_cmp[i].regs.rs_1;
-      assign reg_val_bus[i].src_2 = issue_to_cmp[i].regs.rs_2;
-      assign issue_bus[i].address = issue_to_cmp[i].address;
-      assign issue_bus[i].immediate = issue_to_cmp[i].immediate;
-      assign issue_bus[i].instr_name = issue_to_cmp[i].instr_name;
-      assign issue_bus[i].regs = issue_to_cmp[i].regs;
-      assign issue_bus[i].flags = issue_to_cmp[i].flags;*/
     end
   endgenerate
 endmodule
