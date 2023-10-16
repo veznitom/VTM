@@ -8,7 +8,7 @@ module decoder (
 
     input logic [XLEN-1:0] address,
     input logic [31:0] instr,
-    input logic stop
+    instr_proc_if.decoder instr_proc
 );
   // ------------------------------- Wires -------------------------------
   logic [11:0] system;
@@ -23,146 +23,150 @@ module decoder (
   assign funct3 = instr[14:12];
 
   always_ff @(posedge global_bus.clock) begin : value_sources
-    if (!stop) instr_info.address <= address;
-    case (instr[4:2])
-      3'b000: begin : LSB  // LOAD, STORE, BRANCH
-        case (instr[6:5])
-          2'b00: begin  // LOAD
-            instr_info.immediate <= {{20{instr[31]}}, instr[31:20]};
-            instr_info.regs.rd   <= instr[11:7];
-            instr_info.regs.rs_1 <= instr[19:15];
-            instr_info.regs.rs_2 <= 5'h00;
-          end
+    if (!instr_proc.stop) begin
+      instr_info.address <= address;
+      case (instr[4:2])
+        3'b000: begin : LSB  // LOAD, STORE, BRANCH
+          case (instr[6:5])
+            2'b00: begin  // LOAD
+              instr_info.immediate <= {{20{instr[31]}}, instr[31:20]};
+              instr_info.regs.rd   <= instr[11:7];
+              instr_info.regs.rs_1 <= instr[19:15];
+              instr_info.regs.rs_2 <= 5'h00;
+            end
 
-          2'b01: begin  // STORE
-            instr_info.immediate <= {{20{instr[31]}}, instr[31:25], instr[11:7]};
-            instr_info.regs.rd   <= 5'h00;
-            instr_info.regs.rs_1 <= instr[19:15];
-            instr_info.regs.rs_2 <= instr[24:20];
-          end
+            2'b01: begin  // STORE
+              instr_info.immediate <= {{20{instr[31]}}, instr[31:25], instr[11:7]};
+              instr_info.regs.rd   <= 5'h00;
+              instr_info.regs.rs_1 <= instr[19:15];
+              instr_info.regs.rs_2 <= instr[24:20];
+            end
 
-          2'b11: begin  // BRANCH
-            instr_info.immediate <= {{21{instr[31]}}, instr[7], instr[30:25], instr[11:8], 1'b0};
-            instr_info.regs.rd   <= 5'h00;
-            instr_info.regs.rs_1 <= instr[19:15];
-            instr_info.regs.rs_2 <= instr[24:20];
-          end
+            2'b11: begin  // BRANCH
+              instr_info.immediate <= {{21{instr[31]}}, instr[7], instr[30:25], instr[11:8], 1'b0};
+              instr_info.regs.rd   <= 5'h00;
+              instr_info.regs.rs_1 <= instr[19:15];
+              instr_info.regs.rs_2 <= instr[24:20];
+            end
 
-          default: begin
-            instr_info.immediate <= 32'h0000;
-            instr_info.regs.rd   <= 5'h00;
-            instr_info.regs.rs_1 <= 5'h00;
-            instr_info.regs.rs_2 <= 5'h00;
-          end
-        endcase
-      end
+            default: begin
+              instr_info.immediate <= 32'h0000;
+              instr_info.regs.rd   <= 5'h00;
+              instr_info.regs.rs_1 <= 5'h00;
+              instr_info.regs.rs_2 <= 5'h00;
+            end
+          endcase
+        end
 
-      3'b001: begin  // JALR
-        case (instr[6:5])
-          2'b11: begin  // JALR
-            instr_info.immediate <= {{20{instr[31]}}, instr[31:20]};
-            instr_info.regs.rd   <= instr[11:7];
-            instr_info.regs.rs_1 <= instr[19:15];
-            instr_info.regs.rs_2 <= 5'h00;
-          end
+        3'b001: begin  // JALR
+          case (instr[6:5])
+            2'b11: begin  // JALR
+              instr_info.immediate <= {{20{instr[31]}}, instr[31:20]};
+              instr_info.regs.rd   <= instr[11:7];
+              instr_info.regs.rs_1 <= instr[19:15];
+              instr_info.regs.rs_2 <= 5'h00;
+            end
 
-          default: begin
-            instr_info.immediate <= 32'h0000;
-            instr_info.regs.rd   <= 5'h00;
-            instr_info.regs.rs_1 <= 5'h00;
-            instr_info.regs.rs_2 <= 5'h00;
-          end
-        endcase
-      end
+            default: begin
+              instr_info.immediate <= 32'h0000;
+              instr_info.regs.rd   <= 5'h00;
+              instr_info.regs.rs_1 <= 5'h00;
+              instr_info.regs.rs_2 <= 5'h00;
+            end
+          endcase
+        end
 
-      3'b011: begin  // MISC-MEM, JAL
-        case (instr[6:5])
-          2'b00: begin  // MISC-MEM
-            instr_info.immediate <= 32'h0000;
-            instr_info.regs.rd   <= 5'h00;
-            instr_info.regs.rs_1 <= 5'h00;
-            instr_info.regs.rs_2 <= 5'h00;
-          end
+        3'b011: begin  // MISC-MEM, JAL
+          case (instr[6:5])
+            2'b00: begin  // MISC-MEM
+              instr_info.immediate <= 32'h0000;
+              instr_info.regs.rd   <= 5'h00;
+              instr_info.regs.rs_1 <= 5'h00;
+              instr_info.regs.rs_2 <= 5'h00;
+            end
 
-          2'b11: begin  // JAL
-            instr_info.immediate <= {{13{instr[31]}}, instr[19:12], instr[20], instr[30:21], 1'b0};
-            instr_info.regs.rd   <= instr[11:7];
-            instr_info.regs.rs_1 <= 5'h00;
-            instr_info.regs.rs_2 <= 5'h00;
-          end
+            2'b11: begin  // JAL
+              instr_info.immediate <= {
+                {13{instr[31]}}, instr[19:12], instr[20], instr[30:21], 1'b0
+              };
+              instr_info.regs.rd <= instr[11:7];
+              instr_info.regs.rs_1 <= 5'h00;
+              instr_info.regs.rs_2 <= 5'h00;
+            end
 
-          default: begin
-            instr_info.immediate <= 32'h0000;
-            instr_info.regs.rd   <= 5'h00;
-            instr_info.regs.rs_1 <= 5'h00;
-            instr_info.regs.rs_2 <= 5'h00;
-          end
-        endcase
-      end
+            default: begin
+              instr_info.immediate <= 32'h0000;
+              instr_info.regs.rd   <= 5'h00;
+              instr_info.regs.rs_1 <= 5'h00;
+              instr_info.regs.rs_2 <= 5'h00;
+            end
+          endcase
+        end
 
-      3'b100: begin : OPS  // OP, OP-IMM, SYSTEM
-        case (instr[6:5])
-          2'b00: begin  // OP-IMM
-            if ((instr[14:12] == 3'b001) || (instr[14:12] == 3'b101)) begin
-              instr_info.immediate <= {{27{1'b0}}, instr[24:20]};
-            end else instr_info.immediate <= {{20{instr[31]}}, instr[31:20]};
-            instr_info.regs.rd   <= instr[11:7];
-            instr_info.regs.rs_1 <= instr[19:15];
-            instr_info.regs.rs_2 <= 5'h00;
-          end
+        3'b100: begin : OPS  // OP, OP-IMM, SYSTEM
+          case (instr[6:5])
+            2'b00: begin  // OP-IMM
+              if ((instr[14:12] == 3'b001) || (instr[14:12] == 3'b101)) begin
+                instr_info.immediate <= {{27{1'b0}}, instr[24:20]};
+              end else instr_info.immediate <= {{20{instr[31]}}, instr[31:20]};
+              instr_info.regs.rd   <= instr[11:7];
+              instr_info.regs.rs_1 <= instr[19:15];
+              instr_info.regs.rs_2 <= 5'h00;
+            end
 
-          2'b01: begin  // OP
-            instr_info.immediate <= 32'h0000;
-            instr_info.regs.rd   <= instr[11:7];
-            instr_info.regs.rs_1 <= instr[19:15];
-            instr_info.regs.rs_2 <= instr[24:20];
-          end
+            2'b01: begin  // OP
+              instr_info.immediate <= 32'h0000;
+              instr_info.regs.rd   <= instr[11:7];
+              instr_info.regs.rs_1 <= instr[19:15];
+              instr_info.regs.rs_2 <= instr[24:20];
+            end
 
-          2'b11: begin  // ECALL, EBREAK
-            instr_info.immediate <= 32'h0000;
-            instr_info.regs.rd   <= 5'h00;
-            instr_info.regs.rs_1 <= 5'h00;
-            instr_info.regs.rs_2 <= 5'h00;
-          end
+            2'b11: begin  // ECALL, EBREAK
+              instr_info.immediate <= 32'h0000;
+              instr_info.regs.rd   <= 5'h00;
+              instr_info.regs.rs_1 <= 5'h00;
+              instr_info.regs.rs_2 <= 5'h00;
+            end
 
-          default: begin
-            instr_info.immediate <= 32'h0000;
-            instr_info.regs.rd   <= 5'h00;
-            instr_info.regs.rs_1 <= 5'h00;
-            instr_info.regs.rs_2 <= 5'h00;
-          end
-        endcase
-      end
+            default: begin
+              instr_info.immediate <= 32'h0000;
+              instr_info.regs.rd   <= 5'h00;
+              instr_info.regs.rs_1 <= 5'h00;
+              instr_info.regs.rs_2 <= 5'h00;
+            end
+          endcase
+        end
 
-      3'b101: begin  // AUIPC, LUI
-        casez (instr[6:5])
-          2'b0?: begin  // AUIPC, LUI
-            instr_info.immediate <= {instr[31:12], {12{1'b0}}};
-            instr_info.regs.rd   <= instr[11:7];
-            instr_info.regs.rs_1 <= 5'h00;
-            instr_info.regs.rs_2 <= 5'h00;
-          end
+        3'b101: begin  // AUIPC, LUI
+          casez (instr[6:5])
+            2'b0?: begin  // AUIPC, LUI
+              instr_info.immediate <= {instr[31:12], {12{1'b0}}};
+              instr_info.regs.rd   <= instr[11:7];
+              instr_info.regs.rs_1 <= 5'h00;
+              instr_info.regs.rs_2 <= 5'h00;
+            end
 
-          default: begin
-            instr_info.immediate <= 32'h0000;
-            instr_info.regs.rd   <= 5'h00;
-            instr_info.regs.rs_1 <= 5'h00;
-            instr_info.regs.rs_2 <= 5'h00;
-          end
-        endcase
-      end
+            default: begin
+              instr_info.immediate <= 32'h0000;
+              instr_info.regs.rd   <= 5'h00;
+              instr_info.regs.rs_1 <= 5'h00;
+              instr_info.regs.rs_2 <= 5'h00;
+            end
+          endcase
+        end
 
-      default: begin
-        instr_info.immediate <= 32'h0000;
-        instr_info.regs.rd   <= 5'h00;
-        instr_info.regs.rs_1 <= 5'h00;
-        instr_info.regs.rs_2 <= 5'h00;
-      end
-    endcase
+        default: begin
+          instr_info.immediate <= 32'h0000;
+          instr_info.regs.rd   <= 5'h00;
+          instr_info.regs.rs_1 <= 5'h00;
+          instr_info.regs.rs_2 <= 5'h00;
+        end
+      endcase
+    end
   end
 
   always_ff @(posedge global_bus.clock) begin : instr_name
-    if (!stop)
+    if (!instr_proc.stop) begin
       if (instr == 32'h0000) instr_info.instr_name <= UNKNOWN;
       else
         case (opcode[4:2])
@@ -284,5 +288,6 @@ module decoder (
 
           default: instr_info.instr_name <= UNKNOWN;
         endcase
+    end
   end
 endmodule

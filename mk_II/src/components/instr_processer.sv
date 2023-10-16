@@ -19,18 +19,19 @@ module instr_processer (
   instr_info_bus_if res_to_issue[2] ();
   instr_info_bus_if issue_to_cmp[2] ();
 
+  instr_proc_if instr_proc ();
+
   jmp_relation_e jmp_relation;
 
   logic [XLEN-1:0] load_address_out[2];
   logic [31:0] load_instr_out[2];
-  logic [2:0] stop;
 
   // ------------------------------- Modules -------------------------------
   loader loader (
       .global_bus(global_bus),
       .pc_bus(pc_bus),
       .cache_bus(cache_bus),
-      .stop(stop),
+      .instr_proc(instr_proc),
       .address(load_address_out),
       .instr(load_instr_out)
   );
@@ -40,7 +41,7 @@ module instr_processer (
       .instr_info(dec_to_ren[0]),
       .address(load_address_out[0]),
       .instr(load_instr_out[0]),
-      .stop(stop)
+      .instr_proc(instr_proc)
   );
 
   decoder decoder_1 (
@@ -48,7 +49,7 @@ module instr_processer (
       .instr_info(dec_to_ren[1]),
       .address(load_address_out[1]),
       .instr(load_instr_out[1]),
-      .stop(stop)
+      .instr_proc(instr_proc)
   );
 
   renamer renamer (
@@ -57,7 +58,7 @@ module instr_processer (
       .instr_info_in(dec_to_ren),
       .instr_info_out(ren_to_res),
       .jmp_relation(jmp_relation),
-      .stop(stop[3])
+      .instr_proc(instr_proc)
   );
 
   resolver resolver (
@@ -66,8 +67,7 @@ module instr_processer (
       .instr_info_in(ren_to_res),
       .instr_info_out(res_to_issue),
       .jmp_relation(jmp_relation),
-      .stop_in(stop),
-      .stop_out(stop[1])
+      .instr_proc(instr_proc)
   );
 
   issuer issuer (
@@ -75,7 +75,7 @@ module instr_processer (
       .instr_info_in(res_to_issue),
       .instr_info_out(issue_to_cmp),
       .fullness(fullness),
-      .stop(stop[0])
+      .instr_proc(instr_proc)
   );
 
   comparator comparator_0 (

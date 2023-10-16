@@ -6,8 +6,8 @@ module renamer (
     reg_query_bus_if.resolver query_bus[2],
     instr_info_bus_if.in instr_info_in[2],
     instr_info_bus_if.out instr_info_out[2],
+    instr_proc_if.renamer instr_proc,
 
-    input logic stop,
     output jmp_relation_e jmp_relation
 );
   // ------------------------------- Wires -------------------------------
@@ -26,24 +26,27 @@ module renamer (
       assign query_bus[i].inputs.rn = 6'h0;
 
       always_comb begin
-        if (global_bus.reset) query_bus[i].clear();
+        if (global_bus.reset) begin
+          query_bus[i].clear();
+          instr_info_out[i].clear();
+        end
       end
 
       always_ff @(posedge global_bus.clock) begin : relay
-        if (!stop) begin
+        if (!instr_proc.stop) begin
           instr_info_out[i].address <= instr_info_in[i].address;
           instr_info_out[i].immediate <= instr_info_in[i].immediate;
           instr_info_out[i].instr_name <= instr_info_in[i].instr_name;
           instr_info_out[i].regs <= instr_info_in[i].regs;
           instr_info_out[i].instr_type <= instr_info_in[i].instr_type;
           instr_info_out[i].flags <= instr_info_in[i].flags;
-        end else instr_info_out[i].clear();
+        end
       end
     end
   endgenerate
 
   always_ff @(posedge global_bus.clock) begin : fetch
-    if (!stop)
+    if (!instr_proc.stop)
       if (instr_info_in[0].instr_name != UNKNOWN && instr_info_in[1].instr_name != UNKNOWN) begin
         case ({
           instr_info_in[0].flags.jumps, instr_info_in[1].flags.jumps

@@ -47,7 +47,7 @@ module reservation_station #(
   generate
     for (i = 0; i < 2; i++) begin : gen_issue_bus
       always_ff @(posedge global_bus.clock) begin : receive_instruction
-        if (issue_bus[i].instr_type == INSTR_TYPE && !global_bus.delete_tag) begin
+        if (issue_bus[i].instr_type == INSTR_TYPE && !global_bus.delete_tag && !full) begin
           records[write_index+i] <= '{
               issue_bus[i].data_1,
               issue_bus[i].data_2,
@@ -129,7 +129,8 @@ module reservation_station #(
             1'h0
         };
       end
-      read_index  = '0;
+      full = 1'h0;
+      read_index = '0;
       write_index = '0;
     end
   end
@@ -140,15 +141,14 @@ module reservation_station #(
     end
   end
 
-  always_comb begin
-    if (global_bus.reset) full = 1'h0;
-    else if (!full && (
+  always_ff @(posedge global_bus.clock) begin
+    if (!full && (
       ((write_index + 2) % SIZE == read_index) ||
       ((write_index + 1) % SIZE == read_index)))
-      full = 1'h1;
-    else if (full && next) full = 1'h0;
+      full <= 1'h1;
+    else if (full && next) full <= 1'h0;
 
-    if (next && (read_index == write_index)) empty = 1'h1;
-    else empty = 1'h0;
+    if (next && (read_index == write_index)) empty <= 1'h1;
+    else empty <= 1'h0;
   end
 endmodule
