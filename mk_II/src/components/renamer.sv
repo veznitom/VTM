@@ -23,7 +23,7 @@ module renamer (
   genvar i;
   generate
     for (i = 0; i < 2; i++) begin : gen_q_rn_clear
-      assign query_bus[i].inputs.rn = 6'h0;
+      assign query_bus[i].inputs.rn = 6'h00;
 
       always_comb begin
         if (global_bus.reset) begin
@@ -46,7 +46,7 @@ module renamer (
   endgenerate
 
   always_ff @(posedge global_bus.clock) begin : fetch
-    if (!instr_proc.stop)
+    if (!instr_proc.stop) begin
       if (instr_info_in[0].instr_name != UNKNOWN && instr_info_in[1].instr_name != UNKNOWN) begin
         case ({
           instr_info_in[0].flags.jumps, instr_info_in[1].flags.jumps
@@ -76,6 +76,10 @@ module renamer (
         query_bus[1].clear();
         jmp_relation <= ERROR;
       end
+    end else begin
+      query_bus[0].rename <= 1'h0;
+      query_bus[1].rename <= 1'h0;
+    end
   end
 endmodule
 

@@ -15,7 +15,8 @@ interface issue_bus_if;
   modport rob(input address, instr_type, regs, flags);
   modport cmp(
       output address, immediate, data_1, data_2, valid_1, valid_2,
-      instr_name, instr_type, regs, flags
+      instr_name, instr_type, regs, flags,
+      import clear
   );
 
   task automatic clear();

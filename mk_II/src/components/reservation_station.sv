@@ -90,18 +90,15 @@ module reservation_station #(
   endgenerate
 
   always_ff @(posedge global_bus.clock) begin : feed_ex_unit
-    for (int i = 0; i < SIZE; i++) begin
-      if (records[i].valid_1 && records[i].valid_2 && !records[i].skip) begin
-        feed_bus.data_1 <= records[i].data_1;
-        feed_bus.data_2 <= records[i].data_2;
-        feed_bus.address <= records[i].address;
-        feed_bus.immediate <= records[i].immediate;
-        feed_bus.rrn <= records[i].rrn;
-        feed_bus.instr_name <= records[i].instr_name;
-        break;
-      end else begin
-        feed_bus.instr_name <= UNKNOWN;
-      end
+    if (records[read_index].valid_1 && records[read_index].valid_2 && !records[read_index].skip) begin
+      feed_bus.data_1 <= records[read_index].data_1;
+      feed_bus.data_2 <= records[read_index].data_2;
+      feed_bus.address <= records[read_index].address;
+      feed_bus.immediate <= records[read_index].immediate;
+      feed_bus.rrn <= records[read_index].rrn;
+      feed_bus.instr_name <= records[read_index].instr_name;
+    end else begin
+      feed_bus.instr_name <= UNKNOWN;
     end
   end
 
