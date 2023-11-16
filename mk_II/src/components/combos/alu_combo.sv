@@ -45,5 +45,5 @@ module alu_combo #(
   );
 
   // ------------------------------- Behaviour -------------------------------
-  assign get_bus = 1'h0;
+  assign get_bus = alu_feed.instr_name != UNKNOWN;
 endmodule
