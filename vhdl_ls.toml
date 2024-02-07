@@ -1,0 +1,29 @@
+[libraries.work]
+files = [
+  "/home/tomasv/Projects/VTM/mk_II/VHDL/src/cmb_alu.vhd",
+  "/home/tomasv/Projects/VTM/mk_II/VHDL/src/cmb_br.vhd",
+  "/home/tomasv/Projects/VTM/mk_II/VHDL/src/cmb_ls.vhd",
+  "/home/tomasv/Projects/VTM/mk_II/VHDL/src/cmb_md.vhd",
+  "/home/tomasv/Projects/VTM/mk_II/VHDL/src/comparator.vhd",
+  "/home/tomasv/Projects/VTM/mk_II/VHDL/src/cpu.vhd",
+  "/home/tomasv/Projects/VTM/mk_II/VHDL/src/data_cache.vhd",
+  "/home/tomasv/Projects/VTM/mk_II/VHDL/src/decoder.vhd",
+  "/home/tomasv/Projects/VTM/mk_II/VHDL/src/exe_alu.vhd",
+  "/home/tomasv/Projects/VTM/mk_II/VHDL/src/exe_br.vhd",
+  "/home/tomasv/Projects/VTM/mk_II/VHDL/src/exe_ls.vhd",
+  "/home/tomasv/Projects/VTM/mk_II/VHDL/src/exe_md.vhd",
+  "/home/tomasv/Projects/VTM/mk_II/VHDL/src/instr_cache.vhd",
+  "/home/tomasv/Projects/VTM/mk_II/VHDL/src/instr_processer.vhd",
+  "/home/tomasv/Projects/VTM/mk_II/VHDL/src/issuer.vhd",
+  "/home/tomasv/Projects/VTM/mk_II/VHDL/src/loader.vhd",
+  "/home/tomasv/Projects/VTM/mk_II/VHDL/src/mmu.vhd",
+  "/home/tomasv/Projects/VTM/mk_II/VHDL/src/reg_file.vhd",
+  "/home/tomasv/Projects/VTM/mk_II/VHDL/src/reorder_buff.vhd",
+  "/home/tomasv/Projects/VTM/mk_II/VHDL/src/res_station.vhd",
+  "/home/tomasv/Projects/VTM/mk_II/VHDL/src/resolver.vhd"
+]
+
+[libraries.vtm_types]
+files=[
+  "/home/tomasv/Projects/VTM/mk_II/VHDL/src/vtm_types.vhd"
+]
