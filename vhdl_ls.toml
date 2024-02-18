@@ -1,5 +1,7 @@
 [libraries.work]
 files = [
+  "/home/tomasv/Projects/VTM/mk_II/VHDL/src/bus_control.vhd",
+  "/home/tomasv/Projects/VTM/mk_II/VHDL/src/bus_switcher.vhd",
   "/home/tomasv/Projects/VTM/mk_II/VHDL/src/cmb_alu.vhd",
   "/home/tomasv/Projects/VTM/mk_II/VHDL/src/cmb_br.vhd",
   "/home/tomasv/Projects/VTM/mk_II/VHDL/src/cmb_ls.vhd",
@@ -20,7 +22,8 @@ files = [
   "/home/tomasv/Projects/VTM/mk_II/VHDL/src/reg_file.vhd",
   "/home/tomasv/Projects/VTM/mk_II/VHDL/src/reorder_buff.vhd",
   "/home/tomasv/Projects/VTM/mk_II/VHDL/src/res_station.vhd",
-  "/home/tomasv/Projects/VTM/mk_II/VHDL/src/resolver.vhd"
+  "/home/tomasv/Projects/VTM/mk_II/VHDL/src/resolver.vhd",
+  "/home/tomasv/Projects/VTM/mk_II/VHDL/src/shuffler.vhd"
 ]
 
 [libraries.vtm_types]

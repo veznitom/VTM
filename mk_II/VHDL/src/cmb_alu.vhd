@@ -14,7 +14,7 @@ entity cmb_alu is
         -- Issue bus
         ib_data_1     : in STD_LOGIC_VECTOR(31 downto 0);
         ib_data_2     : in STD_LOGIC_VECTOR(31 downto 0);
-        ib_address_in : in STD_LOGIC_VECTOR(31 downto 0);
+        ib_address : in STD_LOGIC_VECTOR(31 downto 0);
         ib_immediate  : in STD_LOGIC_VECTOR(31 downto 0);
         ib_valid_1    : in STD_LOGIC;
         ib_valid_2    : in STD_LOGIC;
@@ -24,6 +24,7 @@ entity cmb_alu is
         ib_rs_1       : in STD_LOGIC_VECTOR(5 downto 0);
         ib_rs_2       : in STD_LOGIC_VECTOR(5 downto 0);
         ib_rn         : in STD_LOGIC_VECTOR(5 downto 0);
+        ib_full       : out STD_LOGIC;
         -- Data bus
         db_result  : out STD_LOGIC_VECTOR(31 downto 0);
         db_address : out STD_LOGIC_VECTOR(31 downto 0);
