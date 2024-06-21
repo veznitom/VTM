@@ -10,8 +10,10 @@ isa_dir := ../riscv-tests/isa
 
 ifeq ($(XLEN),64)
 include $(isa_dir)/rv64ui/Makefrag
+include $(isa_dir)/rv64um/Makefrag
 endif
 include $(isa_dir)/rv32ui/Makefrag
+include $(isa_dir)/rv32um/Makefrag
 
 default: clean all
 
@@ -61,8 +63,10 @@ endif
 
 endef
 $(eval $(call compile_template,rv32ui,-march=rv32g -mabi=ilp32))
+$(eval $(call compile_template,rv32um,-march=rv32g -mabi=ilp32))
 ifeq ($(XLEN),64)
 $(eval $(call compile_template,rv64ui,-march=rv64g -mabi=lp64))
+$(eval $(call compile_template,rv64um,-march=rv64g -mabi=lp64))
 endif
 
 tests_dump = $(addsuffix .dump, $(tests))
