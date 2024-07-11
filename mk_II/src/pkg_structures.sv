@@ -1,6 +1,4 @@
-package structures;
-  import global_variables::XLEN;
-
+package pkg_structures;
   typedef enum bit [7:0] {
     // Custom value
     UNKNOWN,

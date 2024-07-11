@@ -15,7 +15,7 @@ module cpu #(
   global_bus_if global_bus (
       .clock(clock),
       .reset(reset)
-  );
+  );c
   memory_bus_if #(.BUS_WIDTH_BYTES(DATA_CACHE_WORDS * (XLEN / 8))) data_memory_bus ();
   memory_bus_if #(.BUS_WIDTH_BYTES(INSTR_CACHE_WORDS * (XLEN / 8))) instr_memory_bus ();
   instr_cache_bus_if instr_cache_bus[2] ();

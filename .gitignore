@@ -2,3 +2,4 @@ rv32i-tests/hex/rv**
 rv32i-tests/isa/dump/rv**
 rv32i-tests/isa/elf/rv**
 rv32i-tests/riscv-tests/**
+**/.sv_cache**
