@@ -15,7 +15,7 @@ module ram #(
 
   // ------------------------------- Wires --------------------------------
   logic [7:0] data[MEM_SIZE_BYTES];
-  logic [XLEN-1:0] start_address, end_address;
+  logic [31:0] start_address, end_address;
 
   int file, instr_load, index;
   reg [memory_bus.BUS_WIDTH_BITS-1:0] tmp_data;
@@ -44,10 +44,10 @@ module ram #(
   end
 
   assign start_address = {
-    memory_bus.address[XLEN-1:memory_bus.BUS_BIT_LOG], {memory_bus.BUS_BIT_LOG{1'h0}}
+    memory_bus.address[31:memory_bus.BUS_BIT_LOG], {memory_bus.BUS_BIT_LOG{1'h0}}
   };
   assign end_address = {
-    memory_bus.address[XLEN-1:memory_bus.BUS_BIT_LOG], {memory_bus.BUS_BIT_LOG{1'h1}}
+    memory_bus.address[31:memory_bus.BUS_BIT_LOG], {memory_bus.BUS_BIT_LOG{1'h1}}
   };
 
   always_ff @(posedge clock) begin

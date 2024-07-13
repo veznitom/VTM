@@ -1,19 +1,26 @@
-import global_variables::XLEN;
-
-module load_store_combo #(
+module combo_load_store #(
     parameter logic [7:0] ARBITER_ADDRESS = 8'h00
 ) (
-    global_bus_if.rest global_bus,
+    input clock,
+    input reset,
+    input delete_tag,
+    input clear_tag,
+
     issue_bus_if.combo issue_bus[2],
-    data_cache_bus_if.load_store cache_bus,
     common_data_bus_if.combo data_bus[2],
+
+    input cache_hit,
+    inout wire [31:0] cache_data,
+    output logic [31:0] cache_address,
+    output logic cache_read,
+    output logic cache_write,
 
     output logic full
 );
   // ------------------------------- Wires -------------------------------
   feed_bus_if load_store_feed ();
 
-  logic [XLEN-1:0] load_store_result;
+  logic [31:0] load_store_result;
   logic get_bus;
   logic bus_granted;
   logic bus_selected;

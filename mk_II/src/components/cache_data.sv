@@ -1,7 +1,6 @@
-import global_variables::XLEN;
-import structures::*;
+import pkg_structures::*;
 
-module data_cache #(
+module cache_data #(
     parameter int SETS  = 8,
     parameter int WORDS = 4
 ) (
@@ -22,13 +21,13 @@ module data_cache #(
   // ------------------------------- Structures -------------------------------
   typedef struct packed {
     logic [XLEN-(SetBits+WordBits+2)-1:0] tag;
-    logic [WORDS-1:0][XLEN-1:0] words;
+    logic [WORDS-1:0][31:0] words;
     cache_state_e state;
   } cache_set_t;
 
   typedef struct packed {
-    logic [XLEN-1:0] address;
-    logic [WORDS-1:0][XLEN-1:0] words;
+    logic [31:0] address;
+    logic [WORDS-1:0][31:0] words;
   } wb_record_t;
 
   // ------------------------------- Wires -------------------------------
@@ -65,7 +64,7 @@ module data_cache #(
 
   always_ff @(posedge global_bus.clock) begin : cache_read
     if (cache_bus.read && !write_back) begin
-      if ((cache_bus.address[XLEN-1:(SetBits+WordBits+2)] == data[set_select].tag) &&
+      if ((cache_bus.address[31:(SetBits+WordBits+2)] == data[set_select].tag) &&
           (data[set_select].state == VALID)) begin
         miss <= 1'h0;
         cache_bus.hit <= 1'h1;
@@ -83,7 +82,7 @@ module data_cache #(
         memory_bus.read <= 1'h0;
         memory_bus.address <= {XLEN{1'h0}};
 
-        data[set_select].tag <= cache_bus.address[XLEN-1:(SetBits+WordBits+2)];
+        data[set_select].tag <= cache_bus.address[31:(SetBits+WordBits+2)];
         data[set_select].words <= memory_bus.data;
         data[set_select].state <= VALID;
       end else begin
@@ -95,7 +94,7 @@ module data_cache #(
 
   always_ff @(posedge global_bus.clock) begin
     if (cache_bus.write && !write_back) begin
-      if (cache_bus.address[XLEN-1:(SetBits+WordBits+2)] == data[set_select].tag &&
+      if (cache_bus.address[31:(SetBits+WordBits+2)] == data[set_select].tag &&
           data[set_select].state == MODIFIED) begin
         write_buffer[write_index] <= '{
             {data[set_select].tag, set_select, {WordBits + 2{1'h0}}},
@@ -103,7 +102,7 @@ module data_cache #(
         };
         write_index <= write_index + 1;
       end
-      data[set_select].tag <= cache_bus.address[XLEN-1:(SetBits+WordBits+2)];
+      data[set_select].tag <= cache_bus.address[31:(SetBits+WordBits+2)];
       data[set_select].words[word_select] <= cache_bus.data;
       data[set_select].state <= MODIFIED;
     end

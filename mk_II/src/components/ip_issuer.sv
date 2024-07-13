@@ -1,9 +1,6 @@
-/*  Controls if destination stations or reorder buffer has enough space to hold another instructions, if they do then the instructions are issued otherwise,
-    issuer halts and waits for them to free up (halt also stops loader, decoder, resolver unless there is bubble in the form of zero instruction).
-*/
-import structures::*;
+import pkg_structures::*;
 
-module issuer (
+module ip_issuer (
     global_bus_if.rest global_bus,
     instr_info_bus_if.in instr_info_in[2],
     instr_info_bus_if.out instr_info_out[2],

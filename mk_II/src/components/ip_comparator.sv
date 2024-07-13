@@ -1,6 +1,4 @@
-/*  Checks if common data bus and issue_busd values clash if so then choose the data_bus data as they are always newer than register data.
-    Should contain only combinational logic (it's basicvaly a switch).*/
-module comparator (
+module ip_comparator (
     instr_info_bus_if.in instr_info,
     issue_bus_if.cmp issue_bus,
     reg_val_bus_if.cmp reg_val_bus,

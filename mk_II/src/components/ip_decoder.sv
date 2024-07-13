@@ -1,12 +1,10 @@
-// Translates instructions based on RISC-V instruction encoding
-import global_variables::XLEN;
-import structures::*;
+import pkg_structures::*;
 
-module decoder (
+module ip_decoder (
     global_bus_if.rest global_bus,
     instr_info_bus_if.out instr_info,
 
-    input logic [XLEN-1:0] address,
+    input logic [31:0] address,
     input logic [31:0] instr,
     instr_proc_if.decoder instr_proc
 );

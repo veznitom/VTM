@@ -1,5 +1,13 @@
-import global_variables::XLEN;
-import structures::*;
+import pkg_structures::*;
+
+`include "interfaces/cache_bus.sv"
+`include "interfaces/connects.sv"
+`include "interfaces/data_bus.sv"
+`include "interfaces/feed_bus.sv"
+`include "interfaces/instr_info.sv"
+`include "interfaces/issue_bus.sv"
+`include "interfaces/memory_bus.sv"
+`include "interfaces/query_bus.sv"
 
 module cpu #(
     parameter int INSTR_CACHE_WORDS = 4,
@@ -15,9 +23,9 @@ module cpu #(
   global_bus_if global_bus (
       .clock(clock),
       .reset(reset)
-  );c
-  memory_bus_if #(.BUS_WIDTH_BYTES(DATA_CACHE_WORDS * (XLEN / 8))) data_memory_bus ();
-  memory_bus_if #(.BUS_WIDTH_BYTES(INSTR_CACHE_WORDS * (XLEN / 8))) instr_memory_bus ();
+  );
+  memory_bus_if #(.BUS_WIDTH_BYTES(DATA_CACHE_WORDS * 4)) data_memory_bus ();
+  memory_bus_if #(.BUS_WIDTH_BYTES(INSTR_CACHE_WORDS * 4)) instr_memory_bus ();
   instr_cache_bus_if instr_cache_bus[2] ();
   data_cache_bus_if data_cache_bus ();
 
@@ -55,11 +63,6 @@ module cpu #(
       .cache_bus (data_cache_bus),
       .data_bus  (data_bus)
   );
-
-  /*program_counter pc (
-      .global_bus(global_bus),
-      .pc_bus(pc_bus)
-  );*/
 
   instr_processer instr_processer (
       .global_bus(global_bus),

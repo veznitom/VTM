@@ -1,9 +1,13 @@
 import global_variables::XLEN;
 
-module alu_combo #(
+module combo_alu #(
     parameter logic [7:0] ARBITER_ADDRESS = 8'h00
 ) (
-    global_bus_if.rest global_bus,
+    input clock,
+    input reset,
+    input delete_tag,
+    input clear_tag,
+
     issue_bus_if.combo issue_bus[2],
     common_data_bus_if.combo data_bus[2],
 
@@ -12,7 +16,7 @@ module alu_combo #(
   // ------------------------------- Wires -------------------------------
   feed_bus_if alu_feed ();
 
-  logic [XLEN-1:0] alu_result;
+  logic [31:0] alu_result;
   logic get_bus;
   logic bus_granted;
   logic bus_selected;

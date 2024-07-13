@@ -1,29 +1,38 @@
-/*  Instruction processer combines loader, decoder, resolver, and issue_busr into one block to ease the cpu module complexity
-*/
-import global_variables::XLEN;
-import structures::*;
+import pkg_structures::*;
 
-module instr_processer (
-    global_bus_if.rest global_bus,
-    pc_bus_if.loader pc_bus,
-    instr_cache_bus_if.loader cache_bus[2],
+`include "ip_comparator.sv"
+`include "ip_control.sv"
+`include "ip_decoder.sv"
+`include "ip_issuer.sv"
+`include "ip_loader.sv"
+`include "ip_resolver.sv"
+
+module ip_wrapper (
+    input clock,
+    input reset,
+
+    input wire [31:0] cache_instr[2],
+    input wire cache_hit[2],
+    output reg [31:0] cache_address[2],
+    output reg cache_read[2],
+
     reg_query_bus_if.resolver query_bus[2],
+    reg_val_bus_if.cmp reg_val_bus[2],
+
     fullness_bus_if.issuer fullness,
     issue_bus_if.cmp issue_bus[2],
-    reg_val_bus_if.cmp reg_val_bus[2],
     common_data_bus_if.cmp data_bus[2]
 );
   // ------------------------------- Wires -------------------------------
-  instr_info_bus_if dec_to_ren[2] ();
-  instr_info_bus_if ren_to_res[2] ();
-  instr_info_bus_if res_to_issue[2] ();
-  instr_info_bus_if issue_to_cmp[2] ();
-
-  instr_proc_if instr_proc ();
+  logic [31:0] address[4], immediate[4];
+  instr_name_e instr_name[4];
+  instr_type_e instr_type[4];
+  registers_t regs[4];
+  flag_vector_t flags[4];
 
   jmp_relation_e jmp_relation;
 
-  logic [XLEN-1:0] load_address_out[2];
+  logic [31:0] load_address_out[2];
   logic [31:0] load_instr_out[2];
 
   // ------------------------------- Modules -------------------------------

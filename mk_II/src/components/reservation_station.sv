@@ -1,14 +1,23 @@
-import global_variables::XLEN;
-import structures::*;
+import pkg_structures::*;
 
 module reservation_station #(
     parameter int SIZE = 16,
     parameter instr_type_e INSTR_TYPE = XX
 ) (
-    global_bus_if.rest global_bus,
+    input clock,
+    input reset,
+    input delete_tag,
+    input clear_tag,
+
     issue_bus_if.combo issue_bus[2],
     common_data_bus_if.combo data_bus[2],
-    feed_bus_if.station feed_bus,
+
+    output logic [31:0] data_1,
+    output logic [31:0] data_2,
+    output logic [31:0] address,
+    output logic [31:0] immediate,
+    output instr_name_e instr_name,
+    output logic[5:0] rrn,
 
     input  logic next,
     output logic full
@@ -21,8 +30,8 @@ module reservation_station #(
 
   // ------------------------------- Structures -------------------------------
   typedef struct packed {
-    bit [XLEN-1:0] data_1, data_2;
-    bit [XLEN-1:0] address, immediate;
+    bit [31:0] data_1, data_2;
+    bit [31:0] address, immediate;
     bit [5:0] src_1, src_2, rrn;
     instr_name_e instr_name;
     bit valid_1, valid_2, tag, skip;
@@ -39,7 +48,7 @@ module reservation_station #(
   // ------------------------------- Behaviour -------------------------------
   always_comb begin : reset
     if (global_bus.reset) begin
-      feed_bus.instr_name = UNKNOWN;
+      instr_name = UNKNOWN;
     end
   end
 
@@ -91,14 +100,14 @@ module reservation_station #(
 
   always_ff @(posedge global_bus.clock) begin : feed_ex_unit
     if (records[read_index].valid_1 && records[read_index].valid_2 && !records[read_index].skip) begin
-      feed_bus.data_1 <= records[read_index].data_1;
-      feed_bus.data_2 <= records[read_index].data_2;
-      feed_bus.address <= records[read_index].address;
-      feed_bus.immediate <= records[read_index].immediate;
-      feed_bus.rrn <= records[read_index].rrn;
-      feed_bus.instr_name <= records[read_index].instr_name;
+      data_1 <= records[read_index].data_1;
+      data_2 <= records[read_index].data_2;
+      address <= records[read_index].address;
+      immediate <= records[read_index].immediate;
+      rrn <= records[read_index].rrn;
+      instr_name <= records[read_index].instr_name;
     end else begin
-      feed_bus.instr_name <= UNKNOWN;
+      instr_name <= UNKNOWN;
     end
   end
 
@@ -112,10 +121,10 @@ module reservation_station #(
     if (global_bus.reset) begin
       foreach (records[i]) begin
         records[i] = '{
-            {XLEN{1'h0}},
-            {XLEN{1'h0}},
-            {XLEN{1'h0}},
-            {XLEN{1'h0}},
+            {32{1'h0}},
+            {32{1'h0}},
+            {32{1'h0}},
+            {32{1'h0}},
             6'h00,
             6'h00,
             6'h00,

@@ -1,5 +1,4 @@
-import global_variables::XLEN;
-import structures::*;
+import pkg_structures::*;
 
 module reorder_buffer #(
     parameter logic [7:0] ARBITER_ADDRESS = 8'h00,
@@ -20,7 +19,7 @@ module reorder_buffer #(
   } record_status_e;
 
   typedef struct packed {
-    bit [XLEN-1:0] result, address, jmp_address;
+    bit [31:0] result, address, jmp_address;
     record_status_e status;
     registers_t regs;
     flag_vector_t flags;

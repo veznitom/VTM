@@ -1,5 +1,4 @@
-import global_variables::XLEN;
-import structures::*;
+import pkg_structures::*;
 
 module register_file (
     global_bus_if.rest global_bus,
@@ -10,7 +9,7 @@ module register_file (
 );
   // ------------------------------- Structures -------------------------------
   typedef struct packed {
-    logic [XLEN-1:0] value;
+    logic [31:0] value;
     bit [5:0] rrn;
     bit valid, tag;
   } register_t;

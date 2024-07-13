@@ -1,7 +1,6 @@
-import global_variables::*;
-import structures::*;
+import pkg_structures::*;
 
-module instr_cache #(
+module cache_instr #(
     parameter int SETS  = 8,
     parameter int WORDS = 4
 ) (
@@ -16,7 +15,7 @@ module instr_cache #(
   // ------------------------------- Structures -------------------------------
   typedef struct packed {
     logic [XLEN-(SetBits+WordBits+2)-1:0] tag;
-    logic [WORDS-1:0][XLEN-1:0] words;
+    logic [WORDS-1:0][31:0] words;
     cache_state_e state;
   } cache_set_t;
 
@@ -56,7 +55,7 @@ module instr_cache #(
 
       always_comb  /*_ff @(posedge global_bus.clock)*/ begin : cache_read
         if (cache_bus[i].read) begin
-          if ((cache_bus[i].address_in[XLEN-1:(SetBits+WordBits+2)] == data[set_select[i]].tag) &&
+          if ((cache_bus[i].address_in[31:(SetBits+WordBits+2)] == data[set_select[i]].tag) &&
               (data[set_select[i]].state == VALID)) begin
             miss[i] = 1'h0;
             cache_bus[i].hit = 1'h1;
@@ -82,7 +81,7 @@ module instr_cache #(
             memory_bus.read <= 1'h0;
             memory_bus.address <= {XLEN{1'h0}};
 
-            data[set_select[i]].tag <= cache_bus[i].address_in[XLEN-1:(SetBits+WordBits+2)];
+            data[set_select[i]].tag <= cache_bus[i].address_in[31:(SetBits+WordBits+2)];
             data[set_select[i]].words <= memory_bus.data;
             data[set_select[i]].state <= VALID;
 
