@@ -1,4 +1,4 @@
-package pkg_structures;
+package pkg_defines;
   typedef enum bit [7:0] {
     // Custom value
     UNKNOWN,

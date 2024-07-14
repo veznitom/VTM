@@ -1,4 +1,4 @@
-import pkg_structures::*;
+import pkg_defines::*;
 
 module reorder_buffer #(
     parameter logic [7:0] ARBITER_ADDRESS = 8'h00,

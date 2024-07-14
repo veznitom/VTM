@@ -1,8 +1,8 @@
-module memory_management_unit (
-    global_bus_if.rest global_bus,
-    memory_bus_if.mmu  data_bus,
-    memory_bus_if.mmu  instr_bus,
-    memory_bus_if.cpu  memory_bus
+// Copyright (c) 2024 veznitom
+
+`default_nettype none
+module MemoryManagementUnit (
+    input wire i_clock
 );
   // ------------------------------- Strucutres -------------------------------
   typedef enum bit [1:0] {
@@ -15,7 +15,7 @@ module memory_management_unit (
   mmu_state_e lock;
 
   // ------------------------------- Behaviour -------------------------------
-  always_comb begin : access_management
+  /*always_comb begin : access_management
     if (global_bus.reset) begin
       lock = FREE;
       instr_bus.done = 1'h0;
@@ -62,5 +62,5 @@ module memory_management_unit (
       data_bus.ready = 1'h0;
       data_bus.done = 1'h0;
     end
-  end
+  end*/
 endmodule

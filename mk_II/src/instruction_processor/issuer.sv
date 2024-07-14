@@ -1,11 +1,8 @@
-import pkg_structures::*;
+import pkg_defines::*;
 
 module ip_issuer (
-    global_bus_if.rest global_bus,
-    instr_info_bus_if.in instr_info_in[2],
-    instr_info_bus_if.out instr_info_out[2],
-    fullness_bus_if.issuer fullness,
-    instr_proc_if.issuer instr_proc
+    input clock,
+    input reset
 );
   // ------------------------------- Wires -------------------------------
   logic fullness_split[6];

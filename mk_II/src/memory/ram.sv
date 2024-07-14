@@ -1,4 +1,3 @@
-import global_variables::XLEN;
 import structures::*;
 
 module ram #(

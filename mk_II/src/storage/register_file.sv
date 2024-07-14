@@ -1,4 +1,4 @@
-import pkg_structures::*;
+import pkg_defines::*;
 
 module register_file (
     global_bus_if.rest global_bus,

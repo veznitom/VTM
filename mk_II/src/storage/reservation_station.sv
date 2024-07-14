@@ -12,11 +12,11 @@ module reservation_station #(
     issue_bus_if.combo issue_bus[2],
     common_data_bus_if.combo data_bus[2],
 
-    output logic [31:0] data_1,
-    output logic [31:0] data_2,
-    output logic [31:0] address,
-    output logic [31:0] immediate,
-    output instr_name_e instr_name,
+    output logic [31:0] o_data_1,
+    output logic [31:0] o_data_2,
+    output logic [31:0] o_address,
+    output logic [31:0] o_immediate,
+    output instr_name_e o_instr_name,
     output logic[5:0] rrn,
 
     input  logic next,

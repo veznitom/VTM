@@ -1,5 +1,3 @@
-import global_variables::XLEN;
-
 module combo_alu #(
     parameter logic [7:0] ARBITER_ADDRESS = 8'h00
 ) (
