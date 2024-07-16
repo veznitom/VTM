@@ -10,13 +10,13 @@ interface ifc_issue;
   flag_vector_t flags;
 
   modport combo(
-    input address, immediate, data_1, data_2, valid_1, valid_2,
-          instr_name, instr_type, regs, flags
+      input address, immediate, data_1, data_2, valid_1, valid_2,
+      input instr_name, instr_type, regs, flags
   );
   modport rob(input address, instr_type, regs, flags);
   modport cmp(
       output address, immediate, data_1, data_2, valid_1, valid_2,
-      instr_name, instr_type, regs, flags,
+      output instr_name, instr_type, regs, flags,
       import clear
   );
 
@@ -40,11 +40,14 @@ interface ifc_common_data_bus;
   logic reg_write, cache_write;
 
   modport combo(
-    input arn, inout result, address, jmp_address, select,
-    output rrn, reg_write);
+      input arn,
+      inout result, address, jmp_address, select,
+      output rrn, reg_write
+  );
   modport rob(
-    inout result, address, jmp_address, arn, rrn, select,
-    output reg_write, cache_write);
+      inout result, address, jmp_address, arn, rrn, select,
+      output reg_write, cache_write
+  );
   modport reg_file(input result, address, arn, rrn, reg_write);
   modport cache(input result, address, cache_write);
   modport cmp(input result, arn, rrn);

@@ -1,4 +1,4 @@
-import pkg_structures::*;
+import pkg_defines::*;
 
 module reservation_station #(
     parameter int SIZE = 16,
