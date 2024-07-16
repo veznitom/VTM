@@ -1,3 +1,5 @@
+// Copyright (c) 2024 veznitom
+
 package pkg_defines;
   typedef enum bit [7:0] {
     // Custom value
