@@ -6,11 +6,9 @@ module InstructionCache #(
   parameter int SETS  = 8,
   parameter int WORDS = 4   // Must be > than 1
 ) (
-  input wire i_clock,
-  input wire i_reset,
-
-  ifc_memory.cache      f_memory,
-  ifc_instr_cache.cache f_cache [2]
+  IntfCSB.notag                   cs,
+  IntfMemory.Cache                memory,
+  IntfInstrCache.InstructionCache cache [2]
 );
   // ------------------------------- Parameters -------------------------------
   localparam int SetBits = $clog2(SETS);
@@ -32,40 +30,40 @@ module InstructionCache #(
   // ------------------------------- Behaviour -------------------------------
   generate
     for (genvar i = 0; i < 2; i++) begin : gen_selects
-      assign byte_select[i] = f_cache[i].address[1:0];
-      assign word_select[i] = f_cache[i].address[WordBits+1:2];
-      assign set_select[i]  = f_cache[i].address[SetBits+WordBits+1:WordBits+2];
+      assign byte_select[i] = cache[i].address[1:0];
+      assign word_select[i] = cache[i].address[WordBits+1:2];
+      assign set_select[i]  = cache[i].address[SetBits+WordBits+1:WordBits+2];
 
       always_comb begin : cache_read
-        if (i_reset) begin
-          f_cache[i].instruction = '0;
-          f_cache[i].hit         = '0;
-          miss[i]                = 1'b0;
-        end else if (f_cache[i].read) begin
+        if (cs.reset) begin
+          cache[i].instruction = '0;
+          cache[i].hit         = '0;
+          miss[i]              = 1'b0;
+        end else if (cache[i].read) begin
           if (
-            (f_cache[i].address[31:(SetBits+WordBits+2)] == data[set_select[i]].tag) 
+          (cache[i].address[31:(SetBits+WordBits+2)] == data[set_select[i]].tag)
             && (data[set_select[i]].state == VALID)) begin
-            miss[i]                = 1'h0;
-            f_cache[i].hit         = 1'h1;
-            f_cache[i].instruction = data[set_select[i]].words[word_select[i]];
+            miss[i]              = 1'h0;
+            cache[i].hit         = 1'h1;
+            cache[i].instruction = data[set_select[i]].words[word_select[i]];
           end else begin
-            miss[i]                = 1'h1;
-            f_cache[i].instruction = '0;
-            f_cache[i].hit         = '0;
+            miss[i]              = 1'h1;
+            cache[i].instruction = '0;
+            cache[i].hit         = '0;
           end
         end else begin
-          miss[i]                = 1'h0;
-          f_cache[i].instruction = {32{1'h0}};
-          f_cache[i].hit         = 1'h0;
+          miss[i]              = 1'h0;
+          cache[i].instruction = {32{1'h0}};
+          cache[i].hit         = 1'h0;
         end
       end  //cache_read
     end
   endgenerate
 
-  always_ff @(posedge i_clock) begin : miss_mem_fetch
-    if (i_reset) begin
-      f_memory.address <= '0;
-      f_memory.read    <= '0;
+  always_ff @(posedge cs.clock) begin : miss_mem_fetch
+    if (cs.reset) begin
+      memory.address <= '0;
+      memory.read    <= '0;
     end else begin
       /* TODO create miss fetch for each interface separately cos data cannot
     be written from two processes simultaneously

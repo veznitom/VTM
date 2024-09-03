@@ -1,40 +1,34 @@
+// Copyright (c) 2024 veznitom
+
+`default_nettype none
 import pkg_defines::*;
-
-module reservation_station #(
-    parameter int SIZE = 16,
-    parameter instr_type_e INSTR_TYPE = XX
+module ReservationStation #(
+  parameter int          SIZE       = 16,
+  parameter instr_type_e INSTR_TYPE = XX
 ) (
-    input clock,
-    input reset,
-    input delete_tag,
-    input clear_tag,
+  IntfCSB.tag                    cs,
+  IntfIssue.combo                issue[2],
+  IntfCDB.combo                  data [2],
+  IntfExtFeed.ReservationStation feed,
 
-    issue_bus_if.combo issue_bus[2],
-    common_data_bus_if.combo data_bus[2],
-
-    output logic [31:0] o_data_1,
-    output logic [31:0] o_data_2,
-    output logic [31:0] o_address,
-    output logic [31:0] o_immediate,
-    output instr_name_e o_instr_name,
-    output logic[5:0] rrn,
-
-    input  logic next,
-    output logic full
+  input  wire       i_next,
+  output wire [5:0] o_rrn,
+  output wire       o_full
 );
   // ------------------------------- Functions -------------------------------
-  function automatic bit match_data_bus(input logic [5:0] src, input logic valid,
-                                        input logic [5:0] arn, input logic [5:0] rrn);
+  function automatic bit match_data_bus(
+      input logic [5:0] src, input logic valid, input logic [5:0] arn,
+      input logic [5:0] rrn);
     return (arn == src || rrn == src) && !valid;
   endfunction
 
   // ------------------------------- Structures -------------------------------
   typedef struct packed {
-    bit [31:0] data_1, data_2;
-    bit [31:0] address, immediate;
-    bit [5:0] src_1, src_2, rrn;
+    bit [31:0]   data_1,     data_2;
+    bit [31:0]   address,    immediate;
+    bit [5:0]    src_1,      src_2,     rrn;
     instr_name_e instr_name;
-    bit valid_1, valid_2, tag, skip;
+    bit          valid_1,    valid_2,   tag, skip;
   } station_record_t;
 
   // ------------------------------- Wires -------------------------------
@@ -52,11 +46,11 @@ module reservation_station #(
     end
   end
 
-  genvar i;
   generate
-    for (i = 0; i < 2; i++) begin : gen_issue_bus
+    for (genvar i = 0; i < 2; i++) begin : gen_issue_bus
       always_ff @(posedge global_bus.clock) begin : receive_instruction
-        if (issue_bus[i].instr_type == INSTR_TYPE && !global_bus.delete_tag && !full) begin
+        if (issue_bus[i].instr_type == INSTR_TYPE &&
+            !global_bus.delete_tag && !full) begin
           records[write_index+i] <= '{
               issue_bus[i].data_1,
               issue_bus[i].data_2,
@@ -80,14 +74,20 @@ module reservation_station #(
       always_ff @(posedge global_bus.clock) begin : update_records
         foreach (records[j]) begin
           if (match_data_bus(
-                  records[j].src_1, records[j].valid_1, data_bus[i].arn, data_bus[i].rrn
+                  records[j].src_1,
+                  records[j].valid_1,
+                  data_bus[i].arn,
+                  data_bus[i].rrn
               ));
           begin
             records[j].data_1  <= data_bus[i].result;
             records[j].valid_1 <= 1'h1;
           end
           if (match_data_bus(
-                  records[j].src_2, records[j].valid_2, data_bus[i].arn, data_bus[i].rrn
+                  records[j].src_2,
+                  records[j].valid_2,
+                  data_bus[i].arn,
+                  data_bus[i].rrn
               ));
           begin
             records[j].data_2  <= data_bus[i].result;
@@ -99,12 +99,13 @@ module reservation_station #(
   endgenerate
 
   always_ff @(posedge global_bus.clock) begin : feed_ex_unit
-    if (records[read_index].valid_1 && records[read_index].valid_2 && !records[read_index].skip) begin
-      data_1 <= records[read_index].data_1;
-      data_2 <= records[read_index].data_2;
-      address <= records[read_index].address;
-      immediate <= records[read_index].immediate;
-      rrn <= records[read_index].rrn;
+    if (records[read_index].valid_1 && records[read_index].valid_2 &&
+        !records[read_index].skip) begin
+      data_1     <= records[read_index].data_1;
+      data_2     <= records[read_index].data_2;
+      address    <= records[read_index].address;
+      immediate  <= records[read_index].immediate;
+      rrn        <= records[read_index].rrn;
       instr_name <= records[read_index].instr_name;
     end else begin
       instr_name <= UNKNOWN;
@@ -112,7 +113,9 @@ module reservation_station #(
   end
 
   always_comb begin : skip
-    if (global_bus.delete_tag) foreach (records[i]) records[i].skip = records[i].tag;
+    if (global_bus.delete_tag) begin
+      foreach (records[i]) records[i].skip = records[i].tag;
+    end
   end
 
   // ------------------------------- Queue -------------------------------
@@ -135,8 +138,8 @@ module reservation_station #(
             1'h0
         };
       end
-      full = 1'h0;
-      read_index = '0;
+      full        = 1'h0;
+      read_index  = '0;
       write_index = '0;
     end
   end
@@ -150,9 +153,9 @@ module reservation_station #(
   always_ff @(posedge global_bus.clock) begin
     if (!full && (
       ((write_index + 2) % SIZE == read_index) ||
-      ((write_index + 1) % SIZE == read_index)))
+      ((write_index + 1) % SIZE == read_index))) begin
       full <= 1'h1;
-    else if (full && next) full <= 1'h0;
+    end else if (full && next) full <= 1'h0;
 
     if (next && (read_index == write_index)) empty <= 1'h1;
     else empty <= 1'h0;

@@ -6,12 +6,10 @@ module DataCache #(
   parameter int SETS  = 8,
   parameter int WORDS = 4
 ) (
-  input wire i_clock,
-  input wire i_reset,
-
-  ifc_memory.cache          f_memory,
-  ifc_data_cache.cache      f_cache,
-  ifc_common_data_bus.cache f_data_bus[2]
+  IntfCSB.notag           cs,
+  IntfMemory.Cache        memory,
+  IntfDataCache.DataCache cache,
+  IntfCDB.Cache           data_bus[2]
 );
   // ------------------------------- Parameters -------------------------------
   localparam int SetBits = $clog2(SETS);
@@ -41,35 +39,35 @@ module DataCache #(
   logic read, empty, miss, write_back;
 
   // ------------------------------- Behaviour -------------------------------
-  assign byte_select = f_cache.address[1:0];
-  assign word_select = f_cache.address[WordBits+1:2];
-  assign set_select  = f_cache.address[SetBits+WordBits+1:WordBits+2];
+  assign byte_select = cache.address[1:0];
+  assign word_select = cache.address[WordBits+1:2];
+  assign set_select  = cache.address[SetBits+WordBits+1:WordBits+2];
 
-  always_ff @(posedge i_clock) begin : cache_read
-    if (i_reset) begin
-      miss          <= '0;
-      f_cache.data  <= '0;
-      f_cache.hit   <= '0;
-      f_cache.ready <= '0;
-    end else if (f_cache.read && !write_back) begin
-      if ((f_cache.address[31:(SetBits+WordBits+2)] == data[set_select].tag) &&
+  always_ff @(posedge cs.clock) begin : cache_read
+    if (cs.reset) begin
+      miss        <= '0;
+      cache.data  <= '0;
+      cache.hit   <= '0;
+      cache.ready <= '0;
+    end else if (cache.read && !write_back) begin
+      if ((cache.address[31:(SetBits+WordBits+2)] == data[set_select].tag) &&
           (data[set_select].state == VALID)) begin
-        miss         <= 1'h0;
-        f_cache.hit  <= 1'h1;
-        f_cache.data <= data[set_select].words[word_select];
+        miss       <= 1'h0;
+        cache.hit  <= 1'h1;
+        cache.data <= data[set_select].words[word_select];
       end else begin
-        miss        <= 1'h1;
-        f_cache.hit <= 1'h0;
+        miss      <= 1'h1;
+        cache.hit <= 1'h0;
       end
-    end else f_cache.hit <= 1'h0;
+    end else cache.hit <= 1'h0;
   end  //cache_read
 
-  always_ff @(posedge i_clock) begin : write_buffer_write
-    if (i_reset) begin
+  always_ff @(posedge cs.clock) begin : write_buffer_write
+    if (cs.reset) begin
       read_index  <= '0;
       write_index <= '0;
       foreach (write_buffer[i]) begin
-        write_buffer[i] = '{{32{1'h0}}, {32 * WORDS{1'h0}}};
+        write_buffer[i] <= '{{32{1'h0}}, {32 * WORDS{1'h0}}};
       end
     end else begin
       if (read && !empty) begin
@@ -77,21 +75,21 @@ module DataCache #(
       end
 
       if (miss && !write_back) begin
-        if (f_memory.ready) begin
-          f_memory.read          <= 1'h0;
-          f_memory.address       <= {32{1'h0}};
+        if (memory.ready) begin
+          memory.read            <= 1'h0;
+          memory.address         <= {32{1'h0}};
 
-          data[set_select].tag   <= f_cache.address[31:(SetBits+WordBits+2)];
-          data[set_select].words <= f_memory.data;
+          data[set_select].tag   <= cache.address[31:(SetBits+WordBits+2)];
+          data[set_select].words <= memory.data;
           data[set_select].state <= VALID;
         end else begin
-          f_memory.read    <= 1'h1;
-          f_memory.address <= f_cache.address;
+          memory.read    <= 1'h1;
+          memory.address <= cache.address;
         end
       end
 
-      if (f_cache.write && !write_back) begin
-        if (f_cache.address[31:(SetBits+WordBits+2)] == data[set_select].tag &&
+      if (cache.write && !write_back) begin
+        if (cache.address[31:(SetBits+WordBits+2)] == data[set_select].tag &&
           data[set_select].state == MODIFIED) begin
           write_buffer[write_index] <= '{
               {data[set_select].tag, set_select, {WordBits + 2{1'h0}}},
@@ -99,54 +97,53 @@ module DataCache #(
           };
           write_index <= write_index + 1;
         end
-        data[set_select].tag <= f_cache.address[31:(SetBits+WordBits+2)];
-        data[set_select].words[word_select] <= f_cache.data;
+        data[set_select].tag <= cache.address[31:(SetBits+WordBits+2)];
+        data[set_select].words[word_select] <= cache.data;
         data[set_select].state <= MODIFIED;
       end
     end
   end  //write_buffer_write
 
-  always_ff @(posedge i_clock) begin : memory_write_back
-    if (i_reset) begin
-      f_cache.hit      <= '0;
-      f_memory.address <= '0;
-      f_memory.data    <= '0;
-      f_memory.read    <= '0;
-      f_memory.write   <= '0;
+  always_ff @(posedge cs.clock) begin : memory_write_back
+    if (cs.reset) begin
+      cache.hit      <= '0;
+      memory.address <= '0;
+      memory.data    <= '0;
+      memory.read    <= '0;
+      memory.write   <= '0;
     end else if (write_back) begin
-      if (f_memory.done) begin
-        f_memory.write   <= '0;
-        f_memory.address <= '0;
-        f_memory.data    <= '0;
+      if (memory.done) begin
+        memory.write   <= '0;
+        memory.address <= '0;
+        memory.data    <= '0;
 
-        write_back       <= '0;
-        read             <= '1;
+        write_back     <= '0;
+        read           <= '1;
       end else begin
-        f_memory.write   <= '1;
-        f_memory.address <= write_buffer[0].address;
-        f_memory.data    <= write_buffer[0].words;
+        memory.write   <= '1;
+        memory.address <= write_buffer[0].address;
+        memory.data    <= write_buffer[0].words;
 
-        read             <= 1'h0;
+        read           <= 1'h0;
       end
     end else if (empty) begin
       write_back <= 1'h0;
       read       <= 1'h0;
-    end else if (!empty && !f_memory.read && f_memory.write) begin
+    end else if (!empty && !memory.read && memory.write) begin
       write_back <= 1'h1;
       read       <= 1'h0;
     end else read <= 1'h0;
   end  //memory_write_back
 
-  // Queue control -------------------------------------------------------------------------------
+  // Queue control ------------------------------------------------------------
 
   always_comb begin
-    if (i_reset) begin
-
+    if (cs.reset) begin
 
     end
   end
 
-  always_ff @(posedge i_clock) begin
+  always_ff @(posedge cs.clock) begin
 
   end
 

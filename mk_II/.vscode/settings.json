@@ -6,5 +6,8 @@
     "posedge",
     "struct"
   ],
-  "cSpell.language": "en,cs,en-GB"
+  "cSpell.language": "en,cs,en-GB",
+  "cSpell.enableFiletypes": [
+    "!systemverilog"
+  ]
 }

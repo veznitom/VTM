@@ -1,13 +1,15 @@
-import structures::*;
+// Copyright (c) 2024 veznitom
 
-module ram #(
-    parameter int MEM_SIZE_BYTES = 1024,
-    parameter string MEM_FILE_PATH = ""
+`default_nettype none
+import pkg_defines::*;
+module RAM #(
+  parameter int    MEM_SIZE_BYTES = 1024,
+  parameter string MEM_FILE_PATH  = ""
 ) (
-    memory_bus_if memory_bus,
+  IntfMemory.RAM memory_bus,
 
-    input logic clock,
-    input logic reset
+  input logic i_clock,
+  input logic i_reset
 );
   // ------------------------------- Structures -------------------------------
   typedef logic [memory_bus.BUS_WIDTH_BITS-1:0] memory_bus_data_t;
@@ -23,8 +25,8 @@ module ram #(
   always_comb begin
     if (reset) begin
       // $readmemh(MEM_FILE_PATH, data);
-      file = $fopen(MEM_FILE_PATH, "r");
-      index = 0;
+      file     = $fopen(MEM_FILE_PATH, "r");
+      index    = 0;
       tmp_data = 0;
       foreach (data[i]) data[i] = 0;
       while ($fscanf(
@@ -43,16 +45,19 @@ module ram #(
   end
 
   assign start_address = {
-    memory_bus.address[31:memory_bus.BUS_BIT_LOG], {memory_bus.BUS_BIT_LOG{1'h0}}
+    memory_bus.address[31:memory_bus.BUS_BIT_LOG],
+    {memory_bus.BUS_BIT_LOG{1'h0}}
   };
   assign end_address = {
-    memory_bus.address[31:memory_bus.BUS_BIT_LOG], {memory_bus.BUS_BIT_LOG{1'h1}}
+    memory_bus.address[31:memory_bus.BUS_BIT_LOG],
+    {memory_bus.BUS_BIT_LOG{1'h1}}
   };
 
   always_ff @(posedge clock) begin
     if (memory_bus.read) begin
       for (int i = 0; i < memory_bus.BUS_WIDTH_BYTES; i++) begin
-        memory_bus.data <= memory_bus_data_t'(data[start_address+:memory_bus.BUS_WIDTH_BYTES]);
+        memory_bus.data <=
+        memory_bus_data_t'(data[start_address+:memory_bus.BUS_WIDTH_BYTES]);
       end
       memory_bus.ready <= 1'h1;
     end else if (memory_bus.write) begin

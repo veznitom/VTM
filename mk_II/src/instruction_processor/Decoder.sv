@@ -1,50 +1,60 @@
-import pkg_structures::*;
+// Copyright (c) 2024 veznitom
 
-module ip_decoder (
-    global_bus_if.rest global_bus,
-    instr_info_bus_if.out instr_info,
+`default_nettype none
+import pkg_defines::*;
+module Decoder (
+  IntfCSB.notag     cs,
+  IntfInstrInfo.Out instr_info,
 
-    input logic [31:0] address,
-    input logic [31:0] instr,
-    instr_proc_if.decoder instr_proc
+  input wire [31:0] i_address,
+  input wire [31:0] i_instr,
+  input wire        i_halt
 );
   // ------------------------------- Wires -------------------------------
-  logic [11:0] system;
-  logic [ 6:0] opcode;
-  logic [ 6:0] funct7;
-  logic [ 2:0] funct3;
+  reg [11:0] system;
+  reg [ 6:0] opcode;
+  reg [ 6:0] funct7;
+  reg [ 2:0] funct3;
 
   // ------------------------------- Behaviour -------------------------------
-  assign system = instr[31:20];
-  assign opcode = instr[6:0];
-  assign funct7 = instr[31:25];
-  assign funct3 = instr[14:12];
+  assign system = i_instr[31:20];
+  assign opcode = i_instr[6:0];
+  assign funct7 = i_instr[31:25];
+  assign funct3 = i_instr[14:12];
 
-  always_ff @(posedge global_bus.clock) begin : value_sources
-    if (!instr_proc.stop) begin
-      instr_info.address <= address;
-      case (instr[4:2])
+  always_ff @(posedge cs.clock) begin : value_sources
+    if (!i_halt) begin
+      instr_info.address <= i_address;
+      case (i_instr[4:2])
         3'b000: begin : LSB  // LOAD, STORE, BRANCH
-          case (instr[6:5])
+          case (i_instr[6:5])
             2'b00: begin  // LOAD
-              instr_info.immediate <= {{20{instr[31]}}, instr[31:20]};
-              instr_info.regs.rd   <= instr[11:7];
-              instr_info.regs.rs_1 <= instr[19:15];
+              instr_info.immediate <= {{20{i_instr[31]}}, i_instr[31:20]};
+              instr_info.regs.rd   <= i_instr[11:7];
+              instr_info.regs.rs_1 <= i_instr[19:15];
               instr_info.regs.rs_2 <= 5'h00;
             end
 
             2'b01: begin  // STORE
-              instr_info.immediate <= {{20{instr[31]}}, instr[31:25], instr[11:7]};
-              instr_info.regs.rd   <= 5'h00;
-              instr_info.regs.rs_1 <= instr[19:15];
-              instr_info.regs.rs_2 <= instr[24:20];
+              instr_info.immediate <= {
+                {20{i_instr[31]}}, i_instr[31:25], i_instr[11:7]
+              };
+              instr_info.regs.rd <= 5'h00;
+              instr_info.regs.rs_1 <= i_instr[19:15];
+              instr_info.regs.rs_2 <= i_instr[24:20];
             end
 
             2'b11: begin  // BRANCH
-              instr_info.immediate <= {{21{instr[31]}}, instr[7], instr[30:25], instr[11:8], 1'b0};
-              instr_info.regs.rd   <= 5'h00;
-              instr_info.regs.rs_1 <= instr[19:15];
-              instr_info.regs.rs_2 <= instr[24:20];
+              instr_info.immediate <= {
+                {21{i_instr[31]}},
+                i_instr[7],
+                i_instr[30:25],
+                i_instr[11:8],
+                1'b0
+              };
+              instr_info.regs.rd <= 5'h00;
+              instr_info.regs.rs_1 <= i_instr[19:15];
+              instr_info.regs.rs_2 <= i_instr[24:20];
             end
 
             default: begin
@@ -57,11 +67,11 @@ module ip_decoder (
         end
 
         3'b001: begin  // JALR
-          case (instr[6:5])
+          case (i_instr[6:5])
             2'b11: begin  // JALR
-              instr_info.immediate <= {{20{instr[31]}}, instr[31:20]};
-              instr_info.regs.rd   <= instr[11:7];
-              instr_info.regs.rs_1 <= instr[19:15];
+              instr_info.immediate <= {{20{i_instr[31]}}, i_instr[31:20]};
+              instr_info.regs.rd   <= i_instr[11:7];
+              instr_info.regs.rs_1 <= i_instr[19:15];
               instr_info.regs.rs_2 <= 5'h00;
             end
 
@@ -75,7 +85,7 @@ module ip_decoder (
         end
 
         3'b011: begin  // MISC-MEM, JAL
-          case (instr[6:5])
+          case (i_instr[6:5])
             2'b00: begin  // MISC-MEM
               instr_info.immediate <= 32'h0000;
               instr_info.regs.rd   <= 5'h00;
@@ -85,9 +95,13 @@ module ip_decoder (
 
             2'b11: begin  // JAL
               instr_info.immediate <= {
-                {13{instr[31]}}, instr[19:12], instr[20], instr[30:21], 1'b0
+                {13{i_instr[31]}},
+                i_instr[19:12],
+                i_instr[20],
+                i_instr[30:21],
+                1'b0
               };
-              instr_info.regs.rd <= instr[11:7];
+              instr_info.regs.rd <= i_instr[11:7];
               instr_info.regs.rs_1 <= 5'h00;
               instr_info.regs.rs_2 <= 5'h00;
             end
@@ -102,21 +116,24 @@ module ip_decoder (
         end
 
         3'b100: begin : OPS  // OP, OP-IMM, SYSTEM
-          case (instr[6:5])
+          case (i_instr[6:5])
             2'b00: begin  // OP-IMM
-              if ((instr[14:12] == 3'b001) || (instr[14:12] == 3'b101)) begin
-                instr_info.immediate <= {{27{1'b0}}, instr[24:20]};
-              end else instr_info.immediate <= {{20{instr[31]}}, instr[31:20]};
-              instr_info.regs.rd   <= instr[11:7];
-              instr_info.regs.rs_1 <= instr[19:15];
+              if ((i_instr[14:12] == 3'b001) ||
+                  (i_instr[14:12] == 3'b101)) begin
+                instr_info.immediate <= {{27{1'b0}}, i_instr[24:20]};
+              end else begin
+                instr_info.immediate <= {{20{i_instr[31]}}, i_instr[31:20]};
+              end
+              instr_info.regs.rd   <= i_instr[11:7];
+              instr_info.regs.rs_1 <= i_instr[19:15];
               instr_info.regs.rs_2 <= 5'h00;
             end
 
             2'b01: begin  // OP
               instr_info.immediate <= 32'h0000;
-              instr_info.regs.rd   <= instr[11:7];
-              instr_info.regs.rs_1 <= instr[19:15];
-              instr_info.regs.rs_2 <= instr[24:20];
+              instr_info.regs.rd   <= i_instr[11:7];
+              instr_info.regs.rs_1 <= i_instr[19:15];
+              instr_info.regs.rs_2 <= i_instr[24:20];
             end
 
             2'b11: begin  // ECALL, EBREAK
@@ -136,10 +153,10 @@ module ip_decoder (
         end
 
         3'b101: begin  // AUIPC, LUI
-          casez (instr[6:5])
+          casez (i_instr[6:5])
             2'b0?: begin  // AUIPC, LUI
-              instr_info.immediate <= {instr[31:12], {12{1'b0}}};
-              instr_info.regs.rd   <= instr[11:7];
+              instr_info.immediate <= {i_instr[31:12], {12{1'b0}}};
+              instr_info.regs.rd   <= i_instr[11:7];
               instr_info.regs.rs_1 <= 5'h00;
               instr_info.regs.rs_2 <= 5'h00;
             end
@@ -163,10 +180,10 @@ module ip_decoder (
     end
   end
 
-  always_ff @(posedge global_bus.clock) begin : instr_name
-    if (!instr_proc.stop) begin
-      if (instr == 32'h0000) instr_info.instr_name <= UNKNOWN;
-      else
+  always_ff @(posedge cs.clock) begin : instr_name
+    if (!i_halt) begin
+      if (i_instr == 32'h0000) instr_info.instr_name <= UNKNOWN;
+      else begin
         case (opcode[4:2])
           3'b000: begin : LSB  // LOAD, STORE, BRANCH
             case (opcode[6:5])
@@ -243,14 +260,14 @@ module ip_decoder (
                 instr_info.flags.writes   <= 1'b1;
                 instr_info.flags.uses_imm <= 1'b1;
                 case (funct3)
-                  3'b000:  instr_info.instr_name <= ADDI;
-                  3'b010:  instr_info.instr_name <= SLTI;
-                  3'b011:  instr_info.instr_name <= SLTIU;
-                  3'b100:  instr_info.instr_name <= XORI;
-                  3'b110:  instr_info.instr_name <= ORI;
-                  3'b111:  instr_info.instr_name <= ANDI;
-                  3'b001:  instr_info.instr_name <= SLLI;
-                  3'b101:  instr_info.instr_name <= funct7[5] == 0 ? SRLI : SRAI;
+                  3'b000: instr_info.instr_name <= ADDI;
+                  3'b010: instr_info.instr_name <= SLTI;
+                  3'b011: instr_info.instr_name <= SLTIU;
+                  3'b100: instr_info.instr_name <= XORI;
+                  3'b110: instr_info.instr_name <= ORI;
+                  3'b111: instr_info.instr_name <= ANDI;
+                  3'b001: instr_info.instr_name <= SLLI;
+                  3'b101: instr_info.instr_name <= funct7[5] == 0 ? SRLI : SRAI;
                   default: instr_info.instr_name <= UNKNOWN;
                 endcase
               end
@@ -258,14 +275,15 @@ module ip_decoder (
               2'b01: begin  // OP
                 instr_info.flags.writes <= 1'b1;
                 case (funct3)
-                  3'b000:  instr_info.instr_name <= funct7[5] == 0 ? ADD : SUB;
-                  3'b001:  instr_info.instr_name <= SLL;
-                  3'b010:  instr_info.instr_name <= SLT;
-                  3'b011:  instr_info.instr_name <= SLTU;
-                  3'b100:  instr_info.instr_name <= XOR;
-                  3'b101:  instr_info.instr_name <= funct7[5] == 1'b0 ? SRL : SRA;
-                  3'b110:  instr_info.instr_name <= OR;
-                  3'b111:  instr_info.instr_name <= AND;
+                  3'b000: instr_info.instr_name <= funct7[5] == 0 ? ADD : SUB;
+                  3'b001: instr_info.instr_name <= SLL;
+                  3'b010: instr_info.instr_name <= SLT;
+                  3'b011: instr_info.instr_name <= SLTU;
+                  3'b100: instr_info.instr_name <= XOR;
+                  3'b101:
+                  instr_info.instr_name <= funct7[5] == 1'b0 ? SRL : SRA;
+                  3'b110: instr_info.instr_name <= OR;
+                  3'b111: instr_info.instr_name <= AND;
                   default: instr_info.instr_name <= UNKNOWN;
                 endcase
               end
@@ -286,6 +304,7 @@ module ip_decoder (
 
           default: instr_info.instr_name <= UNKNOWN;
         endcase
+      end
     end
   end
 endmodule

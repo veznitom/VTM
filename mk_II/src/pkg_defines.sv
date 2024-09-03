@@ -1,7 +1,7 @@
 // Copyright (c) 2024 veznitom
 
 package pkg_defines;
-  typedef enum bit [7:0] {
+  typedef enum logic [7:0] {
     // Custom value
     UNKNOWN,
     // Memory instructions
@@ -66,7 +66,7 @@ package pkg_defines;
     FENCE
   } instr_name_e;
 
-  typedef enum bit [2:0] {
+  typedef enum logic [2:0] {
     NN,
     NJ,
     JN,
@@ -74,13 +74,13 @@ package pkg_defines;
     ERROR
   } jmp_relation_e;
 
-  typedef enum bit [1:0] {
+  typedef enum logic [1:0] {
     VALID,
     INVALID,
     MODIFIED
   } cache_state_e;
 
-  typedef enum bit [2:0] {
+  typedef enum logic [2:0] {
     BR,
     AL,
     LS,
@@ -89,7 +89,9 @@ package pkg_defines;
     XX
   } instr_type_e;
 
-  typedef struct packed {bit writes, jumps, uses_imm, tag, mem;} flag_vector_t;
+  typedef struct packed {
+    logic writes, jumps, uses_imm, tag, mem;
+  } flag_vector_t;
 
-  typedef struct packed {bit [5:0] rd, rs_1, rs_2, rn;} registers_t;
+  typedef struct packed {logic [5:0] rd, rs_1, rs_2, rn;} registers_t;
 endpackage
