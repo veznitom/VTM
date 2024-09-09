@@ -51,6 +51,7 @@ module ReorderBuffer #(
   );*/
 
   // ------------------------------- Behaviour -------------------------------
+  /*
   always_ff @(posedge cs.clock) begin : jmp_resolve
     if (records[read_index].status == COMPLETED && records[0].flags.jumps) begin
       if
@@ -190,4 +191,5 @@ module ReorderBuffer #(
     if (read_index == write_index) empty = 1'h1;
     else empty = 1'h0;
   end
+  */
 endmodule

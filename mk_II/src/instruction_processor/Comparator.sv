@@ -9,6 +9,7 @@ module Comparator (
   IntfCDB.Comparator       data      [2]
 );
   // ------------------------------- Behaviour -------------------------------
+  /*
   assign reg_val.src_1    = instr_info.regs.rs_1;
   assign reg_val.src_2    = instr_info.regs.rs_2;
   assign issue.address    = instr_info.address;
@@ -47,4 +48,5 @@ module Comparator (
       issue.valid_2 = reg_val.valid_2;
     end
   end
+  */
 endmodule

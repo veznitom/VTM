@@ -15,6 +15,7 @@ module Issuer (
   logic fullness_split[6];
 
   // ------------------------------- Behaviour -------------------------------
+  /*
   assign fullness_split[AL] = full.alu;
   assign fullness_split[BR] = full.branch;
   assign fullness_split[LS] = full.load_store;
@@ -41,4 +42,5 @@ module Issuer (
       end
     end
   endgenerate
+  */
 endmodule

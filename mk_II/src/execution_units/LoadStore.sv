@@ -22,6 +22,7 @@ module LoadStore (
   reg        write;
 
   // ------------------------------- Functions -------------------------------
+  /*
   function automatic integer is_load_store(input instr_name_e i_instr_name);
     case (i_instr_name)
       LB:      return 1;
@@ -71,5 +72,6 @@ module LoadStore (
       o_result     = 'z;
     end
   end
+  */
 endmodule
 

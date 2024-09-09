@@ -3,11 +3,11 @@
 `default_nettype none
 import pkg_defines::*;
 module IPWrapper (
-  IntfCSB.tag              cs,
+  IntfCSB                  cs,
   IntfInstrCache.Loader    cache  [2],
   IntfIssue.Comparator     issue  [2],
   IntfCDB.Comparator       data   [2],
-  IntfRegQuery.Resolver    query  [2],
+  IntfRegQuery             query  [2],
   IntfRegValBus.Comparator reg_val[2],
   IntfFull.Issuer          full,
 
@@ -83,17 +83,21 @@ module IPWrapper (
     .instr_info(u_iss_cmb[0]),
     .issue     (issue[0]),
     .reg_val   (reg_val[0]),
-    .data      (data[0])
+    .data      (data)
   );
 
   Comparator u_comparator_2 (
     .instr_info(u_iss_cmb[1]),
     .issue     (issue[1]),
     .reg_val   (reg_val[1]),
-    .data      (data[1])
+    .data      (data)
+  );
+
+  Control u_control (
+    .o_ld_halt (loader_halt),
+    .o_dec_halt(decoder_halt)
   );
 
   // ------------------------------- Behaviour -------------------------------
-
 endmodule
 

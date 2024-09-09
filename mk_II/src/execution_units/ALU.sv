@@ -13,6 +13,7 @@ module ALU (
   // ------------------------------- Wires -------------------------------
   reg [31:0] dump;
   // ------------------------------- Behaviour -------------------------------
+  /*
   always_comb begin
     case (i_instr_name)
       // Register-i_immediate operations
@@ -42,4 +43,5 @@ module ALU (
       default: o_result = 'z;
     endcase
   end
+  */
 endmodule

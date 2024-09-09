@@ -11,6 +11,7 @@ module Resolver (
   input  wire i_halt,
   output wire o_panic
 );
+  /*
   function automatic bit match_regs(input logic [5:0] rd, input logic [5:0] rs);
     return (rd != 6'h00 && rd == rs);
   endfunction
@@ -23,7 +24,7 @@ module Resolver (
     end
   end
 
-  /*always_comb begin : stops
+  always_comb begin : stops
     if (
       i_instr_info[0].instr_name != UNKNOWN &&
       i_instr_info[1].instr_name != UNKNOWN) begin
@@ -33,7 +34,7 @@ module Resolver (
         instr_proc.resolver_stop = 1'h1;
       end else instr_proc.resolver_stop = 1'h0;
     end else instr_proc.resolver_stop = 1'h0;
-  end*/
+  end
 
   always_ff @(posedge cs.clock) begin : fetch
     if (
@@ -77,5 +78,6 @@ module Resolver (
       end else o_instr_info[1].flags.tag <= tag_active;
     end
   end
+  */
 endmodule
 

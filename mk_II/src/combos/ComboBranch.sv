@@ -6,8 +6,8 @@ module ComboBranch #(
   parameter bit [7:0] ARBITER_ADDRESS = 8'h00
 ) (
   IntfCSB.tag     cs,
-  IntfIssue.combo issue[2],
-  IntfCDB.combo   data [2],
+  IntfIssue.Combo issue[2],
+  IntfCDB.Combo   data [2],
 
   output wire o_full
 );

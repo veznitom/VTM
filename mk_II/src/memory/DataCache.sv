@@ -2,16 +2,16 @@
 
 `default_nettype none
 import pkg_defines::*;
-module DataCache #(
-  parameter int SETS  = 8,
-  parameter int WORDS = 4
-) (
+module DataCache (
   IntfCSB.notag           cs,
   IntfMemory.Cache        memory,
   IntfDataCache.DataCache cache,
   IntfCDB.Cache           data_bus[2]
 );
   // ------------------------------- Parameters -------------------------------
+  localparam int WORDS = 8;
+  localparam int SETS = 8;
+
   localparam int SetBits = $clog2(SETS);
   localparam int WordBits = $clog2(WORDS);
 
@@ -39,6 +39,7 @@ module DataCache #(
   logic read, empty, miss, write_back;
 
   // ------------------------------- Behaviour -------------------------------
+  /*
   assign byte_select = cache.address[1:0];
   assign word_select = cache.address[WordBits+1:2];
   assign set_select  = cache.address[SetBits+WordBits+1:WordBits+2];
@@ -151,4 +152,5 @@ module DataCache #(
     if (read_index == write_index) empty = 1'h1;
     else empty = 1'h0;
   end
+  */
 endmodule

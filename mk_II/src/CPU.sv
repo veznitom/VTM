@@ -2,21 +2,15 @@
 
 `default_nettype none
 import pkg_defines::*;
-module CPU #(
-  parameter int BUS_WIDTH_BYTES   = 256,
-  parameter int INSTR_CACHE_WORDS = 4,
-  parameter int INSTR_CACHE_SETS  = 8,
-  parameter int DATA_CACHE_WORDS  = 4,
-  parameter int DATA_CACHE_SETS   = 10
-) (
+module CPU (
   input wire i_clock,
   input wire i_reset,
 
   IntfMemory.CPU memory
 );
   IntfCSB u_common_signal_bus ();
-  IntfMemory #(.BUS_WIDTH_BYTES(INSTR_CACHE_WORDS * 4)) u_instr_mem ();
-  IntfMemory #(.BUS_WIDTH_BYTES(DATA_CACHE_WORDS * 4)) u_data_mem ();
+  IntfMemory u_instr_mem ();
+  IntfMemory u_data_mem ();
   IntfInstrCache u_intr_cache_bus[2] ();
   IntfDataCache u_data_cache_bus ();
   IntfCDB u_common_data_bus[2] ();
@@ -29,25 +23,19 @@ module CPU #(
   wire        jmp_write;
 
   MemoryManagementUnit u_mmu (
-    .cs    (u_common_signal_bus),
-    .memory(memory),
-    .instr (u_instr_mem),
-    .data  (u_data_mem)
+    .cs        (u_common_signal_bus),
+    .memory_bus(memory),
+    .instr_bus (u_instr_mem),
+    .data_bus  (u_data_mem)
   );
 
-  InstructionCache #(
-    .SETS (INSTR_CACHE_SETS),
-    .WORDS(INSTR_CACHE_WORDS)
-  ) u_instr_cache (
+  InstructionCache u_instr_cache (
     .cs    (u_common_signal_bus),
     .memory(u_instr_mem),
     .cache (u_intr_cache_bus)
   );
 
-  DataCache #(
-    .SETS (DATA_CACHE_SETS),
-    .WORDS(DATA_CACHE_WORDS)
-  ) u_data_cache (
+  DataCache u_data_cache (
     .cs      (u_common_signal_bus),
     .memory  (u_data_mem),
     .cache   (u_data_cache_bus),
@@ -93,7 +81,7 @@ module CPU #(
     .cs    (u_common_signal_bus),
     .data  (u_common_data_bus),
     .issue (u_issue),
-    .o_full(full.branch)
+    .o_full(u_full.branch)
   );
 
   ComboLoadStore u_combo_load_store (
@@ -101,14 +89,14 @@ module CPU #(
     .data  (u_common_data_bus),
     .issue (u_issue),
     .cache (u_data_cache_bus),
-    .o_full(full.load_store)
+    .o_full(u_full.load_store)
   );
 
   ComboMulDiv u_combo_mul_div (
     .cs    (u_common_signal_bus),
     .data  (u_common_data_bus),
     .issue (u_issue),
-    .o_full(full.mul_div)
+    .o_full(u_full.mul_div)
   );
 
   // ------------------------------- Behaviour -------------------------------

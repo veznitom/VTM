@@ -2,9 +2,9 @@
 
 `default_nettype none
 interface IntfInstrCache;
-  logic [31:0] address, instruction;
+  logic [31:0] address, instr;
   logic read, hit;
 
-  modport InstructionCache(input address, read, output instruction, hit);
-  modport Loader(input instruction, hit, output address, read);
+  modport InstrCache(input address, read, output instr, hit);
+  modport Loader(input instr, hit, output address, read);
 endinterface  //ifc_instr_cache

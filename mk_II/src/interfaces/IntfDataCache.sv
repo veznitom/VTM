@@ -3,7 +3,7 @@
 `default_nettype none
 interface IntfDataCache;
   logic [31:0] address;
-  wire [31:0] data;
+  wire  [31:0] data;
   logic read, write, hit, ready;
 
   modport DataCache(input address, read, write, inout data, output hit, ready);

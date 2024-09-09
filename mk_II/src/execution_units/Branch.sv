@@ -13,6 +13,7 @@ module Branch (
   output reg [31:0] o_jump_result
 );
   // ------------------------------- Behaviour -------------------------------
+  /*
   always_comb begin
     case (i_instr_name)
       JAL: begin
@@ -64,4 +65,5 @@ module Branch (
       end
     endcase
   end
+  */
 endmodule

@@ -20,13 +20,10 @@ module Loader #(
   reg [31:0] pc;
 
   // ------------------------------- Behaviour -------------------------------
-  generate
-    for (genvar i = 0; i < 2; i++) begin : gen_var_reset
-
-      assign cache[i].address = pc + (i * 4);
-      assign cache[i].read    = i_halt ? 1'b0 : 1'b1;
-    end
-  endgenerate
+  assign cache[0].address = pc;
+  assign cache[1].address = pc + 4;
+  assign cache[0].read    = (~i_halt) ? '1 : '0;
+  assign cache[1].read    = (~i_halt) ? '1 : '0;
 
   always_ff @(posedge cs.clock) begin : instr_load
     if (cs.reset) begin
@@ -41,10 +38,10 @@ module Loader #(
           o_instr[1]   <= cache[1].instr;
           pc           <= pc + 8;
         end else begin
-          o_address[0] <= {32{1'h0}};
-          o_address[1] <= {32{1'h0}};
-          o_instr[0]   <= {32{1'h0}};
-          o_instr[1]   <= {32{1'h0}};
+          o_address[0] <= '0;
+          o_address[1] <= '0;
+          o_instr[0]   <= NOP_INSTR;
+          o_instr[1]   <= NOP_INSTR;
         end
       end
     end

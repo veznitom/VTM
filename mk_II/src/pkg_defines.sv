@@ -94,4 +94,6 @@ package pkg_defines;
   } flag_vector_t;
 
   typedef struct packed {logic [5:0] rd, rs_1, rs_2, rn;} registers_t;
+
+  localparam bit [31:0] NOP_INSTR = 32'h00000013;
 endpackage

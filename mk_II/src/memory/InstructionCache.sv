@@ -2,18 +2,18 @@
 
 `default_nettype none
 import pkg_defines::*;
-module InstructionCache #(
-  parameter int SETS  = 8,
-  parameter int WORDS = 4   // Must be > than 1
-) (
-  IntfCSB.notag                   cs,
-  IntfMemory.Cache                memory,
-  IntfInstrCache.InstructionCache cache [2]
+module InstructionCache (
+  IntfCSB.notag             cs,
+  IntfMemory.Cache          memory,
+  IntfInstrCache.InstrCache cache [2]
 );
   // ------------------------------- Parameters -------------------------------
-  localparam int SetBits = $clog2(SETS);
-  localparam int WordBits = $clog2(WORDS);
+  // DO NOT CHANGE
+  localparam int WORDS = 8;
+  localparam int WordBits = 3;
 
+  localparam int SETS = 8;
+  localparam int SetBits = $clog2(SETS);
   // ------------------------------- Structures -------------------------------
   typedef struct packed {
     logic [32 - (SetBits + WordBits + 2) - 1:0] tag;
@@ -36,25 +36,25 @@ module InstructionCache #(
 
       always_comb begin : cache_read
         if (cs.reset) begin
-          cache[i].instruction = '0;
-          cache[i].hit         = '0;
-          miss[i]              = 1'b0;
+          cache[i].instr = '0;
+          cache[i].hit   = '0;
+          miss[i]        = 1'b0;
         end else if (cache[i].read) begin
           if (
           (cache[i].address[31:(SetBits+WordBits+2)] == data[set_select[i]].tag)
             && (data[set_select[i]].state == VALID)) begin
-            miss[i]              = 1'h0;
-            cache[i].hit         = 1'h1;
-            cache[i].instruction = data[set_select[i]].words[word_select[i]];
+            miss[i]        = 1'h0;
+            cache[i].hit   = 1'h1;
+            cache[i].instr = data[set_select[i]].words[word_select[i]];
           end else begin
-            miss[i]              = 1'h1;
-            cache[i].instruction = '0;
-            cache[i].hit         = '0;
+            miss[i]        = 1'h1;
+            cache[i].instr = '0;
+            cache[i].hit   = '0;
           end
         end else begin
-          miss[i]              = 1'h0;
-          cache[i].instruction = {32{1'h0}};
-          cache[i].hit         = 1'h0;
+          miss[i]        = 1'h0;
+          cache[i].instr = {32{1'h0}};
+          cache[i].hit   = 1'h0;
         end
       end  //cache_read
     end
@@ -64,10 +64,36 @@ module InstructionCache #(
     if (cs.reset) begin
       memory.address <= '0;
       memory.read    <= '0;
+      foreach (data[i]) begin
+        data[i].tag   <= '0;
+        data[i].words <= '0;
+        data[i].state <= INVALID;
+      end
     end else begin
-      /* TODO create miss fetch for each interface separately cos data cannot
-    be written from two processes simultaneously
-    */
+      if (miss[0]) begin
+        if (memory.ready) begin
+          if (memory.ready) begin
+            data[set_select[0]].tag <= memory.address[31:(SetBits+WordBits+2)];
+            data[set_select[0]].words <= memory.data;
+            data[set_select[0]].state <= VALID;
+          end else begin
+            memory.address <= cache[0].address;
+            memory.read    <= '1;
+          end
+        end else if (miss[1]) begin
+          if (memory.ready) begin
+            data[set_select[1]].tag <= memory.address[31:(SetBits+WordBits+2)];
+            data[set_select[1]].words <= memory.data;
+            data[set_select[1]].state <= VALID;
+          end else begin
+            memory.address <= cache[1].address;
+            memory.read    <= '1;
+          end
+        end
+      end else begin
+        memory.address <= '0;
+        memory.read    <= '0;
+      end
     end
   end  //miss_mem_fetch
 endmodule

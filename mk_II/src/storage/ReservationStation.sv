@@ -6,19 +6,19 @@ module ReservationStation #(
   parameter int          SIZE       = 16,
   parameter instr_type_e INSTR_TYPE = XX
 ) (
-  IntfCSB.tag                    cs,
-  IntfIssue.combo                issue[2],
-  IntfCDB.combo                  data [2],
-  IntfExtFeed.ReservationStation feed,
+  IntfCSB.tag         cs,
+  IntfIssue.Combo     issue[2],
+  IntfCDB.Combo       data [2],
+  IntfExtFeed.Station feed,
 
   input  wire       i_next,
   output wire [5:0] o_rrn,
   output wire       o_full
 );
   // ------------------------------- Functions -------------------------------
-  function automatic bit match_data_bus(
-      input logic [5:0] src, input logic valid, input logic [5:0] arn,
-      input logic [5:0] rrn);
+  function automatic bit match_data(input logic [5:0] src, input logic valid,
+                                    input logic [5:0] arn,
+                                    input logic [5:0] rrn);
     return (arn == src || rrn == src) && !valid;
   endfunction
 
@@ -40,57 +40,51 @@ module ReservationStation #(
   logic empty;
 
   // ------------------------------- Behaviour -------------------------------
+  /*
   always_comb begin : reset
-    if (global_bus.reset) begin
+    if (cs.reset) begin
       instr_name = UNKNOWN;
     end
   end
 
   generate
-    for (genvar i = 0; i < 2; i++) begin : gen_issue_bus
-      always_ff @(posedge global_bus.clock) begin : receive_instruction
-        if (issue_bus[i].instr_type == INSTR_TYPE &&
-            !global_bus.delete_tag && !full) begin
+    for (genvar i = 0; i < 2; i++) begin : gen_issue
+      always_ff @(posedge cs.clock) begin : receive_instruction
+        if (issue[i].instr_type == INSTR_TYPE && !cs.delete_tag && !full) begin
           records[write_index+i] <= '{
-              issue_bus[i].data_1,
-              issue_bus[i].data_2,
-              issue_bus[i].address,
-              issue_bus[i].immediate,
-              issue_bus[i].regs.rs_1,
-              issue_bus[i].regs.rs_2,
-              issue_bus[i].regs.rn,
-              issue_bus[i].instr_name,
-              issue_bus[i].valid_1,
-              issue_bus[i].valid_2,
-              issue_bus[i].flags.tag,
+              issue[i].data_1,
+              issue[i].data_2,
+              issue[i].address,
+              issue[i].immediate,
+              issue[i].regs.rs_1,
+              issue[i].regs.rs_2,
+              issue[i].regs.rn,
+              issue[i].instr_name,
+              issue[i].valid_1,
+              issue[i].valid_2,
+              issue[i].flags.tag,
               1'h0
           };
           write_index <= write_index +
-          (issue_bus[0].instr_type == INSTR_TYPE  ? 1 : 0) +
-          (issue_bus[1].instr_type == INSTR_TYPE  ? 1 : 0);
+          (issue[0].instr_type == INSTR_TYPE  ? 1 : 0) +
+          (issue[1].instr_type == INSTR_TYPE  ? 1 : 0);
         end
       end
 
-      always_ff @(posedge global_bus.clock) begin : update_records
+      always_ff @(posedge cs.clock) begin : update_records
         foreach (records[j]) begin
-          if (match_data_bus(
-                  records[j].src_1,
-                  records[j].valid_1,
-                  data_bus[i].arn,
-                  data_bus[i].rrn
+          if (match_data(
+                  records[j].src_1, records[j].valid_1, data[i].arn, data[i].rrn
               ));
           begin
-            records[j].data_1  <= data_bus[i].result;
+            records[j].data_1  <= data[i].result;
             records[j].valid_1 <= 1'h1;
           end
-          if (match_data_bus(
-                  records[j].src_2,
-                  records[j].valid_2,
-                  data_bus[i].arn,
-                  data_bus[i].rrn
+          if (match_data(
+                  records[j].src_2, records[j].valid_2, data[i].arn, data[i].rrn
               ));
           begin
-            records[j].data_2  <= data_bus[i].result;
+            records[j].data_2  <= data[i].result;
             records[j].valid_2 <= 1'h1;
           end
         end
@@ -98,7 +92,7 @@ module ReservationStation #(
     end
   endgenerate
 
-  always_ff @(posedge global_bus.clock) begin : feed_ex_unit
+  always_ff @(posedge cs.clock) begin : feed_ex_unit
     if (records[read_index].valid_1 && records[read_index].valid_2 &&
         !records[read_index].skip) begin
       data_1     <= records[read_index].data_1;
@@ -113,7 +107,7 @@ module ReservationStation #(
   end
 
   always_comb begin : skip
-    if (global_bus.delete_tag) begin
+    if (cs.delete_tag) begin
       foreach (records[i]) records[i].skip = records[i].tag;
     end
   end
@@ -121,7 +115,7 @@ module ReservationStation #(
   // ------------------------------- Queue -------------------------------
 
   always_comb begin
-    if (global_bus.reset) begin
+    if (cs.reset) begin
       foreach (records[i]) begin
         records[i] = '{
             {32{1'h0}},
@@ -144,13 +138,13 @@ module ReservationStation #(
     end
   end
 
-  always_ff @(posedge global_bus.clock) begin
+  always_ff @(posedge cs.clock) begin
     if (next && !empty) begin
       read_index <= read_index + 1;
     end
   end
 
-  always_ff @(posedge global_bus.clock) begin
+  always_ff @(posedge cs.clock) begin
     if (!full && (
       ((write_index + 2) % SIZE == read_index) ||
       ((write_index + 1) % SIZE == read_index))) begin
@@ -160,4 +154,5 @@ module ReservationStation #(
     if (next && (read_index == write_index)) empty <= 1'h1;
     else empty <= 1'h0;
   end
+  */
 endmodule
