@@ -33,39 +33,40 @@ module InstructionCache (
   // ------------------------------- Wires -------------------------------
   logic       [SET_BITS - 1:0] set_select [   2];
   logic       [           2:0] word_select[   2];
-  logic       [           1:0] byte_select[   2];
   bit                          miss       [   2];
   cache_set_t                  data       [SETS];
   // ------------------------------- Behaviour -------------------------------
   generate
     for (genvar i = 0; i < 2; i++) begin : gen_selects
-      assign byte_select[i] = i_address[i][1:0];
-      assign word_select[i] = i_address[i][4:2];
-      assign set_select[i]  = i_address[i][SET_BITS+4:5];
+      /*assign word_select[i] = i_address[i][4:2];
+      assign set_select[i]  = i_address[i][SET_BITS+4:5];*/
 
       always_comb begin : cache_read
         if (cs.reset) begin
           o_instr[i] = '0;
           o_hit[i]   = '0;
-          miss[i]    = 1'b0;
-        end else if (i_read[i]) begin
-          if (
-          (i_address[i][31:TAG_LOW_RANGE] == data[set_select[i]].tag)
-            && (data[set_select[i]].state == VALID)) begin
-            miss[i]    = 1'h0;
-            o_hit[i]   = 1'h1;
-            o_instr[i] = data[set_select[i]].words[word_select[i]];
+          miss[i]    = '0;
+        end else begin
+          word_select[i] = i_address[i][4:2];
+          set_select[i]  = i_address[i][SET_BITS+4:5];
+          if (i_read[i]) begin
+            if ((i_address[i][31:TAG_LOW_RANGE] == data[set_select[i]].tag) &&
+              (data[set_select[i]].state == VALID)) begin
+              o_instr[i] = data[set_select[i]].words[word_select[i]];
+              o_hit[i]   = '1;
+              miss[i]    = '0;
+            end else begin
+              o_instr[i] = '0;
+              o_hit[i]   = '0;
+              miss[i]    = '1;
+            end
           end else begin
-            miss[i]    = 1'h1;
             o_instr[i] = '0;
             o_hit[i]   = '0;
+            miss[i]    = '0;
           end
-        end else begin
-          miss[i]    = 1'h0;
-          o_instr[i] = {32{1'h0}};
-          o_hit[i]   = 1'h0;
-        end
-      end  //cache_read
+        end  //cache_read
+      end
     end
   endgenerate
 
