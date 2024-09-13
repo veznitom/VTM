@@ -4,32 +4,39 @@
 import pkg_defines::*;
 module DataCache (
   IntfCSB.notag           cs,
-  IntfMemory.Cache        memory,
   IntfDataCache.DataCache cache,
-  IntfCDB.Cache           data_bus[2]
+  IntfCDB.Cache           data_bus[2],
+
+  input  logic         i_mem_ready,
+  input  logic         i_mem_done,
+  inout  logic [255:0] io_mem_data,
+  output logic [ 31:0] o_mem_address,
+  output logic         o_mem_read,
+  output logic         o_mem_write
 );
   // ------------------------------- Parameters -------------------------------
-  localparam int WORDS = 8;
+  // FOR DEBUG PURPOSES TO TEST BEST SIZE
   localparam int SETS = 8;
+  localparam int SET_BITS = $clog2(SETS);
 
-  localparam int SetBits = $clog2(SETS);
-  localparam int WordBits = $clog2(WORDS);
+  localparam int TAG_LOW_RANGE = (SET_BITS + 5);
+  localparam int TAG_SIZE = 32 - TAG_LOW_RANGE;
 
   // ------------------------------- Wires -------------------------------
-  logic [ SetBits-1:0] set_select;
-  logic [WordBits-1:0] word_select;
+  logic [SET_BITS-1:0] set_select;
+  logic [         2:0] word_select;
   logic [         1:0] byte_select;
 
   // ------------------------------- Structures -------------------------------
   typedef struct packed {
-    logic [32-(SetBits+WordBits+2)-1:0] tag;
-    logic [WORDS-1:0][31:0]             words;
-    cache_state_e                       state;
+    logic [TAG_SIZE-1:0] tag;
+    logic [7:0][31:0]    words;
+    cache_state_e        state;
   } cache_set_t;
 
   typedef struct packed {
-    logic [31:0]            address;
-    logic [WORDS-1:0][31:0] words;
+    logic [31:0]      address;
+    logic [7:0][31:0] words;
   } wb_record_t;
 
   // ------------------------------- Wires -------------------------------
@@ -41,8 +48,8 @@ module DataCache (
   // ------------------------------- Behaviour -------------------------------
   /*
   assign byte_select = cache.address[1:0];
-  assign word_select = cache.address[WordBits+1:2];
-  assign set_select  = cache.address[SetBits+WordBits+1:WordBits+2];
+  assign word_select = cache.address[3+1:2];
+  assign set_select  = cache.address[SET_BITS+3+1:3+2];
 
   always_ff @(posedge cs.clock) begin : cache_read
     if (cs.reset) begin
@@ -51,7 +58,7 @@ module DataCache (
       cache.hit   <= '0;
       cache.ready <= '0;
     end else if (cache.read && !write_back) begin
-      if ((cache.address[31:(SetBits+WordBits+2)] == data[set_select].tag) &&
+      if ((cache.address[31:(SET_BITS+3+2)] == data[set_select].tag) &&
           (data[set_select].state == VALID)) begin
         miss       <= 1'h0;
         cache.hit  <= 1'h1;
@@ -68,7 +75,7 @@ module DataCache (
       read_index  <= '0;
       write_index <= '0;
       foreach (write_buffer[i]) begin
-        write_buffer[i] <= '{{32{1'h0}}, {32 * WORDS{1'h0}}};
+        write_buffer[i] <= '{{32{1'h0}}, {32 * 8{1'h0}}};
       end
     end else begin
       if (read && !empty) begin
@@ -80,7 +87,7 @@ module DataCache (
           memory.read            <= 1'h0;
           memory.address         <= {32{1'h0}};
 
-          data[set_select].tag   <= cache.address[31:(SetBits+WordBits+2)];
+          data[set_select].tag   <= cache.address[31:(SET_BITS+3+2)];
           data[set_select].words <= memory.data;
           data[set_select].state <= VALID;
         end else begin
@@ -90,15 +97,15 @@ module DataCache (
       end
 
       if (cache.write && !write_back) begin
-        if (cache.address[31:(SetBits+WordBits+2)] == data[set_select].tag &&
+        if (cache.address[31:(SET_BITS+3+2)] == data[set_select].tag &&
           data[set_select].state == MODIFIED) begin
           write_buffer[write_index] <= '{
-              {data[set_select].tag, set_select, {WordBits + 2{1'h0}}},
+              {data[set_select].tag, set_select, {3 + 2{1'h0}}},
               data[set_select].words
           };
           write_index <= write_index + 1;
         end
-        data[set_select].tag <= cache.address[31:(SetBits+WordBits+2)];
+        data[set_select].tag <= cache.address[31:(SET_BITS+3+2)];
         data[set_select].words[word_select] <= cache.data;
         data[set_select].state <= MODIFIED;
       end

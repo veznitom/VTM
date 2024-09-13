@@ -9,55 +9,55 @@ module RAM #(
   input logic i_clock,
   input logic i_reset,
 
-  IntfMemory.RAM memory_bus
+  input  logic [ 31:0] i_address,
+  input  logic         i_read,
+  input  logic         i_write,
+  inout  wire  [255:0] io_data,
+  output logic         o_ready,
+  output logic         o_done
 );
   typedef struct packed {logic [255:0] data;} pack_t;
   // ------------------------------- Wires --------------------------------
   logic [  7:0] data          [MEM_SIZE_BYTES];
   logic [ 31:0] start_address;
   logic [255:0] tmp_data;
-  int file, instr_load, index;
+  int file, instr_load, index, ready;
 
   // ------------------------------- Behaviour -------------------------------
-  assign memory_bus.data = memory_bus.ready ? tmp_data : 'z;
+  assign o_ready       = ready;
+  assign io_data       = ready ? tmp_data : 'z;
+  assign start_address = {i_address[31:3], 3'h0};
 
-  always_comb begin
+  always_ff @(posedge i_clock) begin
     if (i_reset) begin
-      // $readmemh(MEM_FILE_PATH, data);
-      file  = $fopen(MEM_FILE_PATH, "r");
-      index = 0;
-      foreach (data[i]) data[i] = 0;
+      $readmemh(MEM_FILE_PATH, data);
+      /*file  <= $fopen(MEM_FILE_PATH, "r");
+      index <= 0;
+      foreach (data[i]) data[i] <= 0;
       while ($fscanf(
           file, "%h", instr_load
       ) == 1) begin
-        data[index+3] = instr_load[7:0];
-        data[index+2] = instr_load[15:8];
-        data[index+1] = instr_load[23:16];
-        data[index+0] = instr_load[31:24];
-        index += 4;
-      end
-
-      memory_bus.done  = 1'h0;
-      memory_bus.ready = 1'h0;
-    end
-  end
-
-  assign start_address = {memory_bus.address[31:3], 3'h0};
-
-  always_ff @(posedge i_clock) begin
-    if (memory_bus.read) begin
+        data[index+3] <= instr_load[7:0];
+        data[index+2] <= instr_load[15:8];
+        data[index+1] <= instr_load[23:16];
+        data[index+0] <= instr_load[31:24];
+        index         <= index + 4;
+      end*/
+      o_done <= 1'h0;
+      ready  <= 1'h0;
+    end else if (i_read) begin
       for (int i = 0; i < 32; i++) begin
         tmp_data <= pack_t'(data[start_address+:32]);
       end
-      memory_bus.ready <= 1'h1;
-    end else if (memory_bus.write) begin
+      ready <= 1'h1;
+    end else if (i_write) begin
       for (int i = 0; i < 32; i++) begin
-        data[start_address+i] <= memory_bus.data[i];
+        data[start_address+i] <= io_data[i];
       end
-      memory_bus.done <= 1'h1;
+      o_done <= 1'h1;
     end else begin
-      memory_bus.ready <= 1'h0;
-      memory_bus.done  <= 1'h0;
+      ready  <= 1'h0;
+      o_done <= 1'h0;
     end
   end
 

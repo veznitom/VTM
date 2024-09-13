@@ -3,8 +3,14 @@
 `default_nettype none
 import pkg_defines::*;
 module IPWrapper (
-  IntfCSB                  cs,
-  IntfInstrCache.Loader    cache  [2],
+  IntfCSB cs,
+
+  input  logic [31:0] i_cache_instr  [2],
+  input  logic        i_cache_hit    [2],
+  output logic [31:0] o_cache_address[2],
+  output logic        o_cache_read   [2],
+
+  //IntfInstrCache.Loader           cache          [2],
   IntfIssue.Comparator     issue  [2],
   IntfCDB.Comparator       data   [2],
   IntfRegQuery             query  [2],
@@ -27,16 +33,19 @@ module IPWrapper (
 
   // ------------------------------- Modules -------------------------------
   Loader u_loader (
-    .cs           (cs),
-    .cache        (cache),
-    .i_jmp_address(i_jmp_address),
-    .i_jmp_write  (i_jmp_write),
-    .o_address    (address),
-    .o_instr      (instr),
-    .i_halt       (loader_halt)
+    .cs             (cs),
+    .i_cache_instr  (i_cache_instr),
+    .i_cache_hit    (i_cache_hit),
+    .o_cache_address(o_cache_address),
+    .o_cache_read   (o_cache_read),
+    .i_jmp_address  (i_jmp_address),
+    .i_jmp_write    (i_jmp_write),
+    .o_address      (address),
+    .o_instr        (instr),
+    .i_halt         (loader_halt)
   );
 
-  Decoder u_ecoder_1 (
+  Decoder u_decoder_1 (
     .cs        (cs),
     .instr_info(u_ld_dc[0]),
     .i_address (address[0]),

@@ -1,5 +1,5 @@
 // Copyright (c) 2024 veznitom
-
+/*
 interface IntfMemory ();
   wire  [255:0] data;
   logic [ 31:0] address;
@@ -10,3 +10,4 @@ interface IntfMemory ();
   modport RAM(input address, read, write, inout data, output ready, done);
   modport CPU(input ready, done, inout data, output address, read, write);
 endinterface
+*/
