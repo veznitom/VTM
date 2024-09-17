@@ -3,13 +3,20 @@
 `default_nettype none
 import pkg_defines::*;
 module Resolver (
-  IntfCSB.tag           cs,
-  IntfRegQuery.Resolver query       [2],
-  IntfInstrInfo.In      i_instr_info[2],
-  IntfInstrInfo.Out     o_instr_info[2],
+  input wire i_clock,
+  input wire i_reset,
 
+  // Query
+  input registers_t i_query_output_regs[2],
+
+  // Info
+  IntfInstrInfo.In  i_instr_info[2],
+  IntfInstrInfo.Out o_instr_info[2],
+
+  // Constrol
   input  wire i_halt,
-  output wire o_panic
+  input  wire i_tag,
+  output reg  o_panic
 );
   /*
   function automatic bit match_regs(input logic [5:0] rd, input logic [5:0] rs);

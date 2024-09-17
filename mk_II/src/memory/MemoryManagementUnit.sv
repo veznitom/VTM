@@ -2,26 +2,26 @@
 
 `default_nettype none
 module MemoryManagementUnit (
-         IntfCSB.notag         cs,
+  input  wire         i_reset,
   // Memory
-  input  logic                 i_mem_ready,
-  input  logic                 i_mem_done,
-  inout  wire          [255:0] io_mem_data,
-  output logic         [ 31:0] o_mem_address,
-  output logic                 o_mem_read,
-  output logic                 o_mem_write,
+  input  wire          i_mem_ready,
+  input  wire          i_mem_done,
+  inout  wire  [255:0] io_mem_data,
+  output reg   [ 31:0] o_mem_address,
+  output reg           o_mem_read,
+  output reg           o_mem_write,
   // Instruction cache
-  input  logic         [ 31:0] i_instr_address,
-  input  logic                 i_instr_read,
-  output logic         [255:0] o_instr_data,
-  output logic                 o_instr_ready,
+  input  wire  [ 31:0] i_instr_address,
+  input  wire          i_instr_read,
+  output reg   [255:0] o_instr_data,
+  output reg           o_instr_ready,
   // Data cache
-  input  logic         [ 31:0] i_data_address,
-  input  logic                 i_data_read,
-  input  logic                 i_data_write,
-  inout  wire          [255:0] io_data_data,
-  output logic                 o_data_ready,
-  output logic                 o_data_done
+  input  wire  [ 31:0] i_data_address,
+  input  wire          i_data_read,
+  input  wire          i_data_write,
+  inout  wire  [255:0] io_data_data,
+  output reg           o_data_ready,
+  output reg           o_data_done
 );
   // ------------------------------- Strucutres -------------------------------
   typedef enum bit [1:0] {
@@ -40,7 +40,7 @@ module MemoryManagementUnit (
 
   // ------------------------------- Behaviour -------------------------------
   always_comb begin : access_management
-    if (cs.reset) begin
+    if (i_reset) begin
       lock          = FREE;
       o_instr_ready = '0;
       o_data_ready  = '0;

@@ -5,13 +5,13 @@ import pkg_defines::*;
 module Loader #(
   parameter bit [31:0] RESET_VECTOR = '0
 ) (
-  IntfCSB.notag cs,
-  //IntfInstrCache.Loader cache[2],
+  input wire i_clock,
+  input wire i_reset,
 
-  input  logic [31:0] i_cache_instr  [2],
-  input  logic        i_cache_hit    [2],
-  output logic [31:0] o_cache_address[2],
-  output logic        o_cache_read   [2],
+  input  wire [31:0] i_cache_instr  [2],
+  input  wire        i_cache_hit    [2],
+  output reg  [31:0] o_cache_address[2],
+  output reg         o_cache_read   [2],
 
   input wire [31:0] i_jmp_address,
   input wire        i_jmp_write,
@@ -19,7 +19,8 @@ module Loader #(
   output reg [31:0] o_address[2],
   output reg [31:0] o_instr  [2],
 
-  input wire i_halt
+  input wire i_halt,
+  input wire i_clear
 );
   // ------------------------------- Regs -------------------------------
   reg [31:0] pc;
@@ -30,8 +31,8 @@ module Loader #(
   assign o_cache_read[0]    = (~i_halt) ? '1 : '0;
   assign o_cache_read[1]    = (~i_halt) ? '1 : '0;
 
-  always_ff @(posedge cs.clock) begin : instr_load
-    if (cs.reset) begin
+  always_ff @(posedge i_clock) begin : instr_load
+    if (i_reset) begin
       o_address <= {'0, '0};
       o_instr   <= {'0, '0};
       pc        <= RESET_VECTOR;

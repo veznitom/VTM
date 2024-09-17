@@ -3,12 +3,15 @@
 `default_nettype none
 import pkg_defines::*;
 module Decoder (
-  IntfCSB.notag     cs,
-  IntfInstrInfo.Out instr_info,
+  input wire i_clock,
+  input wire i_reset,
 
   input wire [31:0] i_address,
   input wire [31:0] i_instr,
-  input wire        i_halt
+
+  IntfInstrInfo.Out instr_info,
+
+  input wire i_halt
 );
   // ------------------------------- Wires -------------------------------
   reg [11:0] system;
@@ -22,9 +25,10 @@ module Decoder (
   assign funct7 = i_instr[31:25];
   assign funct3 = i_instr[14:12];
 
-  always_ff @(posedge cs.clock) begin : value_sources
+  always_ff @(posedge i_clock) begin : value_sources
     if (!i_halt) begin
       instr_info.address <= i_address;
+      instr_info.regs.rn <= '0;
       case (i_instr[4:2])
         3'b000: begin : LSB  // LOAD, STORE, BRANCH
           case (i_instr[6:5])
@@ -180,7 +184,7 @@ module Decoder (
     end
   end
 
-  always_ff @(posedge cs.clock) begin : instr_name
+  always_ff @(posedge i_clock) begin : instr_name
     if (!i_halt) begin
       if (i_instr == 32'h0000) instr_info.instr_name <= UNKNOWN;
       else begin
@@ -229,10 +233,13 @@ module Decoder (
           end
 
           3'b001: begin  // JALR
-            instr_info.flags.writes <= 1'b1;
-            instr_info.flags.jumps  <= 1'b1;
-            instr_info.instr_type   <= BR;
-            instr_info.instr_name   <= JALR;
+            instr_info.flags.writes   <= 1'b1;
+            instr_info.flags.jumps    <= 1'b1;
+            instr_info.flags.tag      <= '0;
+            instr_info.flags.mem      <= '0;
+            instr_info.flags.uses_imm <= '0;
+            instr_info.instr_type     <= BR;
+            instr_info.instr_name     <= JALR;
           end
 
           3'b011: begin  // MISC-MEM, JAL
@@ -259,6 +266,9 @@ module Decoder (
               2'b00: begin
                 instr_info.flags.writes   <= 1'b1;
                 instr_info.flags.uses_imm <= 1'b1;
+                instr_info.flags.tag      <= '0;
+                instr_info.flags.mem      <= '0;
+                instr_info.flags.jumps    <= '0;
                 case (funct3)
                   3'b000: instr_info.instr_name <= ADDI;
                   3'b010: instr_info.instr_name <= SLTI;
@@ -273,7 +283,11 @@ module Decoder (
               end
 
               2'b01: begin  // OP
-                instr_info.flags.writes <= 1'b1;
+                instr_info.flags.writes   <= 1'b1;
+                instr_info.flags.uses_imm <= '0;
+                instr_info.flags.tag      <= '0;
+                instr_info.flags.mem      <= '0;
+                instr_info.flags.jumps    <= '0;
                 case (funct3)
                   3'b000: instr_info.instr_name <= funct7[5] == 0 ? ADD : SUB;
                   3'b001: instr_info.instr_name <= SLL;

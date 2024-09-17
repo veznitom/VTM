@@ -3,8 +3,13 @@
 `default_nettype none
 import pkg_defines::*;
 module RegisterFile (
-  IntfCSB.tag                cs,
-  IntfRegQuery.RegisterFile  query  [2],
+  input wire i_clock,
+  input wire i_reset,
+
+  output reg o_clear_tag,
+  output reg o_delete_tag,
+
+  IntfRegQuery.RegisterFile  query,
   IntfRegValBus.RegisterFile reg_val[2],
   IntfCDB.RegisterFile       data   [2]
 );

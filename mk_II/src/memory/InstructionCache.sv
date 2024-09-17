@@ -5,16 +5,16 @@ import pkg_defines::*;
 module InstructionCache (
   IntfCSB.notag cs,
 
-  input  logic [31:0] i_address[2],
-  input  logic        i_read   [2],
-  output logic [31:0] o_instr  [2],
-  output logic        o_hit    [2],
+  input  wire [31:0] i_address[2],
+  input  wire        i_read   [2],
+  output reg  [31:0] o_instr  [2],
+  output reg         o_hit    [2],
 
 
-  input  logic [255:0] i_mem_data,
-  input  logic         i_mem_ready,
-  output logic [ 31:0] o_mem_address,
-  output logic         o_mem_read
+  input  wire [255:0] i_mem_data,
+  input  wire         i_mem_ready,
+  output reg  [ 31:0] o_mem_address,
+  output reg          o_mem_read
 );
   // ------------------------------- Parameters -------------------------------
   // FOR DEBUG PURPOSES TO TEST BEST SIZE

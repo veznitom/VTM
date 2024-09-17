@@ -14,28 +14,30 @@ module CPU (
   output wire         o_mem_write
 );
   IntfCSB u_common_signal_bus ();
-  //IntfInstrCache u_intr_cache_bus[2] ();
   IntfDataCache u_data_cache_bus ();
   IntfCDB u_common_data_bus[2] ();
   IntfIssue u_issue[2] ();
-  IntfRegQuery u_query[2] ();
+  IntfRegQuery u_query ();
   IntfRegValBus u_reg_val[2] ();
   IntfFull u_full ();
 
-  wire [31:0] jmp_address;
-  wire        jmp_write;
+  wire [ 31:0] jmp_address;
+  wire         jmp_write;
 
-  wire [255:0] mmu_instr_data, mmu_data_data;
+  wire [255:0] mmu_data_data;
+
+  wire [255:0] mmu_instr_data;
   wire [31:0] mmu_instr_address, mmu_data_address;
   wire mmu_instr_read, mmu_instr_ready;
   wire mmu_data_read, mmu_data_write, mmu_data_ready, mmu_data_done;
 
-
   wire [31:0] instr_cache_instr[2], instr_cache_address[2];
   wire instr_cache_hit[2], instr_cache_read[2];
 
+  wire clear_tag, delete_tag;
+
   MemoryManagementUnit u_mmu (
-    .cs             (u_common_signal_bus),
+    .i_reset        (i_reset),
     .i_mem_ready    (i_mem_ready),
     .i_mem_done     (i_mem_done),
     .io_mem_data    (io_mem_data),
@@ -79,22 +81,33 @@ module CPU (
   );
 
   IPWrapper u_wrapper (
-    .cs             (u_common_signal_bus),
+    .i_clock     (i_clock),
+    .i_reset     (i_reset),
+    .i_clear_tag (clear_tag),
+    .i_delete_tag(delete_tag),
+
     .i_cache_instr  (instr_cache_instr),
     .i_cache_hit    (instr_cache_hit),
+    .i_jmp_address  (jmp_address),
+    .i_jmp_write    (jmp_write),
     .o_cache_address(instr_cache_address),
     .o_cache_read   (instr_cache_read),
-    .issue          (u_issue),
-    .data           (u_common_data_bus),
-    .query          (u_query),
-    .reg_val        (u_reg_val),
-    .full           (u_full),
-    .i_jmp_address  (jmp_address),
-    .i_jmp_write    (jmp_write)
+
+    .i_ren_capacity(),
+
+    .query  (u_query),
+    .full   (u_full),
+    .issue  (u_issue),
+    .data   (u_common_data_bus),
+    .reg_val(u_reg_val)
   );
 
   RegisterFile u_reg_file (
-    .cs     (u_common_signal_bus),
+    .i_clock     (i_clock),
+    .i_reset     (i_reset),
+    .o_clear_tag (clear_tag),
+    .o_delete_tag(delete_tag),
+
     .query  (u_query),
     .reg_val(u_reg_val),
     .data   (u_common_data_bus)

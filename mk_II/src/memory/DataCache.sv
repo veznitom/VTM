@@ -7,12 +7,12 @@ module DataCache (
   IntfDataCache.DataCache cache,
   IntfCDB.Cache           data_bus[2],
 
-  input  logic         i_mem_ready,
-  input  logic         i_mem_done,
-  inout  logic [255:0] io_mem_data,
-  output logic [ 31:0] o_mem_address,
-  output logic         o_mem_read,
-  output logic         o_mem_write
+  input  wire         i_mem_ready,
+  input  wire         i_mem_done,
+  inout  wire [255:0] io_mem_data,
+  output reg  [ 31:0] o_mem_address,
+  output reg          o_mem_read,
+  output reg          o_mem_write
 );
   // ------------------------------- Parameters -------------------------------
   // FOR DEBUG PURPOSES TO TEST BEST SIZE

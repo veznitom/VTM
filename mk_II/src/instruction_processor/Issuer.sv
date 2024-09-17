@@ -3,16 +3,18 @@
 `default_nettype none
 import pkg_defines::*;
 module Issuer (
-  IntfCSB.tag       cs,
+  input wire i_clock,
+  input wire i_reset,
+
   IntfInstrInfo.In  i_instr_info[2],
   IntfInstrInfo.Out o_instr_info[2],
   IntfFull.Issuer   full,
 
   input  wire i_halt,
-  output wire o_full
+  output reg  o_full
 );
   // ------------------------------- Wires -------------------------------
-  logic fullness_split[6];
+  wire fullness_split[6];
 
   // ------------------------------- Behaviour -------------------------------
   /*
