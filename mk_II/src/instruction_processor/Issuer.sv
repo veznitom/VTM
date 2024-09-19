@@ -8,32 +8,17 @@ module Issuer (
 
   IntfInstrInfo.In  i_instr_info[2],
   IntfInstrInfo.Out o_instr_info[2],
-  IntfFull.Issuer   full,
 
-  input  wire i_halt,
-  output reg  o_full
+  input wire i_halt
 );
   // ------------------------------- Wires -------------------------------
-  wire fullness_split[6];
-
   // ------------------------------- Behaviour -------------------------------
-  /*
-  assign fullness_split[AL] = full.alu;
-  assign fullness_split[BR] = full.branch;
-  assign fullness_split[LS] = full.load_store;
-  assign fullness_split[RB] = full.rob;
-  assign fullness_split[MD] = full.mul_div;
-  assign fullness_split[XX] = 1'h0;
-
-  assign o_full =
-    fullness_split[i_instr_info[0].instr_type] |
-    fullness_split[i_instr_info[1].instr_type] |
-    fullness_split[RB];
-
   generate
     for (genvar i = 0; i < 2; i++) begin : gen_instr_info
-      always_ff @(posedge cs.clock) begin : issue
-        if (!i_halt) begin
+      always_ff @(posedge i_clock) begin : issue
+        if (i_reset) begin
+          o_instr_info[i].clear();
+        end else if (!i_halt) begin
           o_instr_info[i].address    <= i_instr_info[i].address;
           o_instr_info[i].immediate  <= i_instr_info[i].immediate;
           o_instr_info[i].instr_name <= i_instr_info[i].instr_name;
@@ -44,5 +29,4 @@ module Issuer (
       end
     end
   endgenerate
-  */
 endmodule

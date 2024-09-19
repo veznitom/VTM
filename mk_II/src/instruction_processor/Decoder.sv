@@ -186,8 +186,11 @@ module Decoder (
 
   always_ff @(posedge i_clock) begin : instr_name
     if (!i_halt) begin
-      if (i_instr == 32'h0000) instr_info.instr_name <= UNKNOWN;
-      else begin
+      if (i_instr == 32'h0000) begin
+        instr_info.instr_name <= UNKNOWN;
+        instr_info.instr_type <= XX;
+        instr_info.flags      <= '0;
+      end else begin
         case (opcode[4:2])
           3'b000: begin : LSB  // LOAD, STORE, BRANCH
             case (opcode[6:5])

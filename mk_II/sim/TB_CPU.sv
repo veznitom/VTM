@@ -39,7 +39,7 @@ module TB_CPU ();
   initial begin
     reset = '1;
     #200 reset = '0;
-    #500 $finish;
+    #1200 $finish;
   end
 
 endmodule

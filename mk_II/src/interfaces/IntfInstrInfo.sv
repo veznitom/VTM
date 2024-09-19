@@ -10,5 +10,17 @@ interface IntfInstrInfo;
   flag_vector_t flags;
 
   modport In(input address, immediate, instr_name, regs, instr_type, flags);
-  modport Out(output address, immediate, instr_name, regs, instr_type, flags);
+  modport Out(
+      output address, immediate, instr_name, regs, instr_type, flags,
+      import clear
+  );
+
+  task automatic clear();
+    address    = '0;
+    immediate  = '0;
+    instr_name = UNKNOWN;
+    regs       = '{0, 0, 0, 0};
+    instr_type = XX;
+    flags      = '{0, 0, 0, 0, 0};
+  endtask  //automatic
 endinterface

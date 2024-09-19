@@ -46,8 +46,8 @@ module Loader #(
       end else begin
         o_address[0] <= '0;
         o_address[1] <= '0;
-        o_instr[0]   <= NOP_INSTR;
-        o_instr[1]   <= NOP_INSTR;
+        o_instr[0]   <= '0;
+        o_instr[1]   <= '0;
       end
     end
   end

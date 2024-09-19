@@ -19,7 +19,6 @@ module CPU (
   IntfIssue u_issue[2] ();
   IntfRegQuery u_query ();
   IntfRegValBus u_reg_val[2] ();
-  IntfFull u_full ();
 
   wire [ 31:0] jmp_address;
   wire         jmp_write;
@@ -35,6 +34,10 @@ module CPU (
   wire instr_cache_hit[2], instr_cache_read[2];
 
   wire clear_tag, delete_tag;
+
+  wire [1:0] ren_capacity;
+
+  wire full_alu, full_branch, full_load_store, full_mul_div, full_rob, full;
 
   MemoryManagementUnit u_mmu (
     .i_reset        (i_reset),
@@ -93,10 +96,10 @@ module CPU (
     .o_cache_address(instr_cache_address),
     .o_cache_read   (instr_cache_read),
 
-    .i_ren_capacity(),
+    .i_ren_capacity(ren_capacity),
 
     .query  (u_query),
-    .full   (u_full),
+    .i_full (full),
     .issue  (u_issue),
     .data   (u_common_data_bus),
     .reg_val(u_reg_val)
@@ -105,8 +108,10 @@ module CPU (
   RegisterFile u_reg_file (
     .i_clock     (i_clock),
     .i_reset     (i_reset),
-    .o_clear_tag (clear_tag),
-    .o_delete_tag(delete_tag),
+    .i_clear_tag (clear_tag),
+    .i_delete_tag(delete_tag),
+
+    .o_ren_capacity(ren_capacity),
 
     .query  (u_query),
     .reg_val(u_reg_val),
@@ -119,21 +124,21 @@ module CPU (
     .issue        (u_issue),
     .o_jmp_address(jmp_address),
     .o_jmp_write  (jmp_write),
-    .o_full       (u_full.rob)
+    .o_full       (full_rob)
   );
 
   ComboALU u_combo_alu (
     .cs    (u_common_signal_bus),
     .data  (u_common_data_bus),
     .issue (u_issue),
-    .o_full(u_full.alu)
+    .o_full(full_alu)
   );
 
   ComboBranch u_combo_branch (
     .cs    (u_common_signal_bus),
     .data  (u_common_data_bus),
     .issue (u_issue),
-    .o_full(u_full.branch)
+    .o_full(full_branch)
   );
 
   ComboLoadStore u_combo_load_store (
@@ -141,18 +146,21 @@ module CPU (
     .data  (u_common_data_bus),
     .issue (u_issue),
     .cache (u_data_cache_bus),
-    .o_full(u_full.load_store)
+    .o_full(full_load_store)
   );
 
   ComboMulDiv u_combo_mul_div (
     .cs    (u_common_signal_bus),
     .data  (u_common_data_bus),
     .issue (u_issue),
-    .o_full(u_full.mul_div)
+    .o_full(full_mul_div)
   );
 
   // ------------------------------- Behaviour -------------------------------
   assign u_common_signal_bus.clock = i_clock;
   assign u_common_signal_bus.reset = i_reset;
+
+  assign full = full_alu | full_branch |
+                full_load_store| full_mul_div | full_rob;
 
 endmodule

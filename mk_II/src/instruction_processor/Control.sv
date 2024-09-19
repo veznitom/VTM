@@ -3,29 +3,29 @@
 import pkg_defines::*;
 `default_nettype none
 module Control (
-  input wire i_reset,
-  input wire i_delete_tag,
-  input wire i_clear_tag,
-
-  input wire i_branch,
-  input wire i_full,
-
-  output reg o_tag,
-
-  output reg o_ld_halt,
-  output reg o_dec_halt[2],
-  output reg o_ren_halt,
-  output reg o_res_halt,
+  input  wire i_reset,
+  input  wire i_delete_tag,
+  input  wire i_clear_tag,
+  input  wire i_branch,
+  input       i_full,
+  output reg  o_tag,
+  output reg  o_ld_halt,
+  output reg  o_dec_halt  [2],
+  output reg  o_ren_halt,
+  output reg  o_res_halt,
 
   output reg o_clear
 );
   logic tag, ld_dec_ren;
+  wire fullness_split[6];
 
   assign o_ld_halt     = '0;  //| i_full | ld_dec_ren;
   assign o_dec_halt[0] = '0;  //| i_full | ld_dec_ren;
   assign o_dec_halt[1] = '0;  //| i_full | ld_dec_ren;
   assign o_ren_halt    = '0;  //| i_full;
   assign o_res_halt    = '0;  //| i_full;
+
+  assign o_tag         = '0;  // TODO REMOVE
 
   always_comb begin
     if (i_reset || i_clear_tag) begin
