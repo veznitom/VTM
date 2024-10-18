@@ -38,7 +38,7 @@ module Resolver (
     begin
       if (i_instr_info[0].flags.jumps && i_instr_info[1].flags.jumps) begin
         // Pipeline halts from renamer if tag && branch
-        
+
       end else begin
         // First instruction passthrough
         o_instr_info[0].address    <= i_instr_info[0].address;
