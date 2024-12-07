@@ -51,6 +51,9 @@ module ReorderBuffer #(
   );*/
 
   // ------------------------------- Behaviour -------------------------------
+  assign o_full        = '0;
+  assign cs.clear_tag  = '0;
+  assign cs.delete_tag = '0;
   /*
   always_ff @(posedge cs.clock) begin : jmp_resolve
     if (records[read_index].status == COMPLETED && records[0].flags.jumps) begin

@@ -47,7 +47,7 @@ module Resolver (
         o_instr_info[0].regs.rs_1  <= i_query_output_regs[0].rs_1;
         o_instr_info[0].regs.rs_2  <= i_query_output_regs[0].rs_2;
         o_instr_info[0].regs.rd    <= i_instr_info[0].regs.rd;
-        //if (i_instr_info[0].flags.writes && i_instr_info[0].regs.rd != '0) begin
+        //if (i_instr_info[0].flags.writes && i_instr_info[0].regs.rd !='0)begin
 
         // should return 0 from regfile by default
         o_instr_info[0].regs.rn    <= i_query_output_regs[0].rn;
@@ -79,7 +79,7 @@ module Resolver (
           o_instr_info[1].regs.rs_2 <= i_query_output_regs[0].rn;
         end else o_instr_info[1].regs.rs_2 <= i_query_output_regs[1].rs_2;
 
-        //if (i_instr_info[1].flags.writes && i_instr_info[1].regs.rd != '0) begin
+        //if (i_instr_info[1].flags.writes && i_instr_info[1].regs.rd !='0)begin
 
         // should return 0 from regfile by default
         o_instr_info[1].regs.rn <= i_query_output_regs[1].rn;

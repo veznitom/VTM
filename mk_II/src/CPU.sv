@@ -84,10 +84,7 @@ module CPU (
   );
 
   IPWrapper u_wrapper (
-    .i_clock     (i_clock),
-    .i_reset     (i_reset),
-    .i_clear_tag (clear_tag),
-    .i_delete_tag(delete_tag),
+    .cs(u_common_signal_bus),
 
     .i_cache_instr  (instr_cache_instr),
     .i_cache_hit    (instr_cache_hit),
@@ -160,6 +157,8 @@ module CPU (
   assign u_common_signal_bus.clock = i_clock;
   assign u_common_signal_bus.reset = i_reset;
 
+  // if at least one thing is full halt,
+  // simpler design than to do it on individual basis
   assign full = full_alu | full_branch |
                 full_load_store| full_mul_div | full_rob;
 

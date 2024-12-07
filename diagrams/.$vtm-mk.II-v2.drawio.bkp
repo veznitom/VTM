@@ -1,11 +1,11 @@
-<mxfile host="Electron" modified="2024-07-10T14:11:01.600Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.6.4 Chrome/124.0.6367.207 Electron/30.0.6 Safari/537.36" etag="OiJvgkwarrEzKCPT_sjs" version="24.6.4" type="device">
+<mxfile host="Electron" modified="2024-07-10T14:15:22.848Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.6.4 Chrome/124.0.6367.207 Electron/30.0.6 Safari/537.36" etag="LbAoo-Cyt55GolZ1KD3m" version="24.6.4" type="device">
   <diagram name="Page-1" id="jCOoQlf_-H1OvfI_m8Ck">
-    <mxGraphModel dx="2899" dy="2330" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="2537" dy="2113" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="X1CAZrHg3oSwuM8D-R19-3" value="CPU" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;dashed=1;verticalAlign=top;align=center;horizontal=1;fontSize=14;fontStyle=0;movable=0;resizable=0;rotatable=0;deletable=0;editable=0;locked=1;connectable=0;" parent="1" vertex="1">
-          <mxGeometry x="-340" y="-50" width="1340" height="1170" as="geometry" />
+        <mxCell id="X1CAZrHg3oSwuM8D-R19-3" value="CPU" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;verticalAlign=top;align=center;horizontal=1;fontSize=14;fontStyle=0;movable=0;resizable=0;rotatable=0;deletable=0;editable=0;locked=1;connectable=0;strokeWidth=2;" parent="1" vertex="1">
+          <mxGeometry x="-400" y="-50" width="1410" height="1210" as="geometry" />
         </mxCell>
         <mxCell id="Q_FoPeRNUOorXx9U4-rW-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.75;exitDx=0;exitDy=0;entryX=1;entryY=0.75;entryDx=0;entryDy=0;fontSize=14;strokeWidth=2;" parent="1" source="Q_FoPeRNUOorXx9U4-rW-1" target="Q_FoPeRNUOorXx9U4-rW-2" edge="1">
           <mxGeometry relative="1" as="geometry" />
@@ -27,7 +27,7 @@
         <mxCell id="z0uz1GrBiMd9gZm8dgzP-17" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;dashed=1;verticalAlign=bottom;align=center;horizontal=1;fontSize=14;fontStyle=0;" parent="1" vertex="1">
           <mxGeometry x="150" y="910" width="140" height="170" as="geometry" />
         </mxCell>
-        <mxCell id="f3FpyE6ONrH-SxPNR19--1" value="Instruction processer" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;dashed=1;verticalAlign=top;align=center;horizontal=1;fontSize=14;fontStyle=0;movable=0;resizable=0;rotatable=0;deletable=0;editable=0;locked=1;connectable=0;strokeWidth=2;strokeColor=#FFB570;" parent="1" vertex="1">
+        <mxCell id="f3FpyE6ONrH-SxPNR19--1" value="Instruction processer" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;dashed=1;verticalAlign=top;align=center;horizontal=1;fontSize=14;fontStyle=0;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;strokeWidth=2;strokeColor=#FFB570;" parent="1" vertex="1">
           <mxGeometry y="20" width="550" height="640" as="geometry" />
         </mxCell>
         <mxCell id="Q_FoPeRNUOorXx9U4-rW-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.25;exitDx=0;exitDy=0;entryX=1;entryY=0.25;entryDx=0;entryDy=0;fontSize=14;strokeWidth=2;startArrow=classic;startFill=1;endArrow=none;endFill=0;" parent="1" source="Q_FoPeRNUOorXx9U4-rW-1" target="Q_FoPeRNUOorXx9U4-rW-2" edge="1">
@@ -412,7 +412,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="z0uz1GrBiMd9gZm8dgzP-14" value="Register values and validity" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];rounded=0;fontSize=14;fontColor=#FFD966;" parent="z0uz1GrBiMd9gZm8dgzP-4" vertex="1" connectable="0">
+        <mxCell id="z0uz1GrBiMd9gZm8dgzP-14" value="Register values and validity" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];rounded=0;fontSize=14;fontColor=#B09566;" parent="z0uz1GrBiMd9gZm8dgzP-4" vertex="1" connectable="0">
           <mxGeometry x="-0.7096" relative="1" as="geometry">
             <mxPoint x="-30" y="10" as="offset" />
           </mxGeometry>

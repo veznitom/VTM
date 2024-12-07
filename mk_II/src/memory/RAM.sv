@@ -30,19 +30,8 @@ module RAM #(
 
   always_ff @(posedge i_clock) begin
     if (i_reset) begin
+      foreach (data[i]) data[i] = '0;
       $readmemh(MEM_FILE_PATH, data);
-      /*file  <= $fopen(MEM_FILE_PATH, "r");
-      index <= 0;
-      foreach (data[i]) data[i] <= 0;
-      while ($fscanf(
-          file, "%h", instr_load
-      ) == 1) begin
-        data[index+3] <= instr_load[7:0];
-        data[index+2] <= instr_load[15:8];
-        data[index+1] <= instr_load[23:16];
-        data[index+0] <= instr_load[31:24];
-        index         <= index + 4;
-      end*/
       o_done <= 1'h0;
       ready  <= 1'h0;
     end else if (i_read) begin

@@ -22,7 +22,7 @@ module TB_CPU ();
 
   RAM #(
     .MEM_SIZE_BYTES(1024),
-    .MEM_FILE_PATH ("/home/tomasv/Projects/VTM/mk_II/sim/reg_zero.mem")
+    .MEM_FILE_PATH ("/home/tomasv/Projects/VTM/mk_II/sw/depleet_rename-b-r.hex")
   ) u_ram (
     .i_clock  (clock),
     .i_reset  (reset),

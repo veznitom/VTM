@@ -1,5 +1,6 @@
 // Copyright (c) 2024 veznitom
 
+`default_nettype none
 package pkg_defines;
   typedef enum logic [7:0] {
     // Custom value

@@ -3,10 +3,7 @@
 `default_nettype none
 import pkg_defines::*;
 module IPWrapper (
-  input wire i_clock,
-  input wire i_reset,
-  input wire i_clear_tag,
-  input wire i_delete_tag,
+  IntfCSB.tag cs,
 
   // Loader
   input  wire [31:0] i_cache_instr  [2],
@@ -32,19 +29,20 @@ module IPWrapper (
   // ------------------------------- Wires -------------------------------
   wire [31:0] address[2], instr[2];
   wire loader_halt, decoder_halt[2], renamer_halt, resolver_halt;
-  wire status_ren_empty, status_panic, status_branch;
+  wire status_ren_empty, status_panic, status_branch, status_invalid;
   wire tag, clear;
 
   IntfInstrInfo u_dc_ren[2] ();
   IntfInstrInfo u_ren_del[2] ();
   IntfInstrInfo u_del_res[2] ();
-  IntfInstrInfo u_res_iss[2] ();
-  IntfInstrInfo u_iss_cmb[2] ();
+  IntfInstrInfo u_res_cmp[2] ();
+  //IntfInstrInfo u_res_iss[2] ();
+  //IntfInstrInfo u_iss_cmb[2] ();
 
   // ------------------------------- Modules -------------------------------
   Loader u_loader (
-    .i_clock        (i_clock),
-    .i_reset        (i_reset),
+    .i_clock        (cs.clock),
+    .i_reset        (cs.reset),
     .i_cache_instr  (i_cache_instr),
     .i_cache_hit    (i_cache_hit),
     .o_cache_address(o_cache_address),
@@ -58,8 +56,8 @@ module IPWrapper (
   );
 
   Decoder u_decoder_1 (
-    .i_clock   (i_clock),
-    .i_reset   (i_reset),
+    .i_clock   (cs.clock),
+    .i_reset   (cs.reset),
     .instr_info(u_dc_ren[0]),
     .i_address (address[0]),
     .i_instr   (instr[0]),
@@ -67,17 +65,18 @@ module IPWrapper (
   );
 
   Decoder u_decoder_2 (
-    .i_clock   (i_clock),
-    .i_reset   (i_reset),
-    .instr_info(u_dc_ren[1]),
-    .i_address (address[1]),
-    .i_instr   (instr[1]),
-    .i_halt    (decoder_halt[1])
+    .i_clock        (cs.clock),
+    .i_reset        (cs.reset),
+    .instr_info     (u_dc_ren[1]),
+    .i_address      (address[1]),
+    .i_instr        (instr[1]),
+    .i_halt         (decoder_halt[1]),
+    .o_invalid_instr(status_invalid)
   );
 
   Renamer u_renamer (
-    .i_clock(i_clock),
-    .i_reset(i_reset),
+    .i_clock(cs.clock),
+    .i_reset(cs.reset),
 
     .i_instr_info(u_dc_ren),
     .o_instr_info(u_ren_del),
@@ -94,18 +93,18 @@ module IPWrapper (
   );
 
   PipeDelay u_delay_1 (
-    .i_clock(i_clock),
-    .i_reset(i_reset),
+    .i_clock(cs.clock),
+    .i_reset(cs.reset),
     .i_info (u_ren_del),
     .o_info (u_del_res)
   );
 
   Resolver u_resolver (
-    .i_clock(i_clock),
-    .i_reset(i_reset),
+    .i_clock(cs.clock),
+    .i_reset(cs.reset),
 
     .i_instr_info(u_del_res),
-    .o_instr_info(u_res_iss),
+    .o_instr_info(u_res_cmp),
 
     .i_query_output_regs(query.output_regs),
 
@@ -123,26 +122,27 @@ module IPWrapper (
   );*/
 
   Comparator u_comparator_1 (
-    .instr_info(u_res_iss[0]),
+    .instr_info(u_res_cmp[0]),
     .issue     (issue[0]),
     .reg_val   (reg_val[0]),
     .data      (data)
   );
 
   Comparator u_comparator_2 (
-    .instr_info(u_res_iss[1]),
+    .instr_info(u_res_cmp[1]),
     .issue     (issue[1]),
     .reg_val   (reg_val[1]),
     .data      (data)
   );
 
   Control u_control (
-    .i_reset     (i_reset),
-    .i_clear_tag (i_clear_tag),
-    .i_delete_tag(i_delete_tag),
+    .i_reset     (cs.reset),
+    .i_clear_tag (cs.clear_tag),
+    .i_delete_tag(cs.delete_tag),
 
-    .i_branch(status_branch),
-    .i_full  (i_full),
+    .i_branch   (status_branch),
+    .i_ren_empty(status_ren_empty),
+    .i_full     (i_full),
 
     .o_tag(tag),
 

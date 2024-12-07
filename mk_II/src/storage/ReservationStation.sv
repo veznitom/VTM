@@ -40,6 +40,7 @@ module ReservationStation #(
   logic empty;
 
   // ------------------------------- Behaviour -------------------------------
+  assign o_full = '0;
   /*
   always_comb begin : reset
     if (cs.reset) begin

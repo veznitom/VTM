@@ -32,7 +32,7 @@ module Renamer (
       ren_cap =
       (i_instr_info[0].flags.writes && i_instr_info[0].regs.rd != 0) +
       (i_instr_info[1].flags.writes && i_instr_info[1].regs.rd != 0);
-      o_ren_empty = ren_cap < i_query_ren_capacity;
+      o_ren_empty = ren_cap > i_query_ren_capacity;
       o_branch = i_instr_info[0].flags.jumps || i_instr_info[1].flags.jumps;
     end
   end
@@ -49,7 +49,7 @@ module Renamer (
 
       o_instr_info[0].clear();
       o_instr_info[1].clear();
-    end else begin
+    end else if (!i_halt) begin
       if (ren_cap <= i_query_ren_capacity) begin
         o_query_input_regs[0] <= i_instr_info[0].regs;
         if (i_instr_info[0].flags.writes && i_instr_info[0].regs.rd != 0) begin

@@ -11,7 +11,8 @@ module Decoder (
 
   IntfInstrInfo.Out instr_info,
 
-  input wire i_halt
+  input  wire i_halt,
+  output reg  o_invalid_instr
 );
   // ------------------------------- Wires -------------------------------
   reg [11:0] system;
