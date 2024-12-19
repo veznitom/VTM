@@ -12,18 +12,19 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
-      <ZoomEndTime time="1,131.419 ns"></ZoomEndTime>
-      <Cursor1Time time="52.381 ns"></Cursor1Time>
+      <ZoomStartTime time="414.918 ns"></ZoomStartTime>
+      <ZoomEndTime time="596.519 ns"></ZoomEndTime>
+      <Cursor1Time time="430.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="288"></NameColumnWidth>
-      <ValueColumnWidth column_width="186"></ValueColumnWidth>
+      <ValueColumnWidth column_width="182"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="5" />
    <wvobject type="group" fp_name="group6">
       <obj_property name="label">Top</obj_property>
       <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
       <wvobject type="logic" fp_name="/TB_CPU/clock">
          <obj_property name="ElementShortName">clock</obj_property>
          <obj_property name="ObjectShortName">clock</obj_property>
@@ -264,6 +265,7 @@
    <wvobject type="group" fp_name="group26">
       <obj_property name="label">Buses</obj_property>
       <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
       <wvobject type="group" fp_name="group27">
          <obj_property name="label">Common Signals</obj_property>
          <obj_property name="DisplayName">label</obj_property>
@@ -335,7 +337,6 @@
       <wvobject type="group" fp_name="group2108">
          <obj_property name="label">Instruction Cache</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <obj_property name="isExpanded"></obj_property>
          <wvobject type="array" fp_name="/TB_CPU/u_cpu/instr_cache_instr">
             <obj_property name="ElementShortName">instr_cache_instr[0:1][31:0]</obj_property>
             <obj_property name="ObjectShortName">instr_cache_instr[0:1][31:0]</obj_property>
@@ -384,7 +385,6 @@
       <wvobject type="group" fp_name="group266">
          <obj_property name="label">Common Data Bus</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <obj_property name="isExpanded"></obj_property>
          <wvobject type="group" fp_name="group267">
             <obj_property name="label">0</obj_property>
             <obj_property name="DisplayName">label</obj_property>
@@ -465,6 +465,7 @@
          <wvobject type="group" fp_name="group287">
             <obj_property name="label">0</obj_property>
             <obj_property name="DisplayName">label</obj_property>
+            <obj_property name="isExpanded"></obj_property>
             <wvobject type="array" fp_name="/TB_CPU/u_cpu/\u_issue[0] /address">
                <obj_property name="ElementShortName">address[31:0]</obj_property>
                <obj_property name="ObjectShortName">address[31:0]</obj_property>
@@ -554,7 +555,6 @@
       <wvobject type="group" fp_name="group310">
          <obj_property name="label">Query</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <obj_property name="isExpanded"></obj_property>
          <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_query/input_regs">
             <obj_property name="ElementShortName">input_regs[0:1]</obj_property>
             <obj_property name="ObjectShortName">input_regs[0:1]</obj_property>
@@ -683,25 +683,10 @@
       <wvobject type="group" fp_name="group2097">
          <obj_property name="label">Instruction Processor</obj_property>
          <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
          <wvobject type="group" fp_name="group344">
             <obj_property name="label">IPWrapper</obj_property>
             <obj_property name="DisplayName">label</obj_property>
-            <wvobject type="logic" fp_name="/TB_CPU/u_cpu/u_wrapper/i_clock">
-               <obj_property name="ElementShortName">i_clock</obj_property>
-               <obj_property name="ObjectShortName">i_clock</obj_property>
-            </wvobject>
-            <wvobject type="logic" fp_name="/TB_CPU/u_cpu/u_wrapper/i_reset">
-               <obj_property name="ElementShortName">i_reset</obj_property>
-               <obj_property name="ObjectShortName">i_reset</obj_property>
-            </wvobject>
-            <wvobject type="logic" fp_name="/TB_CPU/u_cpu/u_wrapper/i_clear_tag">
-               <obj_property name="ElementShortName">i_clear_tag</obj_property>
-               <obj_property name="ObjectShortName">i_clear_tag</obj_property>
-            </wvobject>
-            <wvobject type="logic" fp_name="/TB_CPU/u_cpu/u_wrapper/i_delete_tag">
-               <obj_property name="ElementShortName">i_delete_tag</obj_property>
-               <obj_property name="ObjectShortName">i_delete_tag</obj_property>
-            </wvobject>
             <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_wrapper/i_cache_instr">
                <obj_property name="ElementShortName">i_cache_instr[0:1][31:0]</obj_property>
                <obj_property name="ObjectShortName">i_cache_instr[0:1][31:0]</obj_property>
@@ -786,10 +771,10 @@
             <wvobject type="group" fp_name="group345">
                <obj_property name="label">Decoder -&gt; Renamer</obj_property>
                <obj_property name="DisplayName">label</obj_property>
-               <obj_property name="isExpanded"></obj_property>
                <wvobject type="group" fp_name="group349">
                   <obj_property name="label">0</obj_property>
                   <obj_property name="DisplayName">label</obj_property>
+                  <obj_property name="isExpanded"></obj_property>
                   <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_wrapper/\u_dc_ren[0] /address">
                      <obj_property name="ElementShortName">address[31:0]</obj_property>
                      <obj_property name="ObjectShortName">address[31:0]</obj_property>
@@ -797,6 +782,7 @@
                   <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_wrapper/\u_dc_ren[0] /immediate">
                      <obj_property name="ElementShortName">immediate[31:0]</obj_property>
                      <obj_property name="ObjectShortName">immediate[31:0]</obj_property>
+                     <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
                   </wvobject>
                   <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_wrapper/\u_dc_ren[0] /instr_name">
                      <obj_property name="ElementShortName">instr_name[7:0]</obj_property>
@@ -818,6 +804,7 @@
                <wvobject type="group" fp_name="group350">
                   <obj_property name="label">1</obj_property>
                   <obj_property name="DisplayName">label</obj_property>
+                  <obj_property name="isExpanded"></obj_property>
                   <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_wrapper/\u_dc_ren[1] /address">
                      <obj_property name="ElementShortName">address[31:0]</obj_property>
                      <obj_property name="ObjectShortName">address[31:0]</obj_property>
@@ -847,10 +834,10 @@
             <wvobject type="group" fp_name="group346">
                <obj_property name="label">Renamer -&gt; Resolver</obj_property>
                <obj_property name="DisplayName">label</obj_property>
-               <obj_property name="isExpanded"></obj_property>
                <wvobject type="group" fp_name="group349">
                   <obj_property name="label">0</obj_property>
                   <obj_property name="DisplayName">label</obj_property>
+                  <obj_property name="isExpanded"></obj_property>
                   <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_wrapper/\u_ren_del[0] /address">
                      <obj_property name="ElementShortName">address[31:0]</obj_property>
                      <obj_property name="ObjectShortName">address[31:0]</obj_property>
@@ -879,6 +866,7 @@
                <wvobject type="group" fp_name="group350">
                   <obj_property name="label">1</obj_property>
                   <obj_property name="DisplayName">label</obj_property>
+                  <obj_property name="isExpanded"></obj_property>
                   <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_wrapper/\u_ren_del[1] /address">
                      <obj_property name="ElementShortName">address[31:0]</obj_property>
                      <obj_property name="ObjectShortName">address[31:0]</obj_property>
@@ -908,17 +896,128 @@
             <wvobject type="group" fp_name="group347">
                <obj_property name="label">Resolver -&gt; Comparator</obj_property>
                <obj_property name="DisplayName">label</obj_property>
-               <obj_property name="isExpanded"></obj_property>
                <wvobject type="group" fp_name="group349">
                   <obj_property name="label">0</obj_property>
                   <obj_property name="DisplayName">label</obj_property>
                   <obj_property name="isExpanded"></obj_property>
+                  <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_wrapper/\u_res_cmp[0] /address">
+                     <obj_property name="ElementShortName">address[31:0]</obj_property>
+                     <obj_property name="ObjectShortName">address[31:0]</obj_property>
+                  </wvobject>
+                  <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_wrapper/\u_res_cmp[0] /immediate">
+                     <obj_property name="ElementShortName">immediate[31:0]</obj_property>
+                     <obj_property name="ObjectShortName">immediate[31:0]</obj_property>
+                  </wvobject>
+                  <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_wrapper/\u_res_cmp[0] /instr_name">
+                     <obj_property name="ElementShortName">instr_name[7:0]</obj_property>
+                     <obj_property name="ObjectShortName">instr_name[7:0]</obj_property>
+                  </wvobject>
+                  <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_wrapper/\u_res_cmp[0] /instr_type">
+                     <obj_property name="ElementShortName">instr_type[2:0]</obj_property>
+                     <obj_property name="ObjectShortName">instr_type[2:0]</obj_property>
+                  </wvobject>
+                  <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_wrapper/\u_res_cmp[0] /regs">
+                     <obj_property name="ElementShortName">regs</obj_property>
+                     <obj_property name="ObjectShortName">regs</obj_property>
+                  </wvobject>
+                  <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_wrapper/\u_res_cmp[0] /flags">
+                     <obj_property name="ElementShortName">flags</obj_property>
+                     <obj_property name="ObjectShortName">flags</obj_property>
+                  </wvobject>
                </wvobject>
                <wvobject type="group" fp_name="group350">
                   <obj_property name="label">1</obj_property>
                   <obj_property name="DisplayName">label</obj_property>
                   <obj_property name="isExpanded"></obj_property>
+                  <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_wrapper/\u_res_cmp[1] /address">
+                     <obj_property name="ElementShortName">address[31:0]</obj_property>
+                     <obj_property name="ObjectShortName">address[31:0]</obj_property>
+                  </wvobject>
+                  <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_wrapper/\u_res_cmp[1] /immediate">
+                     <obj_property name="ElementShortName">immediate[31:0]</obj_property>
+                     <obj_property name="ObjectShortName">immediate[31:0]</obj_property>
+                  </wvobject>
+                  <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_wrapper/\u_res_cmp[1] /instr_name">
+                     <obj_property name="ElementShortName">instr_name[7:0]</obj_property>
+                     <obj_property name="ObjectShortName">instr_name[7:0]</obj_property>
+                  </wvobject>
+                  <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_wrapper/\u_res_cmp[1] /instr_type">
+                     <obj_property name="ElementShortName">instr_type[2:0]</obj_property>
+                     <obj_property name="ObjectShortName">instr_type[2:0]</obj_property>
+                  </wvobject>
+                  <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_wrapper/\u_res_cmp[1] /regs">
+                     <obj_property name="ElementShortName">regs</obj_property>
+                     <obj_property name="ObjectShortName">regs</obj_property>
+                  </wvobject>
+                  <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_wrapper/\u_res_cmp[1] /flags">
+                     <obj_property name="ElementShortName">flags</obj_property>
+                     <obj_property name="ObjectShortName">flags</obj_property>
+                  </wvobject>
                </wvobject>
+            </wvobject>
+         </wvobject>
+         <wvobject type="group" fp_name="group2969">
+            <obj_property name="label">Controler</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <wvobject type="logic" fp_name="/TB_CPU/u_cpu/u_wrapper/u_control/i_reset">
+               <obj_property name="ElementShortName">i_reset</obj_property>
+               <obj_property name="ObjectShortName">i_reset</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/TB_CPU/u_cpu/u_wrapper/u_control/i_delete_tag">
+               <obj_property name="ElementShortName">i_delete_tag</obj_property>
+               <obj_property name="ObjectShortName">i_delete_tag</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/TB_CPU/u_cpu/u_wrapper/u_control/i_clear_tag">
+               <obj_property name="ElementShortName">i_clear_tag</obj_property>
+               <obj_property name="ObjectShortName">i_clear_tag</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/TB_CPU/u_cpu/u_wrapper/u_control/i_branch">
+               <obj_property name="ElementShortName">i_branch</obj_property>
+               <obj_property name="ObjectShortName">i_branch</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/TB_CPU/u_cpu/u_wrapper/u_control/i_ren_empty">
+               <obj_property name="ElementShortName">i_ren_empty</obj_property>
+               <obj_property name="ObjectShortName">i_ren_empty</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/TB_CPU/u_cpu/u_wrapper/u_control/i_full">
+               <obj_property name="ElementShortName">i_full</obj_property>
+               <obj_property name="ObjectShortName">i_full</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/TB_CPU/u_cpu/u_wrapper/u_control/o_tag">
+               <obj_property name="ElementShortName">o_tag</obj_property>
+               <obj_property name="ObjectShortName">o_tag</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/TB_CPU/u_cpu/u_wrapper/u_control/o_ld_halt">
+               <obj_property name="ElementShortName">o_ld_halt</obj_property>
+               <obj_property name="ObjectShortName">o_ld_halt</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_wrapper/u_control/o_dec_halt">
+               <obj_property name="ElementShortName">o_dec_halt[0:1]</obj_property>
+               <obj_property name="ObjectShortName">o_dec_halt[0:1]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/TB_CPU/u_cpu/u_wrapper/u_control/o_ren_halt">
+               <obj_property name="ElementShortName">o_ren_halt</obj_property>
+               <obj_property name="ObjectShortName">o_ren_halt</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/TB_CPU/u_cpu/u_wrapper/u_control/o_res_halt">
+               <obj_property name="ElementShortName">o_res_halt</obj_property>
+               <obj_property name="ObjectShortName">o_res_halt</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/TB_CPU/u_cpu/u_wrapper/u_control/o_clear">
+               <obj_property name="ElementShortName">o_clear</obj_property>
+               <obj_property name="ObjectShortName">o_clear</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/TB_CPU/u_cpu/u_wrapper/u_control/tag">
+               <obj_property name="ElementShortName">tag</obj_property>
+               <obj_property name="ObjectShortName">tag</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/TB_CPU/u_cpu/u_wrapper/u_control/ld_dec_ren_halt">
+               <obj_property name="ElementShortName">ld_dec_ren_halt</obj_property>
+               <obj_property name="ObjectShortName">ld_dec_ren_halt</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/TB_CPU/u_cpu/u_wrapper/u_control/all_halt">
+               <obj_property name="ElementShortName">all_halt</obj_property>
+               <obj_property name="ObjectShortName">all_halt</obj_property>
             </wvobject>
          </wvobject>
          <wvobject type="group" fp_name="group2098">
@@ -984,10 +1083,10 @@
          <wvobject type="group" fp_name="group217">
             <obj_property name="label">Decoders</obj_property>
             <obj_property name="DisplayName">label</obj_property>
-            <obj_property name="isExpanded"></obj_property>
             <wvobject type="group" fp_name="group218">
                <obj_property name="label">0</obj_property>
                <obj_property name="DisplayName">label</obj_property>
+               <obj_property name="isExpanded"></obj_property>
                <wvobject type="logic" fp_name="/TB_CPU/u_cpu/u_wrapper/u_decoder_1/i_clock">
                   <obj_property name="ElementShortName">i_clock</obj_property>
                   <obj_property name="ObjectShortName">i_clock</obj_property>
