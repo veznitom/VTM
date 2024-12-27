@@ -61,7 +61,8 @@ module IPWrapper (
     .instr_info(u_dc_ren[0]),
     .i_address (address[0]),
     .i_instr   (instr[0]),
-    .i_halt    (decoder_halt[0])
+    .i_halt    (decoder_halt[0]),
+    .o_invalid_instr(status_invalid)
   );
 
   Decoder u_decoder_2 (
