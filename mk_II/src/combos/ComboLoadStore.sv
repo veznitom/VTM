@@ -52,7 +52,7 @@ module ComboLoadStore #(
   CDBArbiter #(
     .ADDRESS(ARBITER_ADDRESS)
   ) u_arbiter (
-    .io_select    (select),
+    .io_select    ({data[1].select, data[0].select}),
     .i_get_bus    (get_bus),
     .o_bus_granted(bus_granted),
     .o_bus_index  (bus_index)

@@ -27,7 +27,7 @@ module Control (
   assign o_ren_halt    = all_halt | i_full | ld_dec_ren_halt | i_ren_empty;
   assign o_res_halt    = all_halt | i_full;
 
-  assign o_tag         = '0;
+  assign o_tag         = tag;
   assign o_clear       = i_delete_tag ? '1 : '0;
 
   always_comb begin

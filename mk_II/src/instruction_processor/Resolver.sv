@@ -91,6 +91,25 @@ module Resolver (
           o_instr_info[1].flags.tag <= '1;
         end else o_instr_info[1].flags.tag <= i_tag;
       end
+    end else if (i_instr_info[0].instr_name != UNKNOWN) begin
+
+      // First instruction passthrough
+      o_instr_info[0].address    <= i_instr_info[0].address;
+      o_instr_info[0].immediate  <= i_instr_info[0].immediate;
+      o_instr_info[0].instr_name <= i_instr_info[0].instr_name;
+      o_instr_info[0].regs.rs_1  <= i_query_output_regs[0].rs_1;
+      o_instr_info[0].regs.rs_2  <= i_query_output_regs[0].rs_2;
+      o_instr_info[0].regs.rd    <= i_instr_info[0].regs.rd;
+      //if (i_instr_info[0].flags.writes && i_instr_info[0].regs.rd !='0)begin
+
+      // should return 0 from regfile by default
+      o_instr_info[0].regs.rn    <= i_query_output_regs[0].rn;
+
+      //end else o_instr_info[0].regs.rn <= '0;
+      o_instr_info[0].instr_type <= i_instr_info[0].instr_type;
+      o_instr_info[0].flags      <= i_instr_info[0].flags;
+      o_instr_info[0].flags.tag  <= i_instr_info[0].flags.jumps ? '0 : i_tag;
+
     end else begin
       o_instr_info[0].clear();
       o_instr_info[1].clear();

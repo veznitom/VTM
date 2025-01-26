@@ -81,8 +81,8 @@ module RegisterFile (
 
       if (query.rename[0] && query.rename[1]) begin
         // Arch reg link to ren
-        registers[query.input_regs[0].rd].rrn <= free_ren_regs[free_ren_head];
-        registers[free_ren_regs[free_ren_head]]    <= '{0, 0, 0, query.tag[0]};
+        registers[query.input_regs[0].rd].rrn   <= free_ren_regs[free_ren_head];
+        registers[free_ren_regs[free_ren_head]] <= '{0, 0, 0, query.tag[0]};
         if (!query.tag[0]) registers[query.input_regs[0].rd].valid <= 1'h0;
         registers[query.input_regs[0].rd].tag <= query.tag[0];
 
@@ -96,8 +96,8 @@ module RegisterFile (
         free_ren_head                         <= free_ren_head - 2;
       end else if (query.rename[0]) begin
         // Arch reg link to ren
-        registers[query.input_regs[0].rd].rrn <= free_ren_regs[free_ren_head];
-        registers[query.output_regs[0].rn]    <= '{0, 0, 0, query.tag[0]};
+        registers[query.input_regs[0].rd].rrn   <= free_ren_regs[free_ren_head];
+        registers[free_ren_regs[free_ren_head]] <= '{0, 0, 0, query.tag[0]};
         if (!query.tag[0]) registers[query.input_regs[0].rd].valid <= 1'h0;
         registers[query.input_regs[0].rd].tag <= query.tag[0];
         // Query out ren send
@@ -106,8 +106,8 @@ module RegisterFile (
         free_ren_head--;
       end else if (query.rename[1]) begin
         // Arch reg link to ren
-        registers[query.input_regs[1].rd].rrn <= free_ren_regs[free_ren_head];
-        registers[query.output_regs[1].rn]    <= '{0, 0, 0, query.tag[1]};
+        registers[query.input_regs[1].rd].rrn   <= free_ren_regs[free_ren_head];
+        registers[free_ren_regs[free_ren_head]] <= '{0, 0, 0, query.tag[1]};
         if (!query.tag[1]) registers[query.input_regs[1].rd].valid <= 1'h0;
         registers[query.input_regs[1].rd].tag <= query.tag[1];
         // Query out ren send

@@ -15,8 +15,6 @@ module ComboALU #(
   // ------------------------------- Wires -------------------------------
   IntfExtFeed u_alu_feed ();
 
-  wire [31:0] alu_result;
-  wire [15:0] select;
   wire [ 5:0] rrn;
   wire        get_bus;
   wire        bus_granted;
@@ -48,21 +46,21 @@ module ComboALU #(
   CDBArbiter #(
     .ADDRESS(ARBITER_ADDRESS)
   ) u_arbiter (
-    .io_select    (select),
+    .io_select    ({data[1].select, data[0].select}),
     .i_get_bus    (get_bus),
     .o_bus_granted(bus_granted),
     .o_bus_index  (bus_index)
   );
-c
+
   // ------------------------------- Behaviour -------------------------------
   assign get_bus = u_alu_feed.instr_name != UNKNOWN;
-  assign select  = {data[1].select, data[0].select};
 
   generate
     for (genvar i = 0; i < 2; i++) begin : gen_rob
       assign data[i].result = (bus_granted & bus_index == i) ? u_alu_feed.result: 'z;
       assign data[i].address = (bus_granted & bus_index == i) ? u_alu_feed.address: 'z;
       assign data[i].jmp_address = (bus_granted & bus_index == i) ? '0 : 'z;
+      assign data[i].arn = (bus_granted & bus_index == i) ? 0 : 'z;
       assign data[i].rrn = (bus_granted & bus_index == i) ? rrn : 'z;
       assign data[i].reg_write = (bus_granted & bus_index == i) ? '1 : 'z;
     end

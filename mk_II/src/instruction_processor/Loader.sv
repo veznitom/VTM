@@ -36,6 +36,8 @@ module Loader #(
       o_address <= {'0, '0};
       o_instr   <= {'0, '0};
       pc        <= RESET_VECTOR;
+    end else if (i_jmp_write) begin
+      pc <= i_jmp_address;
     end else if (!i_halt) begin
       if (i_cache_hit[0] && i_cache_hit[1]) begin
         o_address[0] <= pc;

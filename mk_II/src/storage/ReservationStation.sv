@@ -130,15 +130,20 @@ module ReservationStation #(
       foreach (records[i]) begin
         records[i] <= EMPTY_RECORD;
       end
+      read_index  <= '0;
       write_index <= '0;
     end else if (cs.delete_tag) begin
-      foreach (records[i]) records[i].skip <= records[i].tag;
+      foreach (records[i])
+      if (!records[i].skip) records[i].skip <= records[i].tag;
     end else begin
-      if (i_next) begin
+      if (i_next && !empty) begin
+        read_index <= read_index + 1;
+      end
+      if (i_next && records[read_index].valid_1 && records[read_index].valid_2) begin
         records[read_index].skip <= '1;
       end
       // issue read
-      if (issue[0].instr_type == INSTR_TYPE) begin
+      if (issue[0].instr_type == INSTR_TYPE && issue[1].instr_type == INSTR_TYPE) begin
         records[write_index] <= '{
             data_1[0],
             data_2[0],
@@ -153,9 +158,37 @@ module ReservationStation #(
             issue[0].flags.tag,
             1'h0
         };
-      end
-      if (issue[1].instr_type == INSTR_TYPE) begin
         records[write_index+1] <= '{
+            data_1[1],
+            data_2[1],
+            issue[1].address,
+            issue[1].immediate,
+            issue[1].regs.rs_1,
+            issue[1].regs.rs_2,
+            issue[1].regs.rn,
+            issue[1].instr_name,
+            valid_1[1],
+            valid_2[1],
+            issue[1].flags.tag,
+            1'h0
+        };
+      end else if (issue[0].instr_type == INSTR_TYPE) begin
+        records[write_index] <= '{
+            data_1[0],
+            data_2[0],
+            issue[0].address,
+            issue[0].immediate,
+            issue[0].regs.rs_1,
+            issue[0].regs.rs_2,
+            issue[0].regs.rn,
+            issue[0].instr_name,
+            valid_1[0],
+            valid_2[0],
+            issue[0].flags.tag,
+            1'h0
+        };
+      end else if (issue[1].instr_type == INSTR_TYPE) begin
+        records[write_index] <= '{
             data_1[1],
             data_2[1],
             issue[1].address,
@@ -176,26 +209,22 @@ module ReservationStation #(
     end
   end  // main_loop
 
-  always_ff @(posedge cs.clock) begin : feed_ex_unit
+  always_comb begin : feed_ex_unit
     if (cs.reset) begin
-      feed.instr_name <= UNKNOWN;
-      read_index      <= '0;
-      o_rrn           <= '0;
+      feed.instr_name = UNKNOWN;
+      o_rrn           = '0;
     end else begin
-      if (i_next && !empty) begin
-        read_index <= read_index + 1;
-      end
       if (records[read_index].valid_1 && records[read_index].valid_2 &&
         !records[read_index].skip) begin
-        feed.data_1     <= records[read_index].data_1;
-        feed.data_2     <= records[read_index].data_2;
-        feed.address    <= records[read_index].address;
-        feed.immediate  <= records[read_index].immediate;
-        o_rrn           <= records[read_index].rrn;
-        feed.instr_name <= records[read_index].instr_name;
+        feed.data_1     = records[read_index].data_1;
+        feed.data_2     = records[read_index].data_2;
+        feed.address    = records[read_index].address;
+        feed.immediate  = records[read_index].immediate;
+        o_rrn           = records[read_index].rrn;
+        feed.instr_name = records[read_index].instr_name;
       end else begin
-        feed.instr_name <= UNKNOWN;
-        o_rrn           <= '0;
+        feed.instr_name = UNKNOWN;
+        o_rrn           = '0;
       end
     end
   end
@@ -210,7 +239,9 @@ module ReservationStation #(
     end else full = 1'h0;
 
     if (read_index == write_index &&
-    records[read_index].valid_1 & records[read_index].valid_2 & records[read_index].skip) begin
+        (records[read_index].instr_name == UNKNOWN ||
+        records[read_index].valid_1 && records[read_index].valid_2 && records[read_index].skip ||
+        !(records[read_index].valid_1 && records[read_index].valid_2))) begin
       empty = 1'h1;
     end else empty = 1'h0;
   end

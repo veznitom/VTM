@@ -16,10 +16,11 @@ module ReorderBuffer #(
   output reg o_full
 );
   // ------------------------------- Structs -------------------------------
-  typedef enum bit [1:0] {
+  typedef enum bit [2:0] {
     WAITING,
     COMPLETED,
-    IGNORE
+    IGNORE,
+    DONE
   } record_status_e;
 
   typedef struct packed {
@@ -46,17 +47,15 @@ module ReorderBuffer #(
   CDBArbiter #(
     .ADDRESS(ARBITER_ADDRESS)
   ) u_arbiter (
-    .io_select    (select),
+    .io_select    ({data[1].select, data[0].select}),
     .i_get_bus    (get_bus),
     .o_bus_granted(bus_granted),
     .o_bus_index  (bus_index)
   );
 
   // ------------------------------- Behaviour -------------------------------
-  assign select = {data[1].select, data[0].select};
-
   always_ff @(posedge cs.clock) begin : jmp_resolve
-    if (records[read_index].status == COMPLETED && records[0].flags.jumps) begin
+    if (records[read_index].status == COMPLETED && records[read_index].flags.jumps) begin
       if
       (records[read_index].address + 4 == records[read_index].jmp_address) begin
         o_jmp_address <= 'z;
@@ -64,7 +63,7 @@ module ReorderBuffer #(
         cs.clear_tag  <= 1'h1;
         cs.delete_tag <= 1'h0;
       end else begin
-        o_jmp_address <= records[0].jmp_address;
+        o_jmp_address <= records[read_index].jmp_address;
         o_jmp_write   <= 1'h1;
         cs.clear_tag  <= 1'h0;
         cs.delete_tag <= 1'h1;
@@ -75,11 +74,6 @@ module ReorderBuffer #(
       cs.clear_tag  <= 1'h0;
       cs.delete_tag <= 1'h0;
     end
-  end
-
-  always_comb begin : bus_requesting
-    if (records[read_index].status == COMPLETED) get_bus = 1'h1;
-    else get_bus = 1'h0;
   end
 
   generate
@@ -147,7 +141,7 @@ module ReorderBuffer #(
             issue[0].flags
         };
         write_index <= write_index + 1;
-      end
+      end  // Non XX XX
 
       //data_bus_fetch
       foreach (records[j]) begin
@@ -163,13 +157,20 @@ module ReorderBuffer #(
               records[j].flags.jumps ? data[1].jmp_address : 'z;
           records[j].status <= COMPLETED;
         end
+      end  // Completion
+
+      if (records[read_index].status == COMPLETED) begin
+        records[read_index].status <= DONE;
       end
-    end
+
+    end  // reset
   end  // main_loop
 
-  always_comb begin : pop_ignored
+  always_comb begin : bus_req_and_head_en
     if (records[read_index].status == IGNORE || bus_granted) read = 1'h1;
     else read = 1'h0;
+    if (records[read_index].status == COMPLETED) get_bus = 1'h1;
+    else get_bus = 1'h0;
   end
 
   always_ff @(posedge cs.clock) begin

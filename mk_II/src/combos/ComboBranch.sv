@@ -15,11 +15,9 @@ module ComboBranch #(
   // ------------------------------- Wires -------------------------------
   IntfExtFeed u_branch_feed ();
 
-  wire [31:0] store_result, jump_result;
-  wire [15:0] select;
-  wire        get_bus;
-  wire        bus_granted;
-  wire        bus_index;
+  wire get_bus;
+  wire bus_granted;
+  wire bus_index;
 
   // ------------------------------- Modules -------------------------------
   ReservationStation #(
@@ -48,12 +46,22 @@ module ComboBranch #(
   CDBArbiter #(
     .ADDRESS(ARBITER_ADDRESS)
   ) u_arbiter (
-    .io_select    (select),
+    .io_select    ({data[1].select, data[0].select}),
     .i_get_bus    (get_bus),
     .o_bus_granted(bus_granted),
     .o_bus_index  (bus_index)
   );
   // ------------------------------- Behaviour -------------------------------
-  assign select = {data[1].select, data[0].select};
+  assign get_bus = u_branch_feed.instr_name != UNKNOWN;
 
+  generate
+    for (genvar i = 0; i < 2; i++) begin : gen_rob
+      assign data[i].result = (bus_granted & bus_index == i) ? u_branch_feed.result: 'z;
+      assign data[i].address = (bus_granted & bus_index == i) ? u_branch_feed.address: 'z;
+      assign data[i].jmp_address = (bus_granted & bus_index == i) ? u_branch_feed.jump_result : 'z;
+      assign data[i].arn = (bus_granted & bus_index == i) ? 0 : 'z;
+      assign data[i].rrn = (bus_granted & bus_index == i) ? 0 : 'z;
+      assign data[i].reg_write = (bus_granted & bus_index == i) ? '1 : 'z;
+    end
+  endgenerate
 endmodule

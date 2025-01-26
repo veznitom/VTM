@@ -9,8 +9,7 @@ interface IntfCDB;  // Common Data Bus
   wire reg_write, cache_write;
 
   modport Combo(
-      input arn,
-      inout result, address, jmp_address, select,
+      inout result, address, jmp_address, select, arn,
       output rrn, reg_write
   );
   modport ReorderBuffer(
