@@ -115,7 +115,10 @@ module CPU (
     .data   (u_common_data_bus)
   );
 
-  ReorderBuffer u_rob (
+  ReorderBuffer #(
+    .ARBITER_ADDRESS(1),
+    .SIZE_BITS      (5)
+  ) u_rob (
     .cs           (u_common_signal_bus),
     .data         (u_common_data_bus),
     .issue        (u_issue),
@@ -124,21 +127,30 @@ module CPU (
     .o_full       (full_rob)
   );
 
-  ComboALU u_combo_alu (
+  ComboALU #(
+    .ARBITER_ADDRESS(3),
+    .SIZE_BITS      (4)
+  ) u_combo_alu (
     .cs    (u_common_signal_bus),
     .data  (u_common_data_bus),
     .issue (u_issue),
     .o_full(full_alu)
   );
 
-  ComboBranch u_combo_branch (
+  ComboBranch #(
+    .ARBITER_ADDRESS(2),
+    .SIZE_BITS      (3)
+  ) u_combo_branch (
     .cs    (u_common_signal_bus),
     .data  (u_common_data_bus),
     .issue (u_issue),
     .o_full(full_branch)
   );
 
-  ComboLoadStore u_combo_load_store (
+  ComboLoadStore #(
+    .ARBITER_ADDRESS(4),
+    .SIZE_BITS      (3)
+  ) u_combo_load_store (
     .cs    (u_common_signal_bus),
     .data  (u_common_data_bus),
     .issue (u_issue),
@@ -146,7 +158,10 @@ module CPU (
     .o_full(full_load_store)
   );
 
-  ComboMulDiv u_combo_mul_div (
+  ComboMulDiv #(
+    .ARBITER_ADDRESS(5),
+    .SIZE_BITS      (3)
+  ) u_combo_mul_div (
     .cs    (u_common_signal_bus),
     .data  (u_common_data_bus),
     .issue (u_issue),

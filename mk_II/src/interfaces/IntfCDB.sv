@@ -5,7 +5,7 @@ import pkg_defines::*;
 interface IntfCDB;  // Common Data Bus
   wire [31:0] result, address, jmp_address;
   wire [5:0] arn, rrn;
-  wire [3:0] select;
+  wire [7:0] select;
   wire reg_write, cache_write;
 
   modport Combo(

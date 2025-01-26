@@ -4,7 +4,7 @@
 import pkg_defines::*;
 module ReorderBuffer #(
   parameter bit [7:0] ARBITER_ADDRESS = 8'h00,
-  parameter int       SIZE            = 32
+  parameter int       SIZE_BITS       = 5
 ) (
   IntfCSB.ReorderBuffer   cs,
   IntfCDB.ReorderBuffer   data [2],
@@ -30,31 +30,31 @@ module ReorderBuffer #(
   } rob_record_t;
 
   // ------------------------------- Wires -------------------------------
-  rob_record_t       records      [SIZE];
+  rob_record_t                 records     [2**SIZE_BITS];
 
-  logic        [3:0] read_index;
-  logic        [3:0] write_index;
-  logic              read;
-  logic              empty;
-  logic              get_bus;
-  logic              bus_granted;
-  logic              bus_selected;
+  logic        [SIZE_BITS-1:0] read_index;
+  logic        [SIZE_BITS-1:0] write_index;
+  logic                        read;
+  logic                        empty;
+
+  wire         [         15:0] select;
+  logic                        get_bus;
+  logic                        bus_granted;
+  logic                        bus_index;
 
   // ------------------------------- Modules -------------------------------
-  /*CDBArbiter #(
+  CDBArbiter #(
     .ADDRESS(ARBITER_ADDRESS)
   ) u_arbiter (
-    .select      (),
-    .get_bus     (),
-    .bus_granted (),
-    .bus_selected()
-  );*/
+    .io_select    (select),
+    .i_get_bus    (get_bus),
+    .o_bus_granted(bus_granted),
+    .o_bus_index  (bus_index)
+  );
 
   // ------------------------------- Behaviour -------------------------------
-  assign o_full        = '0;
-  assign cs.clear_tag  = '0;
-  assign cs.delete_tag = '0;
-  /*
+  assign select = {data[1].select, data[0].select};
+
   always_ff @(posedge cs.clock) begin : jmp_resolve
     if (records[read_index].status == COMPLETED && records[0].flags.jumps) begin
       if
@@ -84,31 +84,25 @@ module ReorderBuffer #(
 
   generate
     for (genvar i = 0; i < 2; i++) begin : gen_rob
-      always_ff @(posedge cs.clock) begin : write_to_bus
-        if (bus_granted) begin
-          if (bus_selected == i) begin
-            data[i].result <= records[read_index].result;
-            data[i].address <= records[read_index].address;
-            data[i].jmp_address <= records[read_index].jmp_address;
-            data[i].arn <= records[read_index].regs.rd;
-            data[i].rrn <= records[read_index].regs.rn;
-            data[i].reg_write <= records[read_index].flags.writes;
-            data[i].cache_write <=
-            records[read_index].flags.mem & records[read_index].flags.writes;
-          end
-        end
-      end
+      assign data[i].result = (bus_granted & bus_index == i) ? records[read_index].result: 'z;
+      assign data[i].address = (bus_granted & bus_index == i) ? records[read_index].address: 'z;
+      assign data[i].jmp_address = (bus_granted & bus_index == i) ? records[read_index].jmp_address: 'z;
+      assign data[i].arn = (bus_granted & bus_index == i) ? records[read_index].regs.rd: 'z;
+      assign data[i].rrn = (bus_granted & bus_index == i) ? records[read_index].regs.rn: 'z;
+      assign data[i].reg_write = (bus_granted & bus_index == i) ? records[read_index].flags.writes: 'z;
+      assign data[i].cache_write = (bus_granted & bus_index == i) ?
+            records[read_index].flags.mem & records[read_index].flags.writes: 'z;
     end
   endgenerate
 
-  always_ff @(posedge cs.clock) begin
+  always_ff @(posedge cs.clock) begin : main_loop
     if (cs.reset) begin
       foreach (records[i]) begin
         records[i] <= '{
             'z,
             'z,
             'z,
-            WAITING,
+            IGNORE,
             '{6'h00, 6'h00, 6'h00, 6'h00},
             '{1'h0, 1'h0, 1'h0, 1'h0, 1'h0}
         };
@@ -170,9 +164,8 @@ module ReorderBuffer #(
           records[j].status <= COMPLETED;
         end
       end
-
     end
-  end
+  end  // main_loop
 
   always_comb begin : pop_ignored
     if (records[read_index].status == IGNORE || bus_granted) read = 1'h1;
@@ -188,11 +181,17 @@ module ReorderBuffer #(
   end
 
   always_comb begin
-    if (read_index == write_index + 1) o_full = 1'h1;
-    else o_full = 1'h0;
+    if (
+      (read_index == write_index + 1 ||
+      read_index == write_index) &&
+      records[read_index].status == WAITING) begin
+      o_full = 1'h1;
+    end else o_full = 1'h0;
 
-    if (read_index == write_index) empty = 1'h1;
-    else empty = 1'h0;
+    if (read_index == write_index &&
+        (records[read_index].status == COMPLETED ||
+        records[read_index].status == IGNORE)) begin
+      empty = 1'h1;
+    end else empty = 1'h0;
   end
-  */
 endmodule

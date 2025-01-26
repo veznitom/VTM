@@ -3,7 +3,8 @@
 `default_nettype none
 import pkg_defines::*;
 module ComboMulDiv #(
-  parameter bit [7:0] ARBITER_ADDRESS = 8'h00
+  parameter bit [7:0] ARBITER_ADDRESS = 8'h00,
+  parameter int       SIZE_BITS       = 3
 ) (
   IntfCSB.tag     cs,
   IntfIssue.Combo issue[2],
@@ -15,13 +16,14 @@ module ComboMulDiv #(
   IntfExtFeed u_mult_div_feed ();
 
   wire [31:0] mult_div_result;
+  wire [15:0] select;
   wire        get_bus;
   wire        bus_granted;
-  wire        bus_selected;
+  wire        bus_index;
 
   // ------------------------------- Modules -------------------------------
   ReservationStation #(
-    .SIZE      (16),
+    .SIZE_BITS (SIZE_BITS),
     .INSTR_TYPE(MD)
   ) u_station (
     .cs    (cs),
@@ -43,9 +45,12 @@ module ComboMulDiv #(
   CDBArbiter #(
     .ADDRESS(ARBITER_ADDRESS)
   ) u_arbiter (
-    .io_select     (),
-    .i_get_bus     (),
-    .o_bus_granted (),
-    .o_bus_selected()
+    .io_select    (select),
+    .i_get_bus    (get_bus),
+    .o_bus_granted(bus_granted),
+    .o_bus_index  (bus_index)
   );
+  // ------------------------------- Behaviour -------------------------------
+  assign select = {data[1].select, data[0].select};
+
 endmodule

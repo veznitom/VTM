@@ -1,6 +1,6 @@
 [option]
 exclude_paths = []
-textwidth = 80
+textwidth = 120
 copyright_linenum = 1
 copyright_year = "2024"
 copyright_holder = "veznitom"

@@ -12,13 +12,13 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="414.918 ns"></ZoomStartTime>
-      <ZoomEndTime time="596.519 ns"></ZoomEndTime>
-      <Cursor1Time time="430.000 ns"></Cursor1Time>
+      <ZoomStartTime time="320.141 ns"></ZoomStartTime>
+      <ZoomEndTime time="571.972 ns"></ZoomEndTime>
+      <Cursor1Time time="390.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="288"></NameColumnWidth>
-      <ValueColumnWidth column_width="182"></ValueColumnWidth>
+      <ValueColumnWidth column_width="178"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="5" />
    <wvobject type="group" fp_name="group6">
@@ -385,9 +385,11 @@
       <wvobject type="group" fp_name="group266">
          <obj_property name="label">Common Data Bus</obj_property>
          <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
          <wvobject type="group" fp_name="group267">
             <obj_property name="label">0</obj_property>
             <obj_property name="DisplayName">label</obj_property>
+            <obj_property name="isExpanded"></obj_property>
             <wvobject type="array" fp_name="/TB_CPU/u_cpu/\u_common_data_bus[0] /result">
                <obj_property name="ElementShortName">result[31:0]</obj_property>
                <obj_property name="ObjectShortName">result[31:0]</obj_property>
@@ -424,6 +426,7 @@
          <wvobject type="group" fp_name="group267">
             <obj_property name="label">1</obj_property>
             <obj_property name="DisplayName">label</obj_property>
+            <obj_property name="isExpanded"></obj_property>
             <wvobject type="array" fp_name="/TB_CPU/u_cpu/\u_common_data_bus[1] /result">
                <obj_property name="ElementShortName">result[31:0]</obj_property>
                <obj_property name="ObjectShortName">result[31:0]</obj_property>
@@ -461,11 +464,9 @@
       <wvobject type="group" fp_name="group286">
          <obj_property name="label">Issue</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <obj_property name="isExpanded"></obj_property>
          <wvobject type="group" fp_name="group287">
             <obj_property name="label">0</obj_property>
             <obj_property name="DisplayName">label</obj_property>
-            <obj_property name="isExpanded"></obj_property>
             <wvobject type="array" fp_name="/TB_CPU/u_cpu/\u_issue[0] /address">
                <obj_property name="ElementShortName">address[31:0]</obj_property>
                <obj_property name="ObjectShortName">address[31:0]</obj_property>
@@ -558,6 +559,7 @@
          <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_query/input_regs">
             <obj_property name="ElementShortName">input_regs[0:1]</obj_property>
             <obj_property name="ObjectShortName">input_regs[0:1]</obj_property>
+            <obj_property name="isExpanded"></obj_property>
          </wvobject>
          <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_query/output_regs">
             <obj_property name="ElementShortName">output_regs[0:1]</obj_property>
@@ -683,7 +685,6 @@
       <wvobject type="group" fp_name="group2097">
          <obj_property name="label">Instruction Processor</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <obj_property name="isExpanded"></obj_property>
          <wvobject type="group" fp_name="group344">
             <obj_property name="label">IPWrapper</obj_property>
             <obj_property name="DisplayName">label</obj_property>
@@ -765,9 +766,8 @@
             </wvobject>
          </wvobject>
          <wvobject type="group" fp_name="group343">
-            <obj_property name="label">buses</obj_property>
+            <obj_property name="label">Buses</obj_property>
             <obj_property name="DisplayName">label</obj_property>
-            <obj_property name="isExpanded"></obj_property>
             <wvobject type="group" fp_name="group345">
                <obj_property name="label">Decoder -&gt; Renamer</obj_property>
                <obj_property name="DisplayName">label</obj_property>
@@ -896,6 +896,7 @@
             <wvobject type="group" fp_name="group347">
                <obj_property name="label">Resolver -&gt; Comparator</obj_property>
                <obj_property name="DisplayName">label</obj_property>
+               <obj_property name="isExpanded"></obj_property>
                <wvobject type="group" fp_name="group349">
                   <obj_property name="label">0</obj_property>
                   <obj_property name="DisplayName">label</obj_property>
@@ -1281,6 +1282,7 @@
       <wvobject type="group" fp_name="group110">
          <obj_property name="label">Reorder Buffer</obj_property>
          <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
          <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_rob/o_jmp_address">
             <obj_property name="ElementShortName">o_jmp_address[31:0]</obj_property>
             <obj_property name="ObjectShortName">o_jmp_address[31:0]</obj_property>
@@ -1298,12 +1300,12 @@
             <obj_property name="ObjectShortName">records[0:31]</obj_property>
          </wvobject>
          <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_rob/read_index">
-            <obj_property name="ElementShortName">read_index[3:0]</obj_property>
-            <obj_property name="ObjectShortName">read_index[3:0]</obj_property>
+            <obj_property name="ElementShortName">read_index[4:0]</obj_property>
+            <obj_property name="ObjectShortName">read_index[4:0]</obj_property>
          </wvobject>
          <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_rob/write_index">
-            <obj_property name="ElementShortName">write_index[3:0]</obj_property>
-            <obj_property name="ObjectShortName">write_index[3:0]</obj_property>
+            <obj_property name="ElementShortName">write_index[4:0]</obj_property>
+            <obj_property name="ObjectShortName">write_index[4:0]</obj_property>
          </wvobject>
          <wvobject type="logic" fp_name="/TB_CPU/u_cpu/u_rob/read">
             <obj_property name="ElementShortName">read</obj_property>
@@ -1321,17 +1323,50 @@
             <obj_property name="ElementShortName">bus_granted</obj_property>
             <obj_property name="ObjectShortName">bus_granted</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/TB_CPU/u_cpu/u_rob/bus_selected">
-            <obj_property name="ElementShortName">bus_selected</obj_property>
-            <obj_property name="ObjectShortName">bus_selected</obj_property>
-         </wvobject>
          <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_rob/ARBITER_ADDRESS">
             <obj_property name="ElementShortName">ARBITER_ADDRESS[7:0]</obj_property>
             <obj_property name="ObjectShortName">ARBITER_ADDRESS[7:0]</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_rob/SIZE">
-            <obj_property name="ElementShortName">SIZE[31:0]</obj_property>
-            <obj_property name="ObjectShortName">SIZE[31:0]</obj_property>
+         <wvobject type="group" fp_name="group1652">
+            <obj_property name="label">Arbiter</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <obj_property name="isExpanded"></obj_property>
+            <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_rob/u_arbiter/io_select">
+               <obj_property name="ElementShortName">io_select[15:0]</obj_property>
+               <obj_property name="ObjectShortName">io_select[15:0]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/TB_CPU/u_cpu/u_rob/u_arbiter/i_get_bus">
+               <obj_property name="ElementShortName">i_get_bus</obj_property>
+               <obj_property name="ObjectShortName">i_get_bus</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/TB_CPU/u_cpu/u_rob/u_arbiter/o_bus_granted">
+               <obj_property name="ElementShortName">o_bus_granted</obj_property>
+               <obj_property name="ObjectShortName">o_bus_granted</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/TB_CPU/u_cpu/u_rob/u_arbiter/o_bus_index">
+               <obj_property name="ElementShortName">o_bus_index</obj_property>
+               <obj_property name="ObjectShortName">o_bus_index</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_rob/u_arbiter/select">
+               <obj_property name="ElementShortName">select[15:0]</obj_property>
+               <obj_property name="ObjectShortName">select[15:0]</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_rob/u_arbiter/over_ranked">
+               <obj_property name="ElementShortName">over_ranked[1:0]</obj_property>
+               <obj_property name="ObjectShortName">over_ranked[1:0]</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_rob/u_arbiter/selected">
+               <obj_property name="ElementShortName">selected[1:0]</obj_property>
+               <obj_property name="ObjectShortName">selected[1:0]</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/TB_CPU/u_cpu/u_rob/u_arbiter/granted">
+               <obj_property name="ElementShortName">granted</obj_property>
+               <obj_property name="ObjectShortName">granted</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_rob/u_arbiter/ADDRESS">
+               <obj_property name="ElementShortName">ADDRESS[7:0]</obj_property>
+               <obj_property name="ObjectShortName">ADDRESS[7:0]</obj_property>
+            </wvobject>
          </wvobject>
       </wvobject>
       <wvobject fp_name="divider560" type="divider">
@@ -1401,17 +1436,9 @@
             <obj_property name="ElementShortName">empty</obj_property>
             <obj_property name="ObjectShortName">empty</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_combo_alu/u_station/SIZE">
-            <obj_property name="ElementShortName">SIZE[31:0]</obj_property>
-            <obj_property name="ObjectShortName">SIZE[31:0]</obj_property>
-         </wvobject>
          <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_combo_alu/u_station/INSTR_TYPE">
             <obj_property name="ElementShortName">INSTR_TYPE[2:0]</obj_property>
             <obj_property name="ObjectShortName">INSTR_TYPE[2:0]</obj_property>
-         </wvobject>
-         <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_combo_alu/u_station/IndexSize">
-            <obj_property name="ElementShortName">IndexSize[31:0]</obj_property>
-            <obj_property name="ObjectShortName">IndexSize[31:0]</obj_property>
          </wvobject>
       </wvobject>
       <wvobject type="group" fp_name="group98">
@@ -1425,6 +1452,10 @@
             <obj_property name="ElementShortName">alu_result[31:0]</obj_property>
             <obj_property name="ObjectShortName">alu_result[31:0]</obj_property>
          </wvobject>
+         <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_combo_alu/select">
+            <obj_property name="ElementShortName">select[15:0]</obj_property>
+            <obj_property name="ObjectShortName">select[15:0]</obj_property>
+         </wvobject>
          <wvobject type="logic" fp_name="/TB_CPU/u_cpu/u_combo_alu/get_bus">
             <obj_property name="ElementShortName">get_bus</obj_property>
             <obj_property name="ObjectShortName">get_bus</obj_property>
@@ -1433,13 +1464,54 @@
             <obj_property name="ElementShortName">bus_granted</obj_property>
             <obj_property name="ObjectShortName">bus_granted</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/TB_CPU/u_cpu/u_combo_alu/bus_selected">
-            <obj_property name="ElementShortName">bus_selected</obj_property>
-            <obj_property name="ObjectShortName">bus_selected</obj_property>
+         <wvobject type="logic" fp_name="/TB_CPU/u_cpu/u_combo_alu/bus_index">
+            <obj_property name="ElementShortName">bus_index</obj_property>
+            <obj_property name="ObjectShortName">bus_index</obj_property>
          </wvobject>
          <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_combo_alu/ARBITER_ADDRESS">
             <obj_property name="ElementShortName">ARBITER_ADDRESS[7:0]</obj_property>
             <obj_property name="ObjectShortName">ARBITER_ADDRESS[7:0]</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject type="group" fp_name="group1490">
+         <obj_property name="label">Arbiter</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_combo_alu/u_arbiter/io_select">
+            <obj_property name="ElementShortName">io_select[15:0]</obj_property>
+            <obj_property name="ObjectShortName">io_select[15:0]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/TB_CPU/u_cpu/u_combo_alu/u_arbiter/i_get_bus">
+            <obj_property name="ElementShortName">i_get_bus</obj_property>
+            <obj_property name="ObjectShortName">i_get_bus</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/TB_CPU/u_cpu/u_combo_alu/u_arbiter/o_bus_granted">
+            <obj_property name="ElementShortName">o_bus_granted</obj_property>
+            <obj_property name="ObjectShortName">o_bus_granted</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/TB_CPU/u_cpu/u_combo_alu/u_arbiter/o_bus_index">
+            <obj_property name="ElementShortName">o_bus_index</obj_property>
+            <obj_property name="ObjectShortName">o_bus_index</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_combo_alu/u_arbiter/select">
+            <obj_property name="ElementShortName">select[15:0]</obj_property>
+            <obj_property name="ObjectShortName">select[15:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_combo_alu/u_arbiter/over_ranked">
+            <obj_property name="ElementShortName">over_ranked[1:0]</obj_property>
+            <obj_property name="ObjectShortName">over_ranked[1:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_combo_alu/u_arbiter/selected">
+            <obj_property name="ElementShortName">selected[1:0]</obj_property>
+            <obj_property name="ObjectShortName">selected[1:0]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/TB_CPU/u_cpu/u_combo_alu/u_arbiter/granted">
+            <obj_property name="ElementShortName">granted</obj_property>
+            <obj_property name="ObjectShortName">granted</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_combo_alu/u_arbiter/ADDRESS">
+            <obj_property name="ElementShortName">ADDRESS[7:0]</obj_property>
+            <obj_property name="ObjectShortName">ADDRESS[7:0]</obj_property>
          </wvobject>
       </wvobject>
       <wvobject fp_name="divider561" type="divider">
@@ -1494,32 +1566,24 @@
             <obj_property name="ObjectShortName">o_full</obj_property>
          </wvobject>
          <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_combo_branch/u_station/records">
-            <obj_property name="ElementShortName">records[0:15]</obj_property>
-            <obj_property name="ObjectShortName">records[0:15]</obj_property>
+            <obj_property name="ElementShortName">records[0:7]</obj_property>
+            <obj_property name="ObjectShortName">records[0:7]</obj_property>
          </wvobject>
          <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_combo_branch/u_station/read_index">
-            <obj_property name="ElementShortName">read_index[3:0]</obj_property>
-            <obj_property name="ObjectShortName">read_index[3:0]</obj_property>
+            <obj_property name="ElementShortName">read_index[2:0]</obj_property>
+            <obj_property name="ObjectShortName">read_index[2:0]</obj_property>
          </wvobject>
          <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_combo_branch/u_station/write_index">
-            <obj_property name="ElementShortName">write_index[3:0]</obj_property>
-            <obj_property name="ObjectShortName">write_index[3:0]</obj_property>
+            <obj_property name="ElementShortName">write_index[2:0]</obj_property>
+            <obj_property name="ObjectShortName">write_index[2:0]</obj_property>
          </wvobject>
          <wvobject type="logic" fp_name="/TB_CPU/u_cpu/u_combo_branch/u_station/empty">
             <obj_property name="ElementShortName">empty</obj_property>
             <obj_property name="ObjectShortName">empty</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_combo_branch/u_station/SIZE">
-            <obj_property name="ElementShortName">SIZE[31:0]</obj_property>
-            <obj_property name="ObjectShortName">SIZE[31:0]</obj_property>
-         </wvobject>
          <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_combo_branch/u_station/INSTR_TYPE">
             <obj_property name="ElementShortName">INSTR_TYPE[2:0]</obj_property>
             <obj_property name="ObjectShortName">INSTR_TYPE[2:0]</obj_property>
-         </wvobject>
-         <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_combo_branch/u_station/IndexSize">
-            <obj_property name="ElementShortName">IndexSize[31:0]</obj_property>
-            <obj_property name="ObjectShortName">IndexSize[31:0]</obj_property>
          </wvobject>
       </wvobject>
       <wvobject type="group" fp_name="group99">
@@ -1537,6 +1601,10 @@
             <obj_property name="ElementShortName">jump_result[31:0]</obj_property>
             <obj_property name="ObjectShortName">jump_result[31:0]</obj_property>
          </wvobject>
+         <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_combo_branch/select">
+            <obj_property name="ElementShortName">select[15:0]</obj_property>
+            <obj_property name="ObjectShortName">select[15:0]</obj_property>
+         </wvobject>
          <wvobject type="logic" fp_name="/TB_CPU/u_cpu/u_combo_branch/get_bus">
             <obj_property name="ElementShortName">get_bus</obj_property>
             <obj_property name="ObjectShortName">get_bus</obj_property>
@@ -1545,9 +1613,9 @@
             <obj_property name="ElementShortName">bus_granted</obj_property>
             <obj_property name="ObjectShortName">bus_granted</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/TB_CPU/u_cpu/u_combo_branch/bus_selected">
-            <obj_property name="ElementShortName">bus_selected</obj_property>
-            <obj_property name="ObjectShortName">bus_selected</obj_property>
+         <wvobject type="logic" fp_name="/TB_CPU/u_cpu/u_combo_branch/bus_index">
+            <obj_property name="ElementShortName">bus_index</obj_property>
+            <obj_property name="ObjectShortName">bus_index</obj_property>
          </wvobject>
          <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_combo_branch/ARBITER_ADDRESS">
             <obj_property name="ElementShortName">ARBITER_ADDRESS[7:0]</obj_property>
@@ -1630,32 +1698,24 @@
             <obj_property name="ObjectShortName">o_full</obj_property>
          </wvobject>
          <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_combo_load_store/u_station/records">
-            <obj_property name="ElementShortName">records[0:15]</obj_property>
-            <obj_property name="ObjectShortName">records[0:15]</obj_property>
+            <obj_property name="ElementShortName">records[0:7]</obj_property>
+            <obj_property name="ObjectShortName">records[0:7]</obj_property>
          </wvobject>
          <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_combo_load_store/u_station/read_index">
-            <obj_property name="ElementShortName">read_index[3:0]</obj_property>
-            <obj_property name="ObjectShortName">read_index[3:0]</obj_property>
+            <obj_property name="ElementShortName">read_index[2:0]</obj_property>
+            <obj_property name="ObjectShortName">read_index[2:0]</obj_property>
          </wvobject>
          <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_combo_load_store/u_station/write_index">
-            <obj_property name="ElementShortName">write_index[3:0]</obj_property>
-            <obj_property name="ObjectShortName">write_index[3:0]</obj_property>
+            <obj_property name="ElementShortName">write_index[2:0]</obj_property>
+            <obj_property name="ObjectShortName">write_index[2:0]</obj_property>
          </wvobject>
          <wvobject type="logic" fp_name="/TB_CPU/u_cpu/u_combo_load_store/u_station/empty">
             <obj_property name="ElementShortName">empty</obj_property>
             <obj_property name="ObjectShortName">empty</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_combo_load_store/u_station/SIZE">
-            <obj_property name="ElementShortName">SIZE[31:0]</obj_property>
-            <obj_property name="ObjectShortName">SIZE[31:0]</obj_property>
-         </wvobject>
          <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_combo_load_store/u_station/INSTR_TYPE">
             <obj_property name="ElementShortName">INSTR_TYPE[2:0]</obj_property>
             <obj_property name="ObjectShortName">INSTR_TYPE[2:0]</obj_property>
-         </wvobject>
-         <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_combo_load_store/u_station/IndexSize">
-            <obj_property name="ElementShortName">IndexSize[31:0]</obj_property>
-            <obj_property name="ObjectShortName">IndexSize[31:0]</obj_property>
          </wvobject>
       </wvobject>
       <wvobject type="group" fp_name="group100">
@@ -1669,6 +1729,10 @@
             <obj_property name="ElementShortName">load_store_result[31:0]</obj_property>
             <obj_property name="ObjectShortName">load_store_result[31:0]</obj_property>
          </wvobject>
+         <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_combo_load_store/select">
+            <obj_property name="ElementShortName">select[15:0]</obj_property>
+            <obj_property name="ObjectShortName">select[15:0]</obj_property>
+         </wvobject>
          <wvobject type="logic" fp_name="/TB_CPU/u_cpu/u_combo_load_store/get_bus">
             <obj_property name="ElementShortName">get_bus</obj_property>
             <obj_property name="ObjectShortName">get_bus</obj_property>
@@ -1677,9 +1741,9 @@
             <obj_property name="ElementShortName">bus_granted</obj_property>
             <obj_property name="ObjectShortName">bus_granted</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/TB_CPU/u_cpu/u_combo_load_store/bus_selected">
-            <obj_property name="ElementShortName">bus_selected</obj_property>
-            <obj_property name="ObjectShortName">bus_selected</obj_property>
+         <wvobject type="logic" fp_name="/TB_CPU/u_cpu/u_combo_load_store/bus_index">
+            <obj_property name="ElementShortName">bus_index</obj_property>
+            <obj_property name="ObjectShortName">bus_index</obj_property>
          </wvobject>
          <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_combo_load_store/ARBITER_ADDRESS">
             <obj_property name="ElementShortName">ARBITER_ADDRESS[7:0]</obj_property>
@@ -1766,32 +1830,24 @@
             <obj_property name="ObjectShortName">o_full</obj_property>
          </wvobject>
          <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_combo_mul_div/u_station/records">
-            <obj_property name="ElementShortName">records[0:15]</obj_property>
-            <obj_property name="ObjectShortName">records[0:15]</obj_property>
+            <obj_property name="ElementShortName">records[0:7]</obj_property>
+            <obj_property name="ObjectShortName">records[0:7]</obj_property>
          </wvobject>
          <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_combo_mul_div/u_station/read_index">
-            <obj_property name="ElementShortName">read_index[3:0]</obj_property>
-            <obj_property name="ObjectShortName">read_index[3:0]</obj_property>
+            <obj_property name="ElementShortName">read_index[2:0]</obj_property>
+            <obj_property name="ObjectShortName">read_index[2:0]</obj_property>
          </wvobject>
          <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_combo_mul_div/u_station/write_index">
-            <obj_property name="ElementShortName">write_index[3:0]</obj_property>
-            <obj_property name="ObjectShortName">write_index[3:0]</obj_property>
+            <obj_property name="ElementShortName">write_index[2:0]</obj_property>
+            <obj_property name="ObjectShortName">write_index[2:0]</obj_property>
          </wvobject>
          <wvobject type="logic" fp_name="/TB_CPU/u_cpu/u_combo_mul_div/u_station/empty">
             <obj_property name="ElementShortName">empty</obj_property>
             <obj_property name="ObjectShortName">empty</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_combo_mul_div/u_station/SIZE">
-            <obj_property name="ElementShortName">SIZE[31:0]</obj_property>
-            <obj_property name="ObjectShortName">SIZE[31:0]</obj_property>
-         </wvobject>
          <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_combo_mul_div/u_station/INSTR_TYPE">
             <obj_property name="ElementShortName">INSTR_TYPE[2:0]</obj_property>
             <obj_property name="ObjectShortName">INSTR_TYPE[2:0]</obj_property>
-         </wvobject>
-         <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_combo_mul_div/u_station/IndexSize">
-            <obj_property name="ElementShortName">IndexSize[31:0]</obj_property>
-            <obj_property name="ObjectShortName">IndexSize[31:0]</obj_property>
          </wvobject>
       </wvobject>
       <wvobject type="group" fp_name="group101">
@@ -1805,6 +1861,10 @@
             <obj_property name="ElementShortName">mult_div_result[31:0]</obj_property>
             <obj_property name="ObjectShortName">mult_div_result[31:0]</obj_property>
          </wvobject>
+         <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_combo_mul_div/select">
+            <obj_property name="ElementShortName">select[15:0]</obj_property>
+            <obj_property name="ObjectShortName">select[15:0]</obj_property>
+         </wvobject>
          <wvobject type="logic" fp_name="/TB_CPU/u_cpu/u_combo_mul_div/get_bus">
             <obj_property name="ElementShortName">get_bus</obj_property>
             <obj_property name="ObjectShortName">get_bus</obj_property>
@@ -1813,9 +1873,9 @@
             <obj_property name="ElementShortName">bus_granted</obj_property>
             <obj_property name="ObjectShortName">bus_granted</obj_property>
          </wvobject>
-         <wvobject type="logic" fp_name="/TB_CPU/u_cpu/u_combo_mul_div/bus_selected">
-            <obj_property name="ElementShortName">bus_selected</obj_property>
-            <obj_property name="ObjectShortName">bus_selected</obj_property>
+         <wvobject type="logic" fp_name="/TB_CPU/u_cpu/u_combo_mul_div/bus_index">
+            <obj_property name="ElementShortName">bus_index</obj_property>
+            <obj_property name="ObjectShortName">bus_index</obj_property>
          </wvobject>
          <wvobject type="array" fp_name="/TB_CPU/u_cpu/u_combo_mul_div/ARBITER_ADDRESS">
             <obj_property name="ElementShortName">ARBITER_ADDRESS[7:0]</obj_property>

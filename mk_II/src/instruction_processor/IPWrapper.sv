@@ -93,7 +93,7 @@ module IPWrapper (
     .o_ren_empty(status_ren_empty)
   );
 
-  PipeDelay u_delay_1 (
+  PipeDelay u_delay (
     .i_clock(cs.clock),
     .i_reset(cs.reset),
     .i_info (u_ren_del),

@@ -45,8 +45,9 @@ module RegisterFile (
 
   always_ff @(posedge i_clock) begin
     if (i_reset) begin
-      foreach (registers[j]) begin
-        registers[j] <= '{0, 0, 0, 0};
+      registers[0] <= '{0, 0, 1, 0};
+      for (int i = 1; i < 64; i++) begin
+        registers[i] <= '{0, 0, 0, 0};
       end
       for (int i = 0; i < 32; i++) begin
         free_ren_regs[i] <= i + 32;
@@ -81,12 +82,12 @@ module RegisterFile (
       if (query.rename[0] && query.rename[1]) begin
         // Arch reg link to ren
         registers[query.input_regs[0].rd].rrn <= free_ren_regs[free_ren_head];
-        registers[query.output_regs[0].rn]    <= '{0, 0, 0, query.tag[0]};
+        registers[free_ren_regs[free_ren_head]]    <= '{0, 0, 0, query.tag[0]};
         if (!query.tag[0]) registers[query.input_regs[0].rd].valid <= 1'h0;
         registers[query.input_regs[0].rd].tag <= query.tag[0];
 
         registers[query.input_regs[1].rd].rrn <= free_ren_regs[free_ren_head-1];
-        registers[query.output_regs[1].rn] <= '{0, 0, 0, query.tag[1]};
+        registers[free_ren_regs[free_ren_head-1]] <= '{0, 0, 0, query.tag[1]};
         if (!query.tag[1]) registers[query.input_regs[1].rd].valid <= 1'h0;
         registers[query.input_regs[1].rd].tag <= query.tag[1];
         // Query out ren send
