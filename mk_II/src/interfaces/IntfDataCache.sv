@@ -2,10 +2,16 @@
 
 `default_nettype none
 interface IntfDataCache;
-  logic [31:0] address;
-  wire  [31:0] data;
-  logic read, write, hit, ready;
+  logic [31:0] address, din, dout;
+  logic [1:0] store_type;
+  logic read, hit, write, ready, tag;
 
-  modport DataCache(input address, read, write, inout data, output hit, ready);
-  modport LoadStore(input hit, ready, inout data, output address, read, write);
-endinterface  //ifc_data_cache
+  modport DataCache(
+      input din, address, read, write, ready, store_type, tag,
+      output dout, hit
+  );
+  modport LoadStore(
+      input din, hit,
+      output dout, address, read, write, ready, store_type, tag
+  );
+endinterface

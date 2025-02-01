@@ -15,7 +15,7 @@ module MulDiv (
   reg [31:0] divident_u, divident_s;
   reg [31:0] remainder_u, remainder_s;
   // ------------------------------- Behaviour -------------------------------
-  /*
+
   always_comb begin
     {upper_u, lower_u}   = i_data_1 * i_data_2;
     {upper_s, lower_s}   = $signed(i_data_1) * $signed(i_data_2);
@@ -39,5 +39,5 @@ module MulDiv (
       default: o_result = 'z;
     endcase
   end
-  */
+
 endmodule

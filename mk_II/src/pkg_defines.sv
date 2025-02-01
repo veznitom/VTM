@@ -75,12 +75,6 @@ package pkg_defines;
     ERROR
   } jmp_relation_e;
 
-  typedef enum logic [1:0] {
-    VALID,
-    INVALID,
-    MODIFIED
-  } cache_state_e;
-
   typedef enum logic [2:0] {
     BR,
     AL,
