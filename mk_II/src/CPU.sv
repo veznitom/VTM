@@ -74,7 +74,6 @@ module CPU (
   DataCache u_data_cache (
     .cs           (u_common_signal_bus),
     .cache        (u_data_cache_bus),
-    .data_bus     (u_common_data_bus),
     .i_mem_ready  (mmu_data_ready),
     .i_mem_done   (mmu_data_done),
     .io_mem_data  (mmu_data_data),

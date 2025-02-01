@@ -2,10 +2,11 @@
 
 `default_nettype none
 import pkg_defines::*;
-module DataCache (
+module DataCache #(
+  parameter int SET_SIZE_BITS = 3
+) (
   IntfCSB.notag           cs,
   IntfDataCache.DataCache cache,
-  IntfCDB.Cache           data_bus[2],
 
   input  wire         i_mem_ready,
   input  wire         i_mem_done,
@@ -15,44 +16,37 @@ module DataCache (
   output reg          o_mem_write
 );
   // ------------------------------- Parameters -------------------------------
-  // FOR DEBUG PURPOSES TO TEST BEST SIZE
-  localparam int SETS = 8;
-  localparam int SET_BITS = $clog2(SETS);
-
-  localparam int TAG_LOW_RANGE = (SET_BITS + 5);
-  localparam int TAG_SIZE = 32 - TAG_LOW_RANGE;
-
+  localparam int TAG_SIZE = 32 - (SET_SIZE_BITS + 5);
   // ------------------------------- Structures -------------------------------
+  typedef enum logic [1:0] {
+    IDLE,
+    LOAD,
+    MODIFY,
+    WRITE
+  } cache_state_e;
+
   typedef enum logic [1:0] {
     VALID,
     INVALID,
     MODIFIED
-  } cache_state_e;
+  } data_state_e;
 
   typedef struct packed {
     logic [TAG_SIZE-1:0] tag;
-    logic [7:0][31:0]    words;
-    cache_state_e        state;
+    logic [0:7][31:0]    words;
+    data_state_e         state;
   } cache_set_t;
 
-  typedef struct packed {
-    logic [31:0] address;
-    logic [31:0] data;
-    logic [1:0]  size;
-  } write_record_t;
-
   // ------------------------------- Wires -------------------------------
-  cache_set_t         data     [SETS];
-  logic       [255:0] mem_data;
-  logic miss, write_back;
+  cache_state_e         cache_state;
+  cache_set_t           data        [2**SET_SIZE_BITS];
+  logic         [255:0] mem_data;
+  logic miss, load, write, done;
 
-  write_record_t write_fifo[16];
-  logic [3:0] wf_write_index, wf_read_index;
-
-  logic [SET_BITS-1:0] set_select;
-  logic [         2:0] word_select;
-  logic [         1:0] byte_select;
-  logic [TAG_SIZE-1:0] tag;
+  logic [SET_SIZE_BITS-1:0] set_select;
+  logic [              2:0] word_select;
+  logic [              1:0] byte_select;
+  logic [     TAG_SIZE-1:0] tag;
 
   // ------------------------------- Behaviour -------------------------------
 
@@ -60,17 +54,16 @@ module DataCache (
 
   assign byte_select = cache.address[1:0];
   assign word_select = cache.address[3+1:2];
-  assign set_select  = cache.address[SET_BITS+3+1:3+2];
+  assign set_select  = cache.address[SET_SIZE_BITS+3+1:3+2];
   assign tag         = cache.address[31-:TAG_SIZE];
 
   always_ff @(posedge cs.clock) begin : cache_read
     if (cs.reset) begin
       cache.dout <= '0;
       cache.hit  <= '0;
-    end else begin
-      if (cache.tag) begin // select if seeking the data in the write buffer of cache
-        
-      end
+      miss       <= '0;
+      cache.hit  <= '0;
+    end else if (cache.read) begin
       if (data[set_select].tag == tag && data[set_select].state == VALID) begin
         miss       <= '0;
         cache.dout <= data[set_select].words[word_select];
@@ -80,32 +73,109 @@ module DataCache (
         cache.dout <= '0;
         cache.hit  <= '0;
       end
+    end else begin
+      cache.dout <= '0;
+      cache.hit  <= '0;
+      miss       <= '0;
+      cache.hit  <= '0;
     end
   end  // cache_read
 
-  always_ff @(posedge cs.clock) begin : cache_write_and_miss_handle
+  always_ff @(posedge cs.clock) begin : cache_write
+    if (cs.reset) begin
+      load <= '0;
+    end else if (cache.write) begin
+      if (data[set_select].tag == tag && data[set_select].state == VALID) begin
+        load <= '1;
+      end else begin
+        load <= '1;
+      end
+    end else begin
+      load <= '0;
+    end
+  end  // cache_write
+
+  always_ff @(posedge cs.clock) begin : data_load_and_modify
     if (cs.reset) begin
       foreach (data[i]) data[i] <= '{'0, '0, INVALID};
-
-      cache.ready   <= '0;
-
       o_mem_address <= '0;
       o_mem_read    <= '0;
       o_mem_write   <= '0;
-
       mem_data      <= '0;
+      cache_state   <= IDLE;
     end else begin
-      if (cache.write) begin
+      if (cache.read || cache.write) begin
+        case (cache_state)
+          IDLE: begin
+            if (miss || load) cache_state <= LOAD;
+            cache.ready <= '0;
+          end
+          LOAD: begin
+            if (i_mem_ready) begin
+              data[set_select].tag   <= cache.address[31-:TAG_SIZE];
+              data[set_select].state <= VALID;
+              data[set_select].words <= io_mem_data;
+              o_mem_address          <= '0;
+              o_mem_read             <= '0;
+              if (cache.write) cache_state <= MODIFY;
+              else cache_state <= IDLE;
+            end else begin
+              o_mem_address <= cache.address;
+              o_mem_read    <= '1;
+            end
+          end
+          MODIFY: begin
+            cache_state <= WRITE;
+            case (cache.store_type)
+              0: begin  // SW
+                data[set_select].words[word_select] <= cache.din;
+              end
+              1: begin  // SH
+                if (byte_select[1]) begin
+                  data[set_select].words[word_select][31:16] <= cache.din[15:0];
+                end else begin
+                  data[set_select].words[word_select][15:0] <= cache.din[15:0];
+                end
+              end
+              2: begin  // SB
+                case (byte_select)
+                  0: begin
+                    data[set_select].words[word_select][7:0] <= cache.din[7:0];
+                  end
+                  1: begin
+                    data[set_select].words[word_select][7:0] <= cache.din[7:0];
+                  end
+                  2: begin
+                    data[set_select].words[word_select][15:8] <= cache.din[7:0];
+                  end
+                  3: begin
+                    data[set_select].words[word_select][23:16] <= cache.din[7:0];
+                  end
+                  default: begin
+                    data[set_select].words[word_select][31:24] <= cache.din[7:0];
+                  end
+                endcase
+              end
+              default: data[set_select].words[word_select] <= cache.din;
+            endcase
+          end
+          WRITE: begin
+            if (i_mem_done) begin
+              cache_state   <= IDLE;
+              cache.ready   <= '1;
 
-      end else
-      if (miss) begin
-
-      end else begin
-
+              o_mem_address <= '0;
+              mem_data      <= '0;
+              o_mem_write   <= '0;
+            end else begin
+              o_mem_address <= cache.address;
+              mem_data      <= data[set_select].words;
+              o_mem_write   <= '1;
+            end
+          end
+          default: cache_state <= IDLE;
+        endcase
       end
     end
-  end  // cache_write_and_miss_handle
-
-  always_ff @(posedge cs.clock) begin : memory_write_back
-  end  // memory_write_back
+  end  // data_load_and_modify
 endmodule

@@ -7,11 +7,11 @@ interface IntfDataCache;
   logic read, hit, write, ready, tag;
 
   modport DataCache(
-      input din, address, read, write, ready, store_type, tag,
-      output dout, hit
+      input din, address, read, write, store_type, tag,
+      output dout, hit, ready
   );
   modport LoadStore(
-      input din, hit,
-      output dout, address, read, write, ready, store_type, tag
+      input din, hit, ready,
+      output dout, address, read, write, store_type, tag
   );
 endinterface

@@ -3,8 +3,8 @@
 `default_nettype none
 import pkg_defines::*;
 module LoadStore (
-  IntfCSB.notag cs,
-
+  input wire                     i_clock,
+  input wire                     i_reset,
   input wire              [31:0] i_data_1,
   input wire              [31:0] i_data_2,
   input wire              [31:0] i_address,
@@ -20,8 +20,8 @@ module LoadStore (
 );
   // ------------------------------- Behaviour -------------------------------
 
-  always_ff @(posedge cs.clock) begin
-    if (cs.reset) begin
+  always_ff @(posedge i_clock) begin
+    if (i_reset) begin
       o_result        <= '0;
       o_store_address <= '0;
       o_ready         <= '0;
@@ -37,11 +37,11 @@ module LoadStore (
         i_instr_name == LW) begin
         if (cache.hit) begin
           case (i_instr_name)
-            LB:      o_result <= {{32 - 8{cache.data[7]}}, cache.data[7:0]};
-            LBU:     o_result <= {{32 - 8{1'h0}}, cache.data[7:0]};
-            LH:      o_result <= {{32 - 16{cache.data[15]}}, cache.data[15:0]};
-            LHU:     o_result <= {{32 - 8{1'h0}}, cache.data[15:0]};
-            default: o_result <= cache.data;
+            LB:      o_result <= {{32 - 8{cache.din[7]}}, cache.din[7:0]};
+            LBU:     o_result <= {{32 - 8{1'h0}}, cache.din[7:0]};
+            LH:      o_result <= {{32 - 16{cache.din[15]}}, cache.din[15:0]};
+            LHU:     o_result <= {{32 - 8{1'h0}}, cache.din[15:0]};
+            default: o_result <= cache.din;
           endcase
           o_store_address <= '0;
           o_ready         <= '1;

@@ -206,6 +206,33 @@ module ReservationStation #(
       write_index <= write_index +
           (issue[0].instr_type == INSTR_TYPE  ? 1 : 0) +
           (issue[1].instr_type == INSTR_TYPE  ? 1 : 0);
+      // Records data update
+      foreach (records[i]) begin
+        // data_1 -------------------------------
+        if (match_data(
+                records[i].src_1, records[i].valid_1, data[0].arn, data[0].rrn
+            )) begin
+          records[i].data_1  = data[0].result;
+          records[i].valid_1 = 1'h1;
+        end else if (match_data(
+                records[i].src_1, records[i].valid_1, data[1].arn, data[1].rrn
+            )) begin
+          records[i].data_1  = data[1].result;
+          records[i].valid_1 = 1'h1;
+        end
+        // data_2 -------------------------------
+        if (match_data(
+                records[i].src_2, records[i].valid_2, data[0].arn, data[0].rrn
+            )) begin
+          records[i].data_2  = data[0].result;
+          records[i].valid_2 = 1'h1;
+        end else if (match_data(
+                records[i].src_2, records[i].valid_2, data[1].arn, data[1].rrn
+            )) begin
+          records[i].data_2  = data[1].result;
+          records[i].valid_2 = 1'h1;
+        end
+      end
     end
   end  // main_loop
 

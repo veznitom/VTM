@@ -59,7 +59,7 @@ module ComboALU #(
     for (genvar i = 0; i < 2; i++) begin : gen_rob
       assign data[i].result = (bus_granted & bus_index == i) ? u_alu_feed.result: 'z;
       assign data[i].address = (bus_granted & bus_index == i) ? u_alu_feed.address: 'z;
-      assign data[i].jmp_address = (bus_granted & bus_index == i) ? '0 : 'z;
+      assign data[i].result_address = (bus_granted & bus_index == i) ? '0 : 'z;
       assign data[i].arn = (bus_granted & bus_index == i) ? 0 : 'z;
       assign data[i].rrn = (bus_granted & bus_index == i) ? rrn : 'z;
       assign data[i].reg_write = (bus_granted & bus_index == i) ? '1 : 'z;

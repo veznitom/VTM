@@ -80,7 +80,7 @@ module ReorderBuffer #(
     for (genvar i = 0; i < 2; i++) begin : gen_rob
       assign data[i].result = (bus_granted & bus_index == i) ? records[read_index].result: 'z;
       assign data[i].address = (bus_granted & bus_index == i) ? records[read_index].address: 'z;
-      assign data[i].jmp_address = (bus_granted & bus_index == i) ? records[read_index].jmp_address: 'z;
+      assign data[i].result_address = (bus_granted & bus_index == i) ? records[read_index].jmp_address: 'z;
       assign data[i].arn = (bus_granted & bus_index == i) ? records[read_index].regs.rd: 'z;
       assign data[i].rrn = (bus_granted & bus_index == i) ? records[read_index].regs.rn: 'z;
       assign data[i].reg_write = (bus_granted & bus_index == i) ? records[read_index].flags.writes: 'z;
@@ -148,13 +148,13 @@ module ReorderBuffer #(
         if (records[j].address == data[0].address) begin
           records[j].result <= data[0].result;
           records[j].jmp_address <=
-              records[j].flags.jumps ? data[0].jmp_address : 'z;
+              records[j].flags.jumps ? data[0].result_address : 'z;
           records[j].status <= COMPLETED;
         end
         if (records[j].address == data[1].address) begin
           records[j].result <= data[1].result;
           records[j].jmp_address <=
-              records[j].flags.jumps ? data[1].jmp_address : 'z;
+              records[j].flags.jumps ? data[1].result_address : 'z;
           records[j].status <= COMPLETED;
         end
       end  // Completion

@@ -110,6 +110,7 @@ module Resolver (
       o_instr_info[0].flags      <= i_instr_info[0].flags;
       o_instr_info[0].flags.tag  <= i_instr_info[0].flags.jumps ? '0 : i_tag;
 
+      o_instr_info[1].clear();
     end else begin
       o_instr_info[0].clear();
       o_instr_info[1].clear();

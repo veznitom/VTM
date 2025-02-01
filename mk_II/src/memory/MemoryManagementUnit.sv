@@ -4,24 +4,24 @@
 module MemoryManagementUnit (
   input  wire         i_reset,
   // Memory
-  input  wire          i_mem_ready,
-  input  wire          i_mem_done,
-  inout  wire  [255:0] io_mem_data,
-  output reg   [ 31:0] o_mem_address,
-  output reg           o_mem_read,
-  output reg           o_mem_write,
+  input  wire         i_mem_ready,
+  input  wire         i_mem_done,
+  inout  wire [255:0] io_mem_data,
+  output reg  [ 31:0] o_mem_address,
+  output reg          o_mem_read,
+  output reg          o_mem_write,
   // Instruction cache
-  input  wire  [ 31:0] i_instr_address,
-  input  wire          i_instr_read,
-  output reg   [255:0] o_instr_data,
-  output reg           o_instr_ready,
+  input  wire [ 31:0] i_instr_address,
+  input  wire         i_instr_read,
+  output reg  [255:0] o_instr_data,
+  output reg          o_instr_ready,
   // Data cache
-  input  wire  [ 31:0] i_data_address,
-  input  wire          i_data_read,
-  input  wire          i_data_write,
-  inout  wire  [255:0] io_data_data,
-  output reg           o_data_ready,
-  output reg           o_data_done
+  input  wire [ 31:0] i_data_address,
+  input  wire         i_data_read,
+  input  wire         i_data_write,
+  inout  wire [255:0] io_data_data,
+  output reg          o_data_ready,
+  output reg          o_data_done
 );
   // ------------------------------- Strucutres -------------------------------
   typedef enum bit [1:0] {
@@ -33,10 +33,8 @@ module MemoryManagementUnit (
   // ------------------------------- Wires -------------------------------
   mmu_state_e lock;
 
-  assign io_data_data = (lock == DATA && i_data_read && !i_data_write) ?
-    io_mem_data : 'z;
-  assign io_mem_data  = (lock == DATA && i_data_write && !i_data_read) ?
-    io_data_data : 'z;
+  assign io_data_data = (i_data_read && !i_data_write) ? io_mem_data : 'z;
+  assign io_mem_data  = (i_data_write && !i_data_read) ? io_data_data : 'z;
 
   // ------------------------------- Behaviour -------------------------------
   always_comb begin : access_management

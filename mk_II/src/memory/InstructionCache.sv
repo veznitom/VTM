@@ -24,10 +24,16 @@ module InstructionCache (
   localparam int TAG_LOW_RANGE = (SET_BITS + 5);
   localparam int TAG_SIZE = 32 - TAG_LOW_RANGE;
   // ------------------------------- Structures -------------------------------
+  typedef enum logic [1:0] {
+    VALID,
+    INVALID,
+    MODIFIED
+  } data_state_e;
+
   typedef struct packed {
     logic [TAG_SIZE-1:0] tag;
     logic [0:7][31:0]    words;
-    cache_state_e        state;
+    data_state_e         state;
   } cache_set_t;
 
   // ------------------------------- Wires -------------------------------
