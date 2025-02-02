@@ -15,11 +15,10 @@ module ComboMulDiv #(
   // ------------------------------- Wires -------------------------------
   IntfExtFeed u_mult_div_feed ();
 
-  wire [31:0] mult_div_result;
-  wire [15:0] select;
-  wire        get_bus;
-  wire        bus_granted;
-  wire        bus_index;
+  wire [5:0] rrn;
+  wire       get_bus;
+  wire       bus_granted;
+  wire       bus_index;
 
   // ------------------------------- Modules -------------------------------
   ReservationStation #(
@@ -31,16 +30,11 @@ module ComboMulDiv #(
     .data  (data),
     .feed  (u_mult_div_feed),
     .i_next(bus_granted),
-    .o_rrn (),
+    .o_rrn (rrn),
     .o_full(o_full)
   );
 
-  MulDiv u_mul_div (
-    .i_data_1    (u_mult_div_feed.data_1),
-    .i_data_2    (u_mult_div_feed.data_2),
-    .i_instr_name(u_mult_div_feed.instr_name),
-    .o_result    (u_mult_div_feed.result)
-  );
+  MulDiv u_mul_div (.feed(u_mult_div_feed));
 
   CDBArbiter #(
     .ADDRESS(ARBITER_ADDRESS)
@@ -51,6 +45,16 @@ module ComboMulDiv #(
     .o_bus_index  (bus_index)
   );
   // ------------------------------- Behaviour -------------------------------
-  assign select = {data[1].select, data[0].select};
+  assign get_bus = u_mult_div_feed.instr_name != UNKNOWN;
 
+  generate
+    for (genvar i = 0; i < 2; i++) begin : gen_rob
+      assign data[i].result = (bus_granted & bus_index == i) ? u_mult_div_feed.result: 'z;
+      assign data[i].address = (bus_granted & bus_index == i) ? u_mult_div_feed.address: 'z;
+      assign data[i].result_address = (bus_granted & bus_index == i) ? '0 : 'z;
+      assign data[i].arn = (bus_granted & bus_index == i) ? 0 : 'z;
+      assign data[i].rrn = (bus_granted & bus_index == i) ? rrn : 'z;
+      assign data[i].reg_write = (bus_granted & bus_index == i) ? '1 : 'z;
+    end
+  endgenerate
 endmodule

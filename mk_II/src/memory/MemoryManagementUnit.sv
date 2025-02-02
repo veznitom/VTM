@@ -2,26 +2,9 @@
 
 `default_nettype none
 module MemoryManagementUnit (
-  input  wire         i_reset,
-  // Memory
-  input  wire         i_mem_ready,
-  input  wire         i_mem_done,
-  inout  wire [255:0] io_mem_data,
-  output reg  [ 31:0] o_mem_address,
-  output reg          o_mem_read,
-  output reg          o_mem_write,
-  // Instruction cache
-  input  wire [ 31:0] i_instr_address,
-  input  wire         i_instr_read,
-  output reg  [255:0] o_instr_data,
-  output reg          o_instr_ready,
-  // Data cache
-  input  wire [ 31:0] i_data_address,
-  input  wire         i_data_read,
-  input  wire         i_data_write,
-  inout  wire [255:0] io_data_data,
-  output reg          o_data_ready,
-  output reg          o_data_done
+  IntfMemory memory,
+  IntfMemory instr_cache,
+  IntfMemory data_cache
 );
   // ------------------------------- Strucutres -------------------------------
   typedef enum bit [1:0] {
@@ -33,58 +16,51 @@ module MemoryManagementUnit (
   // ------------------------------- Wires -------------------------------
   mmu_state_e lock;
 
-  assign io_data_data = (i_data_read && !i_data_write) ? io_mem_data : 'z;
-  assign io_mem_data  = (i_data_write && !i_data_read) ? io_data_data : 'z;
+  assign data_cache.data  = data_cache.read ? memory.data : 'z;
+  assign instr_cache.data = instr_cache.read ? memory.data : 'z;
+  assign memory.data      = data_cache.write ? data_cache.data : 'z;
 
   // ------------------------------- Behaviour -------------------------------
   always_comb begin : access_management
-    if (i_reset) begin
-      lock          = FREE;
-      o_instr_ready = '0;
-      o_data_ready  = '0;
-      o_data_done   = '0;
-    end else if (i_instr_read && lock != DATA) begin : instructions_read
+    if (instr_cache.read && lock != DATA) begin : instructions_read
       lock = INSTR;
-      if (i_mem_ready) begin
-        o_instr_data  = io_mem_data;
-        o_instr_ready = 1'h1;
-        lock          = FREE;
+      if (memory.ready) begin
+        instr_cache.ready = 1'h1;
+        lock              = FREE;
       end else begin
-        o_mem_address = i_instr_address;
-        o_mem_read    = 1'h1;
-        o_instr_ready = 1'h0;
+        memory.address    = instr_cache.address;
+        memory.read       = 1'h1;
+        instr_cache.ready = 1'h0;
       end
-    end else if (i_data_read && lock != INSTR) begin : data_read
+    end else if (data_cache.read && lock != INSTR) begin : data_read
       lock = DATA;
-      if (i_mem_ready) begin
-        //io_data_data = io_mem_data;
-        o_data_ready = 1'h1;
-        lock         = FREE;
+      if (memory.ready) begin
+        data_cache.ready = 1'h1;
+        lock             = FREE;
       end else begin
-        o_mem_address = i_data_address;
-        o_mem_read    = 1'h1;
-        o_data_ready  = 1'h0;
+        memory.address   = data_cache.address;
+        memory.read      = 1'h1;
+        data_cache.ready = 1'h0;
       end
-    end else if (i_data_write && lock != INSTR) begin
+    end else if (data_cache.write && lock != INSTR) begin
       lock = DATA;
-      if (i_mem_done) begin
-        //io_data_data       = memory.data[data.BUS_WIDTH_BITS-1:0];
-        o_mem_write = 1'b0;
-        o_data_done = 1'b1;
-        lock        = FREE;
+      if (memory.done) begin
+        memory.write    = 1'b0;
+        data_cache.done = 1'b1;
+        lock            = FREE;
       end else begin
-        o_mem_address = i_data_address;
-        o_mem_write   = 1'b1;
-        o_data_done   = 1'b0;
+        memory.address  = data_cache.address;
+        memory.write    = 1'b1;
+        data_cache.done = 1'b0;
       end
     end else begin
-      o_mem_address = '0;
-      o_mem_read    = '0;
-      o_mem_write   = '0;
-      o_instr_data  = '0;
-      o_instr_ready = '0;
-      o_data_ready  = '0;
-      o_data_done   = '0;
+      lock              = FREE;
+      memory.address    = '0;
+      memory.read       = '0;
+      memory.write      = '0;
+      instr_cache.ready = '0;
+      data_cache.ready  = '0;
+      data_cache.done   = '0;
     end
   end
 

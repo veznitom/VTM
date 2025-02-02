@@ -30,7 +30,8 @@ module IPWrapper (
   wire [31:0] address[2], instr[2];
   wire loader_halt, decoder_halt[2], renamer_halt, resolver_halt;
   wire status_ren_empty, status_panic, status_branch, status_invalid;
-  wire tag, clear;
+  wire tag   [2];
+  wire clear;
 
   IntfInstrInfo u_dc_ren[2] ();
   IntfInstrInfo u_ren_del[2] ();
@@ -56,12 +57,12 @@ module IPWrapper (
   );
 
   Decoder u_decoder_1 (
-    .i_clock   (cs.clock),
-    .i_reset   (cs.reset),
-    .instr_info(u_dc_ren[0]),
-    .i_address (address[0]),
-    .i_instr   (instr[0]),
-    .i_halt    (decoder_halt[0]),
+    .i_clock        (cs.clock),
+    .i_reset        (cs.reset),
+    .instr_info     (u_dc_ren[0]),
+    .i_address      (address[0]),
+    .i_instr        (instr[0]),
+    .i_halt         (decoder_halt[0]),
     .o_invalid_instr(status_invalid)
   );
 
@@ -88,7 +89,7 @@ module IPWrapper (
     .o_query_tag         (query.tag),
 
     .i_halt     (renamer_halt),
-    .i_tag      (tag),
+    .i_tag      (tag[0]),
     .o_branch   (status_branch),
     .o_ren_empty(status_ren_empty)
   );
@@ -110,17 +111,9 @@ module IPWrapper (
     .i_query_output_regs(query.output_regs),
 
     .i_halt (renamer_halt),
-    .i_tag  (tag),
+    .i_tag  (tag[1]),
     .o_panic(status_panic)
   );
-
-  /*Issuer u_issuer (
-    .i_clock     (i_clock),
-    .i_reset     (i_reset),
-    .i_instr_info(u_res_iss),
-    .o_instr_info(u_iss_cmb),
-    .i_halt      (renamer_halt)
-  );*/
 
   Comparator u_comparator_1 (
     .instr_info(u_res_cmp[0]),
@@ -137,15 +130,14 @@ module IPWrapper (
   );
 
   Control u_control (
-    .i_reset     (cs.reset),
-    .i_clear_tag (cs.clear_tag),
-    .i_delete_tag(cs.delete_tag),
+    .cs(cs),
 
     .i_branch   (status_branch),
     .i_ren_empty(status_ren_empty),
     .i_full     (i_full),
 
-    .o_tag(tag),
+    .o_tag_ren(tag[0]),
+    .o_tag_res(tag[1]),
 
     .o_ld_halt (loader_halt),
     .o_dec_halt(decoder_halt),

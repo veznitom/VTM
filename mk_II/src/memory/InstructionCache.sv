@@ -10,11 +10,7 @@ module InstructionCache (
   output reg  [31:0] o_instr  [2],
   output reg         o_hit    [2],
 
-
-  input  wire [255:0] i_mem_data,
-  input  wire         i_mem_ready,
-  output reg  [ 31:0] o_mem_address,
-  output reg          o_mem_read
+  IntfMemory.InstrCache memory
 );
   // ------------------------------- Parameters -------------------------------
   // FOR DEBUG PURPOSES TO TEST BEST SIZE
@@ -32,7 +28,7 @@ module InstructionCache (
 
   typedef struct packed {
     logic [TAG_SIZE-1:0] tag;
-    logic [0:7][31:0]    words;
+    logic [7:0][31:0]    words;
     data_state_e         state;
   } cache_set_t;
 
@@ -78,8 +74,8 @@ module InstructionCache (
 
   always_ff @(posedge cs.clock) begin : miss_mem_fetch
     if (cs.reset) begin
-      o_mem_address <= '0;
-      o_mem_read    <= '0;
+      memory.address <= '0;
+      memory.read    <= '0;
       foreach (data[i]) begin
         data[i].tag   <= '0;
         data[i].words <= '0;
@@ -87,26 +83,26 @@ module InstructionCache (
       end
     end else begin
       if (miss[0]) begin
-        if (i_mem_ready) begin
+        if (memory.ready) begin
           data[set_select[0]].tag   <= i_address[0][31:TAG_LOW_RANGE];
-          data[set_select[0]].words <= i_mem_data;
+          data[set_select[0]].words <= memory.data;
           data[set_select[0]].state <= VALID;
         end else begin
-          o_mem_address <= i_address[0];
-          o_mem_read    <= '1;
+          memory.address <= i_address[0];
+          memory.read    <= '1;
         end
       end else if (miss[1]) begin
-        if (i_mem_ready) begin
+        if (memory.ready) begin
           data[set_select[1]].tag   <= i_address[1][31:TAG_LOW_RANGE];
-          data[set_select[1]].words <= i_mem_data;
+          data[set_select[1]].words <= memory.data;
           data[set_select[1]].state <= VALID;
         end else begin
-          o_mem_address <= i_address[1];
-          o_mem_read    <= '1;
+          memory.address <= i_address[1];
+          memory.read    <= '1;
         end
       end else begin
-        o_mem_address <= '0;
-        o_mem_read    <= '0;
+        memory.address <= '0;
+        memory.read    <= '0;
       end
     end
   end  //miss_mem_fetch

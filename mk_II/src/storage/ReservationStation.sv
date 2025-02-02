@@ -249,6 +249,7 @@ module ReservationStation #(
         feed.immediate  = records[read_index].immediate;
         o_rrn           = records[read_index].rrn;
         feed.instr_name = records[read_index].instr_name;
+        feed.tag        = records[read_index].tag;
       end else begin
         feed.instr_name = UNKNOWN;
         o_rrn           = '0;

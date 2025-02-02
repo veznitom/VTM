@@ -7,7 +7,7 @@ CFLAGS=-c -O0 -ffreestanding -nostartfiles -ffunction-sections -march=rv32im -ma
 LDFLAGS=-T link.ld -A elf32lriscv
 
 default: $(elfs) $(dumps)
-	python ../../tools/elfhex.py -arb -s ./tmp/ -d ./hex/
+	python ../../tools/elfhex.py -ab -s ./tmp/ -d ./hex/
 
 %.o : %.c
 	riscv32-unknown-elf-gcc $(CFLAGS) $< -o $@
@@ -19,7 +19,10 @@ default: $(elfs) $(dumps)
 	riscv32-unknown-elf-ld $(LDFLAGS) $< -o $@
 
 %.dump : %.elf
+#riscv32-unknown-elf-objdump -D $< > $@
+	riscv32-unknown-elf-strip -R .comment -R .riscv.attributes -o $< $<
 	riscv32-unknown-elf-objdump -D $< > $@
+
 
 clean:
 	rm tmp/*.o tmp/*.hex tmp/*.mem tmp/*.dump tmp/*.elf

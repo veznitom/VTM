@@ -11,6 +11,5 @@ SECTIONS
     {
       . = ALIGN(4);
       *(.text.init)
-      *(.text*)
-    } > ram
+    }
 }

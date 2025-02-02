@@ -67,7 +67,7 @@ def main():
                         help='Path to the source elf directory/file.')
     parser.add_argument('-d', '--dst', action='store', default='', dest='dest',
                         help='Path to the destination elf directory')
-    parser.add_argument('-f', '--fill', action='store', default=16384, dest='fill', type=int,
+    parser.add_argument('-f', '--fill', action='store', default=0x10000, dest='fill', type=int,
                         help='Fills the rest of the file with zeros up to fill bytes.', required=False)
     parser.add_argument('-b', '--bytes', action='count', default=0, dest='bytes',
                         help='Saves instructions as 4 byte values.')

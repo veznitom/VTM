@@ -33,15 +33,7 @@ module ComboBranch #(
     .o_full(o_full)
   );
 
-  Branch u_branch (
-    .i_data_1      (u_branch_feed.data_1),
-    .i_data_2      (u_branch_feed.data_2),
-    .i_address     (u_branch_feed.address),
-    .i_immediate   (u_branch_feed.immediate),
-    .i_instr_name  (u_branch_feed.instr_name),
-    .o_store_result(u_branch_feed.result),
-    .o_jump_result (u_branch_feed.jump_result)
-  );
+  Branch u_branch (.feed(u_branch_feed));
 
   CDBArbiter #(
     .ADDRESS(ARBITER_ADDRESS)
@@ -58,7 +50,7 @@ module ComboBranch #(
     for (genvar i = 0; i < 2; i++) begin : gen_rob
       assign data[i].result = (bus_granted & bus_index == i) ? u_branch_feed.result: 'z;
       assign data[i].address = (bus_granted & bus_index == i) ? u_branch_feed.address: 'z;
-      assign data[i].result_address = (bus_granted & bus_index == i) ? u_branch_feed.jump_result : 'z;
+      assign data[i].result_address = (bus_granted & bus_index == i) ? u_branch_feed.result_address : 'z;
       assign data[i].arn = (bus_granted & bus_index == i) ? 0 : 'z;
       assign data[i].rrn = (bus_granted & bus_index == i) ? 0 : 'z;
       assign data[i].reg_write = (bus_granted & bus_index == i) ? '1 : 'z;

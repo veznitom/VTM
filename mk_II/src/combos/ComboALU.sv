@@ -15,10 +15,10 @@ module ComboALU #(
   // ------------------------------- Wires -------------------------------
   IntfExtFeed u_alu_feed ();
 
-  wire [ 5:0] rrn;
-  wire        get_bus;
-  wire        bus_granted;
-  wire        bus_index;
+  wire [5:0] rrn;
+  wire       get_bus;
+  wire       bus_granted;
+  wire       bus_index;
 
   // ------------------------------- Modules -------------------------------
   ReservationStation #(
@@ -34,14 +34,7 @@ module ComboALU #(
     .o_full(o_full)
   );
 
-  ALU u_alu (
-    .i_data_1    (u_alu_feed.data_1),
-    .i_data_2    (u_alu_feed.data_2),
-    .i_address   (u_alu_feed.address),
-    .i_immediate (u_alu_feed.immediate),
-    .i_instr_name(u_alu_feed.instr_name),
-    .o_result    (u_alu_feed.result)
-  );
+  ALU u_alu (.feed(u_alu_feed));
 
   CDBArbiter #(
     .ADDRESS(ARBITER_ADDRESS)
