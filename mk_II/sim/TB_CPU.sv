@@ -15,7 +15,7 @@ module TB_CPU ();
 
   RAM #(
     .MEM_SIZE_BYTES(4096),
-    .MEM_FILE_PATH ("/home/tomasv/Projects/VTM/mk_II/sw/hex/zero_load-b.hex")
+    .MEM_FILE_PATH ("/home/tomasv/Projects/VTM/mk_II/sw/hex/load-b.hex")
   ) u_ram (
     .i_clock(clock),
     .i_reset(reset),

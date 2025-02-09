@@ -1,8 +1,8 @@
 // Copyright (c) 2024 veznitom
 
 interface IntfMemory ();
-  tri   [255:0] data;
-  logic [ 31:0] address;
+  tri   [31:0][7:0] data;
+  logic [31:0]      address;
   logic read, ready;
   logic write, done;
 

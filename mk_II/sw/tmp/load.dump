@@ -1,0 +1,23 @@
+
+tmp/load.elf:     file format elf32-littleriscv
+
+
+Disassembly of section .text:
+
+00000000 <.text>:
+   0:	00002003          	lw	zero,0(zero) # 0x0
+   4:	00402083          	lw	ra,4(zero) # 0x4
+   8:	00802103          	lw	sp,8(zero) # 0x8
+   c:	00c02183          	lw	gp,12(zero) # 0xc
+  10:	01002203          	lw	tp,16(zero) # 0x10
+  14:	01402283          	lw	t0,20(zero) # 0x14
+  18:	01802303          	lw	t1,24(zero) # 0x18
+  1c:	01c02383          	lw	t2,28(zero) # 0x1c
+  20:	02002403          	lw	s0,32(zero) # 0x20
+  24:	02402483          	lw	s1,36(zero) # 0x24
+  28:	40000513          	li	a0,1024
+  2c:	00052583          	lw	a1,0(a0)
+  30:	06900593          	li	a1,105
+  34:	00b52023          	sw	a1,0(a0)
+  38:	00052583          	lw	a1,0(a0)
+  3c:	0000006f          	j	0x3c

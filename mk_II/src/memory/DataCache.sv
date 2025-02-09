@@ -27,7 +27,7 @@ module DataCache #(
 
   typedef struct packed {
     logic [TAG_SIZE-1:0] tag;
-    logic [7:0][31:0]    words;
+    logic [7:0][3:0][7:0]    words;
     data_state_e         state;
   } cache_set_t;
 
@@ -105,7 +105,11 @@ module DataCache #(
       if (cache.read || cache.write) begin
         case (cache_state)
           IDLE: begin
-            if (miss || load) cache_state <= LOAD;
+            if (miss || load) begin
+              if (data[set_select].tag == tag && data[set_select].state == VALID) begin
+                cache_state <= MODIFY;
+              end else cache_state <= LOAD;
+            end
             cache.done <= '0;
           end
           LOAD: begin
@@ -124,7 +128,7 @@ module DataCache #(
           end
           MODIFY: begin
             cache_state <= WRITE;
-            case (cache.store_type)
+            case (byte_select)
               0: begin  // SW
                 data[set_select].words[word_select] <= cache.data;
               end
