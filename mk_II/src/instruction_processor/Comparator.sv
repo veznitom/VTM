@@ -19,13 +19,14 @@ module Comparator (
     issue.regs       = instr_info.regs;
     issue.flags      = instr_info.flags;
 
-    if (instr_info.regs.rs_1 == data[0].arn ||
-        instr_info.regs.rs_1 == data[0].rrn) begin
+    if (instr_info.regs.rs_1 != 0 &&
+        (instr_info.regs.rs_1 == data[0].arn ||
+        instr_info.regs.rs_1 == data[0].rrn)) begin
       issue.data_1  = data[0].result;
       issue.valid_1 = 1'h1;
-    end else if (
-      instr_info.regs.rs_1 == data[1].arn ||
-      instr_info.regs.rs_1 == data[1].rrn) begin
+    end else if (instr_info.regs.rs_1 != 0 &&
+      (instr_info.regs.rs_1 == data[1].arn ||
+      instr_info.regs.rs_1 == data[1].rrn)) begin
       issue.data_1  = data[1].result;
       issue.valid_1 = 1'h1;
     end else begin
@@ -33,13 +34,13 @@ module Comparator (
       issue.valid_1 = reg_val.valid_1;
     end
 
-    if (instr_info.regs.rs_2 == data[0].arn ||
-        instr_info.regs.rs_2 == data[0].rrn) begin
+    if (instr_info.regs.rs_2 != 0 && (instr_info.regs.rs_2 == data[0].arn ||
+        instr_info.regs.rs_2 == data[0].rrn)) begin
       issue.data_2  = data[0].result;
       issue.valid_2 = 1'h1;
-    end else if (
+    end else if (instr_info.regs.rs_2 != 0 && (
       instr_info.regs.rs_2 == data[1].arn ||
-      instr_info.regs.rs_2 == data[1].rrn) begin
+      instr_info.regs.rs_2 == data[1].rrn)) begin
       issue.data_2  = data[1].result;
       issue.valid_2 = 1'h1;
     end else begin

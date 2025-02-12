@@ -16,43 +16,29 @@ module MemoryManagementUnit (
   // ------------------------------- Wires -------------------------------
   mmu_state_e lock;
 
-  assign data_cache.data  = data_cache.read ? memory.data : 'z;
-  assign instr_cache.data = instr_cache.read ? memory.data : 'z;
-  assign memory.data      = data_cache.write ? data_cache.data : 'z;
+  assign data_cache.data = data_cache.read && lock != INSTR ? memory.data : 'z;
+  assign instr_cache.data = instr_cache.read && lock != DATA ? memory.data : 'z;
+  assign memory.data = data_cache.write && lock != INSTR ? data_cache.data : 'z;
 
   // ------------------------------- Behaviour -------------------------------
   always_comb begin : access_management
     if (instr_cache.read && lock != DATA) begin : instructions_read
-      lock = INSTR;
-      if (memory.ready) begin
-        instr_cache.ready = 1'h1;
-        lock              = FREE;
-      end else begin
-        memory.address    = instr_cache.address;
-        memory.read       = 1'h1;
-        instr_cache.ready = 1'h0;
-      end
-    end else if (data_cache.read && lock != INSTR) begin : data_read
-      lock = DATA;
-      if (memory.ready) begin
-        data_cache.ready = 1'h1;
-        lock             = FREE;
-      end else begin
-        memory.address   = data_cache.address;
-        memory.read      = 1'h1;
-        data_cache.ready = 1'h0;
-      end
-    end else if (data_cache.write && lock != INSTR) begin
-      lock = DATA;
-      if (memory.done) begin
-        memory.write    = 1'b0;
-        data_cache.done = 1'b1;
-        lock            = FREE;
-      end else begin
-        memory.address  = data_cache.address;
-        memory.write    = 1'b1;
-        data_cache.done = 1'b0;
-      end
+      lock              = INSTR;
+      memory.write      = '0;
+      data_cache.ready  = '0;
+      data_cache.done   = '0;
+      memory.address    = instr_cache.address;
+      memory.read       = instr_cache.read;
+      instr_cache.ready = memory.ready;
+    end else if ((data_cache.read || data_cache.write) && lock != INSTR) begin : data_read
+      lock              = DATA;
+      memory.read       = '0;
+      instr_cache.ready = '0;
+      memory.address    = data_cache.address;
+      memory.read       = data_cache.read;
+      memory.write      = data_cache.write;
+      data_cache.ready  = memory.ready;
+      data_cache.done   = memory.done;
     end else begin
       lock              = FREE;
       memory.address    = '0;

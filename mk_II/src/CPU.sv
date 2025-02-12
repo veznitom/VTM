@@ -97,7 +97,7 @@ module CPU (
   );
 
   ComboALU #(
-    .ARBITER_ADDRESS(3),
+    .ARBITER_ADDRESS(5),
     .SIZE_BITS      (4)
   ) u_combo_alu (
     .cs    (u_common_signal_bus),
@@ -107,7 +107,7 @@ module CPU (
   );
 
   ComboBranch #(
-    .ARBITER_ADDRESS(2),
+    .ARBITER_ADDRESS(3),
     .SIZE_BITS      (3)
   ) u_combo_branch (
     .cs    (u_common_signal_bus),
@@ -117,7 +117,7 @@ module CPU (
   );
 
   ComboLoadStore #(
-    .ARBITER_ADDRESS(4),
+    .ARBITER_ADDRESS(7),
     .SIZE_BITS      (3)
   ) u_combo_load_store (
     .cs    (u_common_signal_bus),
@@ -128,7 +128,7 @@ module CPU (
   );
 
   ComboMulDiv #(
-    .ARBITER_ADDRESS(5),
+    .ARBITER_ADDRESS(9),
     .SIZE_BITS      (3)
   ) u_combo_mul_div (
     .cs    (u_common_signal_bus),

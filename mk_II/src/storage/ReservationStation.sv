@@ -33,8 +33,8 @@ module ReservationStation #(
     6'h00,
     6'h00,
     UNKNOWN,
-    1'h0,
-    1'h0,
+    1'h1,
+    1'h1,
     1'h0,
     1'h0
   };
@@ -43,7 +43,7 @@ module ReservationStation #(
   function automatic bit match_data(input logic [5:0] src, input logic valid,
                                     input logic [5:0] arn,
                                     input logic [5:0] rrn);
-    return (arn == src || rrn == src) && !valid;
+    return ((arn != 0 && arn == src) || (rrn != 0 && rrn == src)) && !valid;
   endfunction
 
   function automatic bit issue_to_record();
@@ -212,25 +212,25 @@ module ReservationStation #(
         if (match_data(
                 records[i].src_1, records[i].valid_1, data[0].arn, data[0].rrn
             )) begin
-          records[i].data_1  = data[0].result;
-          records[i].valid_1 = 1'h1;
+          records[i].data_1  <= data[0].result;
+          records[i].valid_1 <= 1'h1;
         end else if (match_data(
                 records[i].src_1, records[i].valid_1, data[1].arn, data[1].rrn
             )) begin
-          records[i].data_1  = data[1].result;
-          records[i].valid_1 = 1'h1;
+          records[i].data_1  <= data[1].result;
+          records[i].valid_1 <= 1'h1;
         end
         // data_2 -------------------------------
         if (match_data(
                 records[i].src_2, records[i].valid_2, data[0].arn, data[0].rrn
             )) begin
-          records[i].data_2  = data[0].result;
-          records[i].valid_2 = 1'h1;
+          records[i].data_2  <= data[0].result;
+          records[i].valid_2 <= 1'h1;
         end else if (match_data(
                 records[i].src_2, records[i].valid_2, data[1].arn, data[1].rrn
             )) begin
-          records[i].data_2  = data[1].result;
-          records[i].valid_2 = 1'h1;
+          records[i].data_2  <= data[1].result;
+          records[i].valid_2 <= 1'h1;
         end
       end
     end
@@ -238,7 +238,13 @@ module ReservationStation #(
 
   always_comb begin : feed_ex_unit
     if (cs.reset) begin
+      feed.data_1     = '0;
+      feed.data_2     = '0;
+      feed.address    = '0;
+      feed.immediate  = '0;
+      o_rrn           = '0;
       feed.instr_name = UNKNOWN;
+      feed.tag        = '0;
       o_rrn           = '0;
     end else begin
       if (records[read_index].valid_1 && records[read_index].valid_2 &&
@@ -251,7 +257,14 @@ module ReservationStation #(
         feed.instr_name = records[read_index].instr_name;
         feed.tag        = records[read_index].tag;
       end else begin
+        feed.data_1     = '0;
+        feed.data_2     = '0;
+        feed.address    = '0;
+        feed.immediate  = '0;
+        o_rrn           = '0;
         feed.instr_name = UNKNOWN;
+        feed.tag        = '0;
+        o_rrn           = '0;
         o_rrn           = '0;
       end
     end

@@ -26,16 +26,16 @@ module DataCache #(
   } data_state_e;
 
   typedef struct packed {
-    logic [TAG_SIZE-1:0] tag;
-    logic [7:0][3:0][7:0]    words;
-    data_state_e         state;
+    logic [TAG_SIZE-1:0]  tag;
+    logic [7:0][3:0][7:0] words;
+    data_state_e          state;
   } cache_set_t;
 
   // ------------------------------- Wires -------------------------------
   cache_state_e         cache_state;
   cache_set_t           data        [2**SET_SIZE_BITS];
   logic         [255:0] mem_data;
-  logic miss, load, mem_write, cache_write;
+  logic miss, load, mem_write;
 
   logic [SET_SIZE_BITS-1:0] set_select;
   logic [              2:0] word_select;
@@ -44,36 +44,32 @@ module DataCache #(
 
   // ------------------------------- Behaviour -------------------------------
   assign memory.data = mem_write ? mem_data : 'z;
-  assign cache.data  = cache_write ? data[set_select].words[word_select] : 'z;
 
-  assign byte_select = cache.address[1:0];
-  assign word_select = cache.address[3+1:2];
-  assign set_select  = cache.address[SET_SIZE_BITS+3+1:3+2];
-  assign tag         = cache.address[31-:TAG_SIZE];
+  always_comb begin
+    byte_select   = cache.address[1:0];
+    word_select   = cache.address[4:2];
+    set_select    = cache.address[SET_SIZE_BITS+4:5];
+    tag           = cache.address[31-:TAG_SIZE];
+    cache.rd_data = data[set_select].words[word_select];
+  end
 
-  always_ff @(posedge cs.clock) begin : cache_read
+  always_comb begin : cache_read
     if (cs.reset) begin
-      cache.hit   <= '0;
-
-      miss        <= '0;
-      cache_write <= '0;
+      cache.hit = '0;
+      miss      = '0;
     end else if (cache.read) begin
-      if (data[set_select].tag == tag && data[set_select].state == VALID) begin
-        cache.hit   <= '1;
-
-        miss        <= '0;
-        cache_write <= '1;
+      if (data[set_select].tag == tag &&
+        (data[set_select].state == VALID ||
+        (data[set_select].state == MODIFIED && cache.tag))) begin
+        cache.hit = '1;
+        miss      = '0;
       end else begin
-        cache.hit   <= '0;
-
-        miss        <= '1;
-        cache_write <= '0;
+        cache.hit = '0;
+        miss      = '1;
       end
     end else begin
-      cache.hit   <= '0;
-
-      miss        <= '0;
-      cache_write <= '0;
+      cache.hit = '0;
+      miss      = '0;
     end
   end  // cache_read
 
@@ -128,38 +124,11 @@ module DataCache #(
           end
           MODIFY: begin
             cache_state <= WRITE;
-            case (byte_select)
-              0: begin  // SW
-                data[set_select].words[word_select] <= cache.data;
+            for (int i = 0; i < 4; i++) begin
+              if (cache.write_select[i]) begin
+                data[set_select].words[word_select][i] <= cache.wr_data[i];
               end
-              1: begin  // SH
-                if (byte_select[1]) begin
-                  data[set_select].words[word_select][31:16] <= cache.data[15:0];
-                end else begin
-                  data[set_select].words[word_select][15:0] <= cache.data[15:0];
-                end
-              end
-              2: begin  // SB
-                case (byte_select)
-                  0: begin
-                    data[set_select].words[word_select][7:0] <= cache.data[7:0];
-                  end
-                  1: begin
-                    data[set_select].words[word_select][7:0] <= cache.data[7:0];
-                  end
-                  2: begin
-                    data[set_select].words[word_select][15:8] <= cache.data[7:0];
-                  end
-                  3: begin
-                    data[set_select].words[word_select][23:16] <= cache.data[7:0];
-                  end
-                  default: begin
-                    data[set_select].words[word_select][31:24] <= cache.data[7:0];
-                  end
-                endcase
-              end
-              default: data[set_select].words[word_select] <= cache.data;
-            endcase
+            end
           end
           WRITE: begin
             if (memory.done) begin

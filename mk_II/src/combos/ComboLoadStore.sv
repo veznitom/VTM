@@ -16,9 +16,10 @@ module ComboLoadStore #(
   // ------------------------------- Wires -------------------------------
   IntfExtFeed u_load_store_feed ();
 
-  wire get_bus;
-  wire bus_granted;
-  wire bus_index;
+  wire [5:0] rrn;
+  wire       get_bus;
+  wire       bus_granted;
+  wire       bus_index;
   // ------------------------------- Modules -------------------------------
   ReservationStation #(
     .SIZE_BITS (SIZE_BITS),
@@ -29,7 +30,7 @@ module ComboLoadStore #(
     .data  (data),
     .feed  (u_load_store_feed),
     .i_next(bus_granted),
-    .o_rrn (),
+    .o_rrn (rrn),
     .o_full(o_full)
   );
 
@@ -56,7 +57,7 @@ module ComboLoadStore #(
       assign data[i].address = (bus_granted & bus_index == i) ? u_load_store_feed.address: 'z;
       assign data[i].result_address = (bus_granted & bus_index == i) ? u_load_store_feed.result_address : 'z;
       assign data[i].arn = (bus_granted & bus_index == i) ? 0 : 'z;
-      assign data[i].rrn = (bus_granted & bus_index == i) ? 0 : 'z;
+      assign data[i].rrn = (bus_granted & bus_index == i) ? rrn : 'z;
       assign data[i].reg_write = (bus_granted & bus_index == i) ? '1 : 'z;
     end
   endgenerate

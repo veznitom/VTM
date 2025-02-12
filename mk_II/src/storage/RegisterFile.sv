@@ -123,7 +123,7 @@ module RegisterFile (
       // CDB data update
       //---------------------------------------
       if (data[0].reg_write) begin
-        if (data[0].arn == 6'h00) begin : from_exec_0
+        if (data[0].arn == 6'h00 && data[0].rrn != 6'h00) begin : from_exec_0
           registers[data[0].rrn].value <= data[0].result;
           registers[data[0].rrn].valid <= 1'h1;
         end else if (data[0].arn != 6'h00) begin : from_rob_0
@@ -143,7 +143,7 @@ module RegisterFile (
       end
 
       if (data[1].reg_write) begin
-        if (data[1].arn == 6'h00) begin : from_exec_1
+        if (data[1].arn == 6'h00 && data[1].rrn != 6'h00) begin : from_exec_1
           registers[data[1].rrn].value <= data[1].result;
           registers[data[1].rrn].valid <= 1'h1;
         end else if (data[1].arn != 6'h00) begin : from_rob_1
