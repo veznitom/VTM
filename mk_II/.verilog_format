@@ -2,7 +2,7 @@
 --case_items_alignment=align
 --class_member_variable_alignment=align
 --column_limit=80
---indentation_spaces=2
+--indentation_spaces=4
 --compact_indexing_and_selections=true
 --distribution_items_alignment=align
 --enum_assignment_statement_alignment=align
@@ -19,4 +19,4 @@
 --port_declarations_right_align_packed_dimensions=true
 --port_declarations_right_align_unpacked_dimensions=true
 --struct_union_members_alignment=align
---try_wrap_long_lines=false
+--try_wrap_long_lines=true
