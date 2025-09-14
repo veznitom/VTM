@@ -1,7 +1,0 @@
-[verilog]
-include_paths = ["src/", "sim/"]
-defines = []
-plugins = [""]
-
-[option]
-linter = true

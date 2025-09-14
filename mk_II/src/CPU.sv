@@ -2,6 +2,7 @@
 
 `default_nettype none
 import pkg_defines::*;
+
 module CPU (
     input wire i_clock,
     input wire i_reset,
@@ -143,7 +144,6 @@ module CPU (
 
     // if at least one thing is full halt,
     // simpler design than to do it on individual basis
-    assign full = full_alu | full_branch | full_load_store | full_mul_div |
-        full_rob;
+    assign full = full_alu | full_branch | full_load_store | full_mul_div | full_rob;
 
 endmodule
